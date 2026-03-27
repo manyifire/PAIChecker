@@ -43,6 +43,12 @@ pip install -r requirements.txt
 
 ## Reproducing Evaluation Results
 
+> **Note:** The input dataset `data/minisweagent_sample.jsonl` is not included in this repository due to its size. Before running evaluation, first build it from the SWE-gym raw data using:
+> ```bash
+> python scripts/construct_dataset.py
+> ```
+> This requires a valid `GITHUB_TOKEN` environment variable.
+
 ```bash
 cd scripts
 
