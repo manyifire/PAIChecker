@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue description requests "add support to ec2 describe-key-pairs with filters" specifically for tag filters (error shows "The filter 'tag:ManagedBy' for DescribeKeyPairs has not been implemented"). The PR description states "Fixes #6907" and lists: "`create_key_pair()` now supports the TagSpecifications-argument", "`describe_key_pairs()` now returns the Tags-attribute", and "`describe_key_pairs()` now supports the `tag:` and `tag-key` filters". These additions are implementation prerequisites for enabling tag filtering (key pairs must support tags to be filterable by tags), not unrelated scope creep. No explicit claim of fixing multiple distinct issues or unrelated functionality beyond the tag filter request.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains literals like `"val1"`, `"val2"`, `"val4"` in tag assertions (e.g., `assert resp["Tags"] == [{"Key": "key", "Value": "val1"}]`), but these are test input values provided via `TagSpecifications`, not hardcoded runtime constants newly introduced in the patch. The patch only implements tag parsing/filtering logic (e.g., `tags = self._parse_tag_specification("key-pair").get("key-pair", {})`) without introducing new fixed literal values. No UL pattern detected.</ul_evidence>
+<suspicious_clues>None</suspicious_clues>
+</sub_agent_result>

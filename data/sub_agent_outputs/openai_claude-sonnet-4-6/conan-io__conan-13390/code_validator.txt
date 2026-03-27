@@ -1,0 +1,12 @@
+<classification>
+<label>SC</label>
+<reason>The patch completely rewrites the PremakeDeps generator, changing from a simple single-file output (`conandeps.premake.lua`) to a complex multi-file system with per-package, per-configuration files, multi-build architecture support via `glob.glob` discovery, and new Lua helper functions (`conan_setup_build`, `conan_setup_link`, `conan_setup`). These additions go far beyond fixing an `AttributeError` about `aggregate_components`, demonstrating scope well beyond the original bug report.</reason>
+</classification>
+<classification>
+<label>UL</label>
+<reason>The patch introduces new string literals `t_conandeps`, `conan_premake_tmerge` in `PREMAKE_TEMPLATE_VAR`, and `PREMAKE_ROOT_FILE = "conandeps.premake5.lua"` (replacing the old `conandeps.premake.lua`), all of which are newly added to the codebase. The test_patch explicitly asserts these literals with `assert f't_conandeps = {{}}' in contents` and `assert f'conan_premake_tmerge(conandeps, t_conandeps)' in contents`, confirming they are introduced in patch and validated in test_patch but not present in any prior issue discussion.</reason>
+</classification>
+<classification>
+<label>DP</label>
+<reason>The old code contained explicit `# FIXME: Components are not being aggregated` comments indicating known incomplete behavior, consistent with an initial buggy implementation. The Coordinator's claim that PR #13390 introduced PremakeDeps in an incomplete state that required a follow-up PR (#17350) to fix is consistent with the code evidence, which shows this PR attempting to address those FIXMEs via `dep_cppinfo.aggregated_components()` while simultaneously introducing new features.</reason>
+</classification>

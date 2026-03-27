@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue (#2369) requests detaching tensors before decollate_batch. The PR description states "Fixes #2369" and "this PR added the missing arg `detach` to `Decollated` transform and `InverseBatchTransform`" - this is squarely within the scope of the detach issue. The mention of "#2378" is contextual ("Follow up of #2378"), indicating prior work on which this PR builds, not claiming to fix an additional separate issue.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch uses `Decollated(detach=True)(batch_data)` and `BatchInverseTransform(transforms, loader, collate_fn=no_collation, detach=True)`, but these are argument-passing usages rather than assertion literals checking hardcoded output values. There are no newly introduced fixed string constants or specific numeric values asserted in test_patch that were introduced as runtime constants in patch. The `True` boolean is just the default parameter value, not a meaningful new literal in the UL sense.</ul_evidence>
+<suspicious_clues>The PR mentions being a "Follow up of #2378" - it appears PR #2378 may have done the core fix for decollate_batch, while this PR #2393 adds the detach parameter to the Decollated and InverseBatchTransform wrapper classes. The patch shows only a type annotation change (`bool =` added) to `decollate_batch` in utils.py while the main changes are to the wrapper classes, suggesting the actual detach functionality was already implemented in #2378.</suspicious_clues>
+</sub_agent_result>

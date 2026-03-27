@@ -1,0 +1,12 @@
+<classification>
+<label>IS</label>
+<reason>The test patch introduces several new typing-only tests (e.g., `testDataclassTransformSimpleDescriptor` and `testDataclassTransformUnannotatedDescriptor`) that solely rely on the `typing` module and mock descriptor classes. This code-level evidence aligns with the claim that a "typing-only example" was provided to clarify the expected behavior and supplement reproduction code.</reason>
+</classification>
+<classification>
+<label>UL</label>
+<reason>The patch explicitly introduces new hardcoded error string literals such as `f'Unsupported signature for "__set__" in "{t.type.name}"'` and `f'Unsupported "__set__" in "{t.type.name}"'`. The test patch confirms these exact literals are asserted as expected errors (e.g., `# E: Unsupported signature for "__set__" in "Desc"`), supporting the Unspecified Literal classification.</reason>
+</classification>
+<classification>
+<label>DP</label>
+<reason>The patch implementation in `_infer_dataclass_attr_init_type` explicitly checks `if not isinstance(t, Instance): return default`. Because `Optional` types are represented as `UnionType` in mypy, this logic skips them and returns the default type without inferring from `__set__`. This code directly supports the claim that PR #15006 failed to handle 'Optional' types, requiring a subsequent fix.</reason>
+</classification>

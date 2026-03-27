@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue description is focused on one bug: “Time Series Interpolation is wrong” for `ts1.resample('\''15H'\'').interpolate(method='\''time'\'')`. PR-side text explicitly adds broader work, e.g. commit messages: “fix: Adds test skips for interpolation methods that require scipy if scipy is not installed” and “fix: Makes sure keyword arguments \"downcast\" is not passed to scipy interpolation methods…”, which are not part of the issue baseline. It also includes broader interpolation test-assumption changes (“fixes wrong test case assumption… irregular index/business days”), indicating scope beyond the single resample-time bug.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The patch introduces a new hardcoded runtime literal in `resample.py` via `raise NotImplementedError(\"Direct interpolation of MultiIndex data frames is not supported...\")`. The test patch explicitly asserts this same literal: `pytest.raises(..., match=\"Direct interpolation of MultiIndex data frames is not supported\")` in `test_groupby_resample_interpolate_raises`. This exact string is not specified in the issue description/discussion, so it matches UL criteria.</ul_evidence>
+<suspicious_clues>PR discussion acknowledges additional behavior decisions for MultiIndex/groupby interpolation (raising NotImplementedError and recommending apply syntax), which appears to be a design addition beyond the original issue’s single-series resample interpolation bug.</suspicious_clues>
+</sub_agent_result>

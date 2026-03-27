@@ -1,0 +1,8 @@
+<classification>
+<label>SC</label>
+<reason>The issue is specifically about Cognito Identity `GetId` failing without Authorization, but the patch adds a public-operation bypass list only for `AWSCognitoIdentityProviderService.*` targets in `moto/core/responses.py`. The test changes are exclusively under `tests/test_cognitoidp/test_cognitoidp.py` and validate IDP operations (`GetUser`, `ForgotPassword`, `SignUp`/`ConfirmSignUp`, `InitiateAuth`), not Cognito Identity `GetId`. This code evidence supports the Coordinator’s scope-creep claim that PR #7331 addressed a different service area than issue #7320.</reason>
+</classification>
+<classification>
+<label>DP</label>
+<reason>The PR’s functional change is limited to Cognito IDP public actions and does not include any Cognito Identity `GetId` handling, so it does not resolve the issue’s reported failure path. The test patch similarly confirms only IDP behavior under auth gating, leaving the original Cognito Identity scenario unaddressed. This is consistent with the textual thread evidence that #7331 was incomplete for #7320 and later corrected by a follow-up PR.</reason>
+</classification>

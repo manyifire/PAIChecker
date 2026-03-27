@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description explicitly states "Fixes #5451" (single issue) and describes its scope as adding new flags (`--deps` for `dvc params diff` and `--param-deps` for `dvc exp show/diff`) "in order to show only those parameters that are actually used." All commit messages ("params: introduce include_untracked flag", "experiments: add option to show tracked params", "params: rename tracked to deps") are directly related to this single issue's request to filter untracked params. No additional unrelated functionality is claimed.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The `patch` introduces filtering logic in `read_params_d()` using `dpath.util` operations but no new hardcoded string/numeric literals as fixed runtime constants. Test assertions use values like `{"foo": "qux", "xyz": "val", "abc": "ignore"}` which are defined in the test setup (`tmp_dir.gen()`) as input data, not as constants newly introduced in the production `patch` code. No new error messages or fixed strings are introduced in `patch` and then asserted in `test_patch`.</ul_evidence>
+<suspicious_clues>The PR deletes a test `test_diff_deleted_config` from `tests/func/params/test_diff.py` without obvious explanation in the PR description. Also notable: the PR's solution is opt-in (new flags) rather than changing default behavior, which means the reported bug (untracked params showing by default) is not fully fixed but instead made opt-out - this is a design choice but within the issue's scope of addressing the problem.</suspicious_clues>
+</sub_agent_result>

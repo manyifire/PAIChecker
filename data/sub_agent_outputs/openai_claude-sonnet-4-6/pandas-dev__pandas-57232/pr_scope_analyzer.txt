@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR title and description only reference issue #57224: "REGR: to_json converting nullable ints to floats" and "closes #57224". Commit messages are "REGR: to_json converting nullable ints to floats" and "Add skip" - no other issues referenced. The fix covers both masked (`Int64`) and Arrow-backed (`int64[pyarrow]`) integer types, but the PR text makes no separate scope claim for this; it's an implementation detail within the same regression bug scope.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch asserts `result == '{"a":1,"b":2}\n{"a":null,"b":null}\n'`, but these literal values are not hardcoded constants introduced in the patch itself - they are derived from test input data (`Series([1, NA], ...)`) serialized by the JSON function under test. The patch only adds `_values_for_json()` returning `np.asarray(self, dtype=object)` with no fixed string/number constants. No literals are newly introduced in patch and simultaneously asserted in test_patch as per UL definition.</ul_evidence>
+<suspicious_clues>The test uses `int64[pyarrow]` (Arrow-backed) in addition to `Int64` (masked), while the issue description only mentions `Int64`. The patch modifies both `masked.py` and `arrow/array.py`. This is consistent with fixing the same regression across both nullable integer backends, but the issue report only demonstrates the bug with `Int64`.</suspicious_clues>
+</sub_agent_result>

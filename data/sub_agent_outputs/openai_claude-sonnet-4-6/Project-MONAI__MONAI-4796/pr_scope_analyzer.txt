@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue description requests fixing "The location values of probability mask is not being used correctly" by "Explicit conversion to tuple". The PR description states "Fixes #4795" and "Fix the bug." The PR patch shows only the tuple conversion at line 98: `self.prob_map[name][tuple(loc)] = prob`. The commit "Change from round to floor" has no corresponding code in the patch (likely reverted per "Revert and unintended change" commit), so the PR scope matches the issue baseline exactly.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>N/A. The patch introduces no new hardcoded literals - it only adds `tuple(loc)` wrapper for type conversion. Test_patch contains literals like `[i, i + 1]` and `range(size - 1)`, but these are test setup values, not runtime constants defined in the production patch. The patch merely forwards location data through tuple conversion without introducing fixed literal values.</ul_evidence>
+<suspicious_clues>The commit message "Change from round to floor" suggests additional scope, but no corresponding code appears in the patch. This was likely reverted per the commit "Revert and unintended change", leaving only the tuple conversion fix. The test changes modify the test data pattern from diagonal `[i, i]` to off-diagonal `[i, i + 1]`, which better exercises the indexing bug but is a test design choice rather than a new feature.</suspicious_clues>
+</sub_agent_result>

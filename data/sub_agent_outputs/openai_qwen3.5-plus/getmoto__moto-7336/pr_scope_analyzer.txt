@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue description (#7264) specifically requests fixing the hardcoded default user ARN in STS `get_caller_identity` ("It's hard code. Maybe it's better to use the var in partition" referring to `arn:aws:sts::{self.account_id}:user/moto`). However, the PR description explicitly claims broader scope: "Currently only supports Chinese partitions in ARN's returned by `IAM.assume_user`, `IAM.create_user` and `IAM.get_caller_identity`". This indicates the PR delivers fixes for `IAM.create_user` and `IAM.assume_role` ARNs beyond what the issue description requested.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains literals like "aws", "aws-cn", "us-east-1", "cn-north-1" in parametrized tests. However, these are not newly introduced hardcoded runtime constants in the patch—the patch implements `get_partition_from_region()` which dynamically returns partition based on region name. The ARN strings in tests are dynamically constructed using the `partition` variable from test parameters, not fixed constants introduced by the patch.</ul_evidence>
+<suspicious_clues>The PR description mentions "IAM.assume_user" which appears to be a typo (should be "assume_role"). The scope expansion is related functionality (partition support) rather than completely unrelated features, but still exceeds the issue baseline scope.</suspicious_clues>
+</sub_agent_result>

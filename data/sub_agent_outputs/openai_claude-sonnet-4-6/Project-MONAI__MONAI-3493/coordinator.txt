@@ -1,0 +1,52 @@
+**Coordinator Analysis**
+
+## Step 1: Review Tier 1 Results
+
+I have received findings from three Tier 1 agents:
+- **issue_analyzer**: NO_IS (no issue scope evolution)
+- **pr_scope_analyzer**: SC (scope creep) + UL (undocumented literals)
+- **pr_connection_analyzer**: NO_DP + NO_FP (no defect/follow-up patterns)
+
+## Step 2: Judge Tier 1 Conclusions Against Their Evidence
+
+### issue_analyzer (NO_IS)
+**Evidence Review**: The agent states the baseline issue fully described the resolution-invariance problem, and the discussion only finalized implementation details (the `normalize=True` parameter). This is an API design decision about *how* to solve the problem, not *what* problem to solve.
+
+**Judgment**: The evidence clearly supports NO_IS. There is no sanctioned scope evolution in the issue thread before merge.
+
+### pr_scope_analyzer (SC)
+**Evidence Review**: The agent cites that the issue requested only "scale/resolution-invariant" functionality via a normalize parameter, but the PR description explicitly adds input validation: "Raise error when number of vector components does not match the number of spatial dimensions" and "Add test cases for the new error."
+
+**Judgment**: The evidence directly supports SC. The PR implemented additional validation functionality beyond the issue's stated scope of resolution-invariance.
+
+### pr_scope_analyzer (UL)
+**Evidence Review**: The agent identifies three error message literals introduced in the patch that are not specified in the issue: "Expecting 3-d, 4-d or 5-d pred", "All spatial dimensions must be > 4", and "Number of vector components, {pred.shape[1]}, does not match number of spatial dimensions". These are asserted in test_patch but were not mentioned in the issue.
+
+**Judgment**: The evidence supports UL. These are literal strings introduced by the patch for the new validation feature, tested with specific regex patterns, but not documented in the original issue.
+
+### pr_connection_analyzer (NO_DP, NO_FP)
+**Evidence Review**: The agent reports empty sets for follow-up PRs/issues after merging, and confirms issue #3485 has only one merged PR (#3493).
+
+**Judgment**: Both NO_DP and NO_FP are supported by the evidence.
+
+## Step 3: Gather Final Supported Labels
+
+Based on Tier 1 evidence:
+- **SC**: Supported - PR added input validation beyond issue scope
+- **UL**: Supported - Error message literals not specified in issue
+- **IS**: Not supported - NO_IS confirmed
+- **DP/FP**: Not supported - NO_DP and NO_FP confirmed
+- **Others**: No additional textual misalignment beyond SC/UL
+- **No Misalignment**: Excluded because SC and UL apply
+
+## Step 4: Final Classification
+
+<classification>
+<label>SC</label>
+<reason>The pr_scope_analyzer found explicit textual evidence that the PR description added "Raise error when number of vector components does not match the number of spatial dimensions" functionality, while the issue only requested making BendingEnergyLoss resolution-invariant through a normalize parameter. This input validation represents additional scope beyond the issue's stated requirements.</reason>
+</classification>
+
+<classification>
+<label>UL</label>
+<reason>The pr_scope_analyzer identified three error message literals ("Expecting 3-d, 4-d or 5-d pred", "All spatial dimensions must be > 4", "Number of vector components...does not match") that were introduced in the patch and tested in test_patch but were not specified in the original issue description. These literals are part of the new validation feature not mentioned in the issue.</reason>
+</classification>

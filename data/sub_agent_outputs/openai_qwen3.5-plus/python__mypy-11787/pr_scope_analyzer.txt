@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue description states the problem is "Python 2 future import can leak between modules" with a specific test case showing `from __future__ import division` leaking from m2 to m1. The PR description states "Now `__future__` imports do not leak in `semanal.py`" and "Closes #11740" - this directly addresses the baseline scope. The PR references #11276 and #11741, but these are the original PR that introduced the bug and its revert, not separate distinct issues being fixed. The commit messages focus on the same scope: "Use `__truediv__` for python2 with `__future__` import, refs #11740" and "Add `future_import_flags` property to `MypyFile`" which is the implementation mechanism to fix the leak.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains assertion literals like `Revealed type is "builtins.str"` and `Unsupported operand types for / ("A" and "int")`, but these are mypy's standard output format, not newly introduced constants. These literals exactly match what was specified in the issue description test case: `reveal_type(A() / 'b')  # N: Revealed type is "builtins.str"`. The patch does not introduce new hardcoded string literals - it adds `future_import_flags` property and checks `self.chk.tree.is_future_flag_set('division')` which are implementation mechanisms, not new assertion values.</ul_evidence>
+<suspicious_clues>None</suspicious_clues>
+</sub_agent_result>

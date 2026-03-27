@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description states only "Fixes #3434" and the commit message says "remote: is_dir_checksum: handle empty/None checksum\n\nFixed #3434" — both reference only the single target issue. The PR fixes the exact reported error (`'NoneType' object has no attribute 'endswith'`) by adding a null/empty guard in `is_dir_checksum`, which is precisely the scope requested by the issue. No additional issues or unrelated enhancements are claimed.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The `test_patch` parameterizes `[(None, False), ("", False), ("3456.dir", True), ("3456", False)]`. The `patch` introduces `if not checksum: return False` — a general falsy check, not a hardcoded string constant. Neither `None` nor `""` are fixed runtime constants introduced in patch; they are inputs to a general falsy guard. The `"3456.dir"` literal in tests relies on the pre-existing `CHECKSUM_DIR_SUFFIX` constant (`.dir`), not a new literal defined by the patch.</ul_evidence>
+<suspicious_clues>The empty string `""` case handled by the patch is not explicitly mentioned in the issue (which only references NoneType), but since the patch uses a general `if not checksum` falsy check rather than hardcoding `""` as a constant, this does not qualify as UL under the strict criterion of "newly introduced fixed runtime constant."</suspicious_clues>
+</sub_agent_result>

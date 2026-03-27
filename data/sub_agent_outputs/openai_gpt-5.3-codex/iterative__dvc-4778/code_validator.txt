@@ -1,0 +1,12 @@
+<classification>
+<label>SC</label>
+<reason>The issue report is narrowly about re-adding an already tracked file path from the repo root, but the PR/test changes also enforce new prohibitions for symlinked directories and files within symlinked directories. In `test_patch`, `test_add_symlink_dir` and `test_add_file_in_symlink_dir` newly assert `pytest.raises(DvcException)` for those cases, which is extra behavior beyond the issue’s original symptom. The code patch in `resolve_paths` adds an explicit exception branch for symlinked-dir scenarios, confirming this additional scope is functionally implemented.</reason>
+</classification>
+<classification>
+<label>IS</label>
+<reason>Code-level evidence is consistent with an evolved symlink scope because the modified tests now cover both the original repeat-add case and broader symlink handling constraints. Specifically, `test_add_symlink_file` includes a second `dvc.add(os.path.join("dir", "foo"))` call (explicitly referencing issue 4654) while separate new tests enforce rejection paths for symlinked directories. This alignment supports that the merged behavior tracks discussion-expanded requirements rather than only the initial minimal bug statement.</reason>
+</classification>
+<classification>
+<label>UL</label>
+<reason>The patch introduces a new concrete runtime literal: "Cannot add files inside symlinked directories to DVC. See {} for more information." in `dvc/utils/__init__.py`. While tests assert exception type (`DvcException`) rather than full string matching, they still enforce the newly introduced exception path that is not specified in the issue text. Since this literal behavior is newly defined in code and tied to new tests for that path, UL remains supported.</reason>
+</classification>

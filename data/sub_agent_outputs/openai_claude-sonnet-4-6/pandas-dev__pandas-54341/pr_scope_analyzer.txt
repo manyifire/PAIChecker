@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue_number field contains multiple issue numbers ['52016', '54389'], immediately triggering SC classification. This is confirmed by the PR description which explicitly states "- [x] closes #52016" and "- [x] closes #54389", meaning the PR claims to fix two distinct issues. The target issue (#52016) focuses on `DataFrame.all(axis="columns")` being slow for `bool[pyarrow]`, while the PR expands to cover all axis=1 reductions with EA dtypes more broadly.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch uses hardcoded dtype strings like "int64", "boolean", and "Float64" as expected dtypes, but these are not newly introduced as fixed constants in the patch code itself — they reflect pre-existing return type behavior of methods like `count`, `any`/`all`. The warning message `"The behavior of DataFrame.{method} with all-NA values"` asserted in tests is a pre-existing warning string not introduced by the patch. No new hardcoded literal constants were defined in the patch that are simultaneously asserted in test_patch.</ul_evidence>
+<suspicious_clues>The PR description mentions "cc @rhshadrach - this includes the test you wrote in #51923" suggesting tests from a third issue (#51923) were incorporated. The PR comment also raises whether this might close #28487 and #36123, though the PR author indicated it does not. The patch also modifies `groupby.py` to add special-casing for `SparseArray`, which is tangentially related but represents additional scope beyond the original issue about `bool[pyarrow]` reductions.</suspicious_clues>
+</sub_agent_result>

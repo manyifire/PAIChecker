@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description states "Fixes #6504" and the commit message says "CloudFront - Add default timeouts for CustomOrigins" - both directly address the single issue. The issue description reports a ValueError when botocore tries to parse 'None' as an integer for CloudFront CustomOriginConfig fields. The PR adds default values (5 and 30) for OriginKeepaliveTimeout and OriginReadTimeout to prevent None from being returned, which directly fixes the reported parsing error without claiming additional unrelated scope.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The patch introduces hardcoded default values: `self.keep_alive = config.get("OriginKeepaliveTimeout") or 5` and `self.read_timeout = config.get("OriginReadTimeout") or 30`. The test_patch explicitly asserts these exact literals: `assert custom_config["OriginReadTimeout"] == 30` and `assert custom_config["OriginKeepaliveTimeout"] == 5`. These specific numeric values (5 and 30) are not mentioned anywhere in the issue description, which only describes the ValueError error without specifying what default timeout values should be used.</ul_evidence>
+<suspicious_clues>The test_patch also modifies existing test data values from 5/30 to 10/15 in example_dist_custom_config, and adds assertions for those values in test_create_distribution_custom_config. This suggests the tests are verifying both explicit user-provided values and the new default fallback behavior. The literal values 5, 10, 15, 30 all appear to be implementation-chosen defaults rather than AWS-specified values mentioned in the issue.</suspicious_clues>
+</sub_agent_result>

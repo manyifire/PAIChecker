@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The Issue Description only reports "`AsDiscreted` bug when `threshold=0.0`" as the problem scope. However, the PR Description explicitly claims broader scope: "This PR fixed the None or 0.0 value of to_onehot and threshold at runtime." This claim includes fixing `to_onehot=None`, `threshold=None`, and `to_onehot=0.0` scenarios that were never mentioned in the issue description. The commit message "[DLMED] fix None value" further confirms the PR addresses None-related fixes beyond the original threshold=0.0 bug report.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains literals like `threshold: 0.0`, `threshold: [0.0, None]`, and expected output arrays. However, `threshold=0.0` is explicitly specified in the Issue Description ("`AsDiscreted` bug when `threshold=0.0`"), so it is not an unspecified literal. The patch does not introduce any new hardcoded string literals or magic numbers—it only changes logic from `threshold or self.threshold` to `self.threshold if threshold is None else threshold`. No UL pattern detected.</ul_evidence>
+<suspicious_clues>The PR title says "3387 Fix 0.0 or None value" which hints at broader scope than the issue description's single `threshold=0.0` bug. The scope creep is subtle because fixing the underlying `or` operator bug naturally affects both `to_onehot` and `threshold` parameters, but the PR text explicitly claims this expanded scope.</suspicious_clues>
+</sub_agent_result>

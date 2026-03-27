@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue description asks to fix a single bug: “describe produces a TypeError exception when one of the columns is using a Int64 dtype,” and expects “Describe for single row dataframes shall not fail.” The PR text stays on that scope, with title “REGR: describe raising when result contains NA,” checklist item “closes #48778,” and rationale “otherwise we either end up with object or with these TypeErrors as soon as a NA is introduced.” There is no PR-side claim of fixing additional distinct issues or unrelated functionality.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The patch introduces a new fixed literal implementation choice for runtime dtype: `dtype = pd.Float64Dtype()` (and `np.dtype("float")` for non-EA). The test patch explicitly asserts this literal via `dtype="Float64"` in expected DataFrame/Series construction (e.g., `expected = DataFrame(..., dtype="Float64")` and conditional expected dtype `dtype = "Float64"`). The exact literal `Float64` is not stated in the issue baseline/discussion text, so this is UL under the stated rule.</ul_evidence>
+<suspicious_clues>The issue discussion mentions bisect to #48501, but PR text does not claim to fix #48501 directly; it only closes #48778. Tests broaden to `any_numeric_ea_dtype`, but this appears as generalized coverage of the same NA/describe regression rather than explicit scope expansion in PR text.</suspicious_clues>
+</sub_agent_result>

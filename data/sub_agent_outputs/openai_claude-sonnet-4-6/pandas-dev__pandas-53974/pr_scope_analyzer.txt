@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description states "closes #53425" exclusively, and the commit messages say "DEPR: Replacing builtin and NumPy funcs in agg/apply/transform" — directly matching the issue's request to deprecate special casing of NumPy and Python builtin functions. No other issues are referenced, and no unrelated functionality is claimed in the PR text.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The `patch` introduces a new `warn_alias_replacement` function in `apply.py` that constructs the warning message: `f"The provided callable {func} is currently using {full_alias}. In a future version of pandas, the provided callable will be used directly. To keep current behavior pass {alias} instead."` The `test_patch` then explicitly asserts these newly-introduced literals via patterns like `match="using SeriesGroupBy.mean"`, `match="using DataFrameGroupBy.sum"`, and `match="is currently using Series.*"`. These specific message formats (e.g., `"using SeriesGroupBy.mean"`) are new runtime constants introduced in patch and asserted in test_patch, but are not specified in the issue description.</ul_evidence>
+<suspicious_clues>The test_patch uses regex matching patterns (not exact string equality) against warning messages, but the core warning message template is entirely new and not discussed in the issue. The issue only discusses the behavioral change (deprecation), not what the warning text should say.</suspicious_clues>
+</sub_agent_result>

@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue baseline asks to fix Bazel static lib ordering for multi-lib packages (openssl) and proposes `alwayslink = True`, while also noting alternative ideas like `visibility` as potentially separate. PR-side text initially says “Add alwayslink attribute... Fixes #11559,” but later commit text explicitly pivots to “Remove always link in favor of do not sort,” which directly matches issue-discussion clarification that `# do not sort` prevents buildifier from reordering deps. The final delivered change (adding `# do not sort` in deps generation and tests) remains within the same ordering/usability bug scope rather than adding an unrelated second feature/issue.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The patch newly introduces the literal comment `# do not sort` in generated output (`deps = [ ... ]`). The test patch then explicitly asserts that same literal, e.g. `assert """deps = [\n        # do not sort\n    \n    ":lib1_precompiled",""" in dependency_content` and regex `r'deps =\s*\[\s*# do not sort\s*":lib1_precompiled", ...'`. This exact literal is not present in the issue description baseline text, so it is an unspecified literal introduced in patch and asserted in tests.</ul_evidence>
+<suspicious_clues>The PR description/first commit says “Fixes #11559” while the provided instance is tied to #11560, indicating possible issue-number mismatch in metadata lineage, though scope content still aligns to the same Bazel ordering problem.</suspicious_clues>
+</sub_agent_result>

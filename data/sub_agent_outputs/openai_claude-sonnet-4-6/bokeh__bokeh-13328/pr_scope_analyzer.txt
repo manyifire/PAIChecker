@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description explicitly states "fixes #13210" — only the single target issue. The PR title "Serialise objects supporting __array__" and the commit message "Serialise objects supporting __array__" both align with the issue's request to fix `SerializationError: can't serialize <class 'polars.series.series.Series'>`. No additional issues or unrelated functionality are claimed in any PR text.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The patch introduces no hardcoded literal constants — it only adds `if hasattr(obj, "__array__") and isinstance(arr := obj.__array__(), np.ndarray): return self._encode_ndarray(arr)`, which is a pure forwarding mechanism with no fixed strings or numbers. The literals in test_patch (`"uint32"`, `[[0, 1, 2], [3, 4, 5]]`, `[2, 3]`) are defined in the test's own `CustomArray` setup, not introduced as fixed constants by the production patch, matching the counter-example pattern of test-defined values rather than patch-introduced literals.</ul_evidence>
+<suspicious_clues>The issue discussion explicitly suggested a "__array__" catch-all approach ("anything that can be 'turned into a list'" and the mention of "binary protocols"), so the PR's `__array__` implementation is squarely within the discussed solution space, even though the issue title only mentions polars.Series. No anomalies detected.</suspicious_clues>
+</sub_agent_result>

@@ -1,0 +1,8 @@
+<classification>
+<label>IS</label>
+<reason>The code confirms scope evolution beyond a simple error message: the `chunks_from_arrays` shape fix (`return x.shape if x.shape else (1,)`) enables scalar returns to be treated as valid 1-element arrays, and the `enforce_ndim` parameter with `apply_and_enforce` function provides an opt-in enforcement mechanism. The test for `ndim=1` explicitly verifies that `out.compute()` "should not raise an exception," confirming the shift from "just show a better error" to "actually support scalar returns."</reason>
+</classification>
+<classification>
+<label>UL</label>
+<reason>The patch newly introduces the specific error message literal `"Dimension mismatch: expected output of {func} to have dims = {expected_ndim}.  Got {out_ndim} instead."` in the `apply_and_enforce` function in `core.py`. The test patch asserts `match="Dimension mismatch:"` in both `test_chunk_shape_broadcast` and `test_chunk_non_array_like`, confirming this is a new literal asserted in tests. This specific wording was not present in the codebase before this PR.</reason>
+</classification>

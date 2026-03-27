@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue description baseline is narrowly: “Request AWS::EMR::Cluster resource to be added to cloudformation.” In contrast, the PR explicitly states “PR Title: CloudFormation: Support AWS::EMR::InstanceGroupConfig.” and commit message repeats “CloudFormation: Support AWS::EMR::InstanceGroupConfig,” which is a different CloudFormation resource than the baseline request, indicating added scope beyond the original issue description.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>Tests assert literals such as “cfnTask2”, “ON_DEMAND”, and “m4.large”, but these are provided as template inputs in test data, not fixed constants newly defined by production patch behavior. In patch, the key new fixed literal is the type mapping return “AWS::EMR::InstanceGroupConfig” (`cloudformation_type()`), and tests do not assert that exact literal directly; therefore the required patch+test same-literal condition is not met.</ul_evidence>
+<suspicious_clues>PR says “Fixes #7381” even though #7381 baseline is EMR::Cluster, while this PR targets EMR::InstanceGroupConfig; this suggests issue linkage drift. Issue discussion later mentions InstanceGroupConfig as a new request, but per scope-first rule that does not expand the original baseline scope for SC judgment.</suspicious_clues>
+</sub_agent_result>

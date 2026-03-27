@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue description requests fixing "Authorization may not be included in some Cognito operations. Not including Authorization results in an error when Access control is enabled." The PR description states "Fixes #7320" with title "CognitoIDP: Allow public actions even if IAM auth is enabled." The PR only claims to address the single issue #7320, with no explicit mentions of additional issues, unrelated enhancements, or cross-issue references. The implementation allows public Cognito operations to work without authorization, directly addressing the baseline scope.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The patch introduces operation name literals in `PUBLIC_OPERATIONS = ["AWSCognitoIdentityProviderService.ConfirmSignUp", ...]`, but these literals are not explicitly asserted in test_patch. The tests use decorators like `@set_initial_no_auth_action_count(0)` to verify behavioral outcomes (operations succeed without auth) rather than asserting the literal operation name strings themselves. The only assertion in new tests is `assert err["Code"] == "ResourceNotFoundException"` which tests AWS error behavior, not a patch-introduced literal.</ul_evidence>
+<suspicious_clues>The issue title mentions "GetId on Cognito Identity" but the implementation focuses on CognitoIDP operations (ConfirmSignUp, GetUser, ForgotPassword, InitiateAuth, SignUp). However, this appears to be a clarification during implementation rather than scope creep, as the issue description and stack trace clearly indicate the CognitoIDP context.</suspicious_clues>
+</sub_agent_result>

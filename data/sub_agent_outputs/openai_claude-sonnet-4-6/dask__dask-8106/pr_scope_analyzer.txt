@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue description specifically reports a `TypeError` in `asanyarray` when using `dtype` keyword, but the PR title states "Add dtype and order to asarray and asanyarray definitions" — explicitly extending the fix to `asarray` as well. Additionally, a commit message says "Docstrings and forward kwargs to xarray as well," and a review comment confirms this is extra: "I realize it predates this PR, but should we be forwarding `like`, `dtype`, etc. keywords for the case when the input `a` is from `xarray`?" — indicating that xarray kwarg forwarding is an unrelated enhancement added beyond the issue scope.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch uses only `assert_eq(func(1, dtype=float, like=da.array((1))), func(1, dtype=float))` — no new hardcoded string literals or fixed constants are introduced in the patch and then asserted in tests. The patch only modifies function signatures to accept `dtype` and `order` parameters and passes them through to numpy calls; no new literal runtime constants are introduced in the patch itself.</ul_evidence>
+<suspicious_clues>The PR also modifies `asarray` (not just `asanyarray` as reported in the issue), and adds xarray kwarg forwarding via the commit "Docstrings and forward kwargs to xarray as well." The review comment explicitly flags the xarray change as predating the PR, suggesting it was bundled in opportunistically. The test for `test_like_with_numpy_func` (testing without dtype) also includes `np.array` in addition to `np.asarray`/`np.asanyarray`, though this is a minor detail.</suspicious_clues>
+</sub_agent_result>

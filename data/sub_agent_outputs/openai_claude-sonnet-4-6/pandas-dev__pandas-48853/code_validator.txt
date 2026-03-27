@@ -1,0 +1,8 @@
+<classification>
+<label>IS</label>
+<reason>The test_patch adds `test_loc_rhs_empty_warning` in `test_indexing.py` which specifically tests setting values on a truly empty DataFrame (`DataFrame(columns=["a", "b"])` with no rows), tagged with `# GH48480`. This new test targets the empty DataFrame edge case that was added to the issue scope during discussion, confirming the IS claim that issue scope expanded beyond the original non-empty DataFrame with None values scenario.</reason>
+</classification>
+<classification>
+<label>FP</label>
+<reason>The patch in `indexing.py` adds a real functional fix (`and not len(new_values) == 0`), while `test_loc.py` modifies an existing test `test_loc_setitem_consistency_empty` to change from expecting `FutureWarning` to expecting no warning at all. This strongly implies a prior PR had set up tests accepting/expecting the warning behavior without fixing the root cause, and this PR (with the actual code change in `_setitem_single_column`) is the true functional follow-up fix for the same issue #48480.</reason>
+</classification>

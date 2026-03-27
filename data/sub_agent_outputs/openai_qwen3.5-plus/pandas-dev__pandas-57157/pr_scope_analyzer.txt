@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description explicitly states "closes #57125" and the title is "BUG: Fix to_dict with datelike types and orient=list." which directly matches the issue baseline scope about "df.to_dict produces int instead of timestamp". The commit message "BUG: Fix to_dict with datelike types and orient=list" confirms the same scope. The reviewer comment mentioning issue #57063 is just an observation about similar problems elsewhere, not a claim that this PR fixes that issue.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains pandas type constructors like `Timestamp(2020, 1, 1)`, `Timedelta(1)`, `Period("2020")`, `Interval(1, 2)` which are standard pandas objects, not new hardcoded string/number literals introduced by the patch. The patch itself does not introduce any new fixed string literals - it only modifies the `to_dict` implementation to use `maybe_box_native` mapping. No literal values are newly defined as runtime constants in the patch and then asserted in tests.</sc_evidence>
+<suspicious_clues>The whatsnew file entry references issue #54824 ("Fixed regression in :meth:`DataFrame.to_dict` with ``orient='list'`` and datetime or timedelta types returning integers (:issue:`54824`)") while the PR description claims to close #57125. This appears to be a documentation reference discrepancy rather than actual scope creep, as both issues relate to the same `to_dict` datelike types bug. The test_patch expands coverage to include Period and Interval types beyond just Timestamp/Timedelta, but these are all datelike types within the same functional scope.</suspicious_clues>
+</sub_agent_result>

@@ -1,0 +1,12 @@
+<classification>
+<label>SC</label>
+<reason>The patch confirms scope creep: `dynunet_block.py`, `dynunet.py` are modified to support flexible norm kwargs (not mentioned in the issue about SegResNet), and `segresnet.py` gains a new `act` parameter replacing the hardcoded RELU. These changes go beyond the issue's stated request for `**kwargs` support in SegResNet's normalization layers.</reason>
+</classification>
+<classification>
+<label>UL</label>
+<reason>The new `get_norm_layer` in `monai/networks/blocks/utils.py` uses `Norm[norm_name, spatial_dims]` without validation, causing a `KeyError` for invalid norm names (replacing the old explicit `ValueError` checks in both `dynunet_block.py` and `segresnet_block.py`). Test patches in both `test_dynunet_block.py` and `test_segresnet_block.py` assert `KeyError` for invalid norm names - this specific exception type is newly introduced and not mentioned in the issue.</reason>
+</classification>
+<classification>
+<label>DP</label>
+<reason>The PR creates `monai/networks/blocks/utils.py` as a new utility file, which the Coordinator identifies as an incomplete placement that PR #2199 followed up by relocating to `monai/networks/layers/utils.py`. The code placing shared utilities in the `blocks/` subdirectory (rather than a proper `layers/` API location) is consistent with an incomplete PR requiring a follow-up supplement.</reason>
+</classification>

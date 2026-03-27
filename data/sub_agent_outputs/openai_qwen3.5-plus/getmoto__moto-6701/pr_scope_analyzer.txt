@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description states "Fixes #6689" and the commit message says "IOT: group names can now contain special characters" - both directly align with the issue description scope about "iot: actions where ids are sent in the body won't work when they have URL reserved characters". The issue discussion suggested using `unquote` on URL-extracted values, and the PR implements exactly this approach without claiming additional unrelated fixes or multiple issue closures.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch uses literals like "my-group:name-1a" and "my-group:name" as test input values for thing group names, not as hardcoded assertion outputs. The patch only introduces `unquote(self.path.split("/thing-groups/")[-1])` which is a transformation function, not a new fixed runtime constant. These test literals are example test data matching the issue's pattern (e.g., issue uses "test:group"), not newly defined constants asserted in tests.</sc_evidence>
+<suspicious_clues>The test_patch changes multiple test cases to use colons in group names (e.g., "my-group:name" instead of "my-group-name"), but these are input test data values to verify the fix works, not hardcoded expected output literals. The implementation approach in the PR follows the maintainer's suggestion from the issue discussion about using `unquote(self.uri.split("/")[-1])` pattern.</suspicious_clues>
+</sub_agent_result>

@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue baseline is one consistency bug: “These need to be consistent,” between us-west-1 AZ names used in zone definitions and instance-type offerings. The PR text stays on that same scope: “Fixes #5494” and “The availability zones that we expose are `us-west-1a` and `us-west-1b`... ensure that the instance types... also use `a` and `b`.” “Reverts #5513” is framed as undoing a prior approach for the same bug, not adding a distinct second issue scope.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The patch introduces fixed literals in runtime behavior, e.g. `kwargs.get("region_name", "us-east-1")`, `self._placement.zone = ec2_backend.region_name + "a"`, and explicit remaps `"us-west-1b" -> "us-west-1a"` / `"us-west-1c" -> "us-west-1b"` in the script. The test patch asserts concrete literals such as `AvailabilityZones=["us-west-1a"]` and `assert details["AvailabilityZones"] == ["us-west-1a", "us-west-1b"]`. These exact asserted literals are not explicitly specified in the issue text, so UL applies.</ul_evidence>
+<suspicious_clues>The `instances.py` changes (default region literal and default zone construction) seem broader than the issue narrative and are not explicitly discussed in PR text; notable anomaly but not sufficient alone for SC under the text-first rule.</suspicious_clues>
+</sub_agent_result>

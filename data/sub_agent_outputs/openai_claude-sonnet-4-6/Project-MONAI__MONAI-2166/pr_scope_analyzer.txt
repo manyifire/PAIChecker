@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue (#2164) only mentions `SegResNet` needing `**kwargs` support for normalization layers. The PR description explicitly states "Enhance norm and act layers for segresnet and dynunet," extending scope to `DynUNet` as well. Additionally, the PR introduces `act` layer enhancement (new `act` parameter for SegResNet replacing implicit RELU) beyond the issue's sole focus on `norm`/kwargs for normalization layers.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>In `patch`, the new `get_norm_layer` in `utils.py` uses `Norm[norm_name, spatial_dims]` which raises a `KeyError` for invalid norm names (replacing the old explicit `ValueError` check). In `test_patch`, this is asserted as `with self.assertRaises(KeyError)` in both `test_dynunet_block.py` and `test_segresnet_block.py`. The specific exception type `KeyError` (as opposed to `ValueError`) is newly introduced in patch and asserted in test_patch, but is not mentioned anywhere in the issue description or discussion.</ul_evidence>
+<suspicious_clues>The PR also changes the default value of `norm_name` for `DynUNet` from `"instance"` to `("INSTANCE", {"affine": True})`, which is a behavioral change (adding `affine=True`) not requested by the issue. The test_patch uses `("batch", {"track_running_stats": False})` while the issue example uses `track_running_stats=True` — same key but opposite value, confirming the test literal is not exactly specified in the issue.</suspicious_clues>
+</sub_agent_result>

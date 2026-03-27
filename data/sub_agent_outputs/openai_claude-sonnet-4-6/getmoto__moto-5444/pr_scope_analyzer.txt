@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description states "Fixes #5359" and the commit message is "Kinesis:create_stream() now supports stream-mode=OnDemand", which directly matches the issue description requesting "Support Kinesis on-demand mode" by allowing "StreamModeDetails={"StreamMode": "ON_DEMAND"}". There is no explicit claim in PR text to fix multiple issues or add unrelated functionality beyond the requested on-demand mode support.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The patch introduces a new error message in exceptions.py: `message = f"Request is invalid. Stream {stream_name} under account {account_id} is in On-Demand mode."` and the test_patch asserts this exact literal: `err["Message"].should.equal(f"Request is invalid. Stream my_stream under account {ACCOUNT_ID} is in On-Demand mode.")`. Additionally, the patch hardcodes `shard_count = 4` for on-demand mode, and the test asserts `shard_list.should.have.length_of(4)`. Neither the specific error message format, the number 4, nor the validation behavior for update_shard_count are specified in the issue description.</ul_evidence>
+<suspicious_clues>The implementation includes validation logic for update_shard_count() that prevents updates in on-demand mode, which is AWS-compliant behavior but not explicitly requested in the issue. This is a natural implementation detail rather than scope creep, but the specific error message and default shard count are implementation choices not specified in requirements.</suspicious_clues>
+</sub_agent_result>

@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description states "Bugfix: Use 'android-<level>' format for the ANDROID_PLATFORM argument to be compatible with old NDK versions" and "Closes: https://github.com/conan-io/conan/issues/11798" — a single issue closure. Commit messages reference only the NDK format fix ("Old NDK versions only support 'android-<level>' format") with no additional issues or unrelated functionality mentioned.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The patch introduces the new fixed string constant `'android-' + str(self._conanfile.settings.os.api_level)` — specifically the `'android-'` prefix is a newly hardcoded literal in patch. The test_patch asserts `"set(ANDROID_PLATFORM android-23)"` using this new constant combined with test api_level=23. The issue describes the error "Invalid Android platform: 21" and mentions needing the "android-<level>" format, but does not specify the exact string "android-23" (different api_level, no exact string match), so this assertion literal is not explicitly in the issue text.</ul_evidence>
+<suspicious_clues>The test also newly asserts "set(ANDROID_ABI x86_64)" and "include(/foo/build/cmake/android.toolchain.cmake)" — these check pre-existing behavior not changed by the patch, suggesting the reviewer added broader verification beyond just the fix. The api_level used in the test (23) differs from the issue's example (21), making an exact match impossible by design.</suspicious_clues>
+</sub_agent_result>

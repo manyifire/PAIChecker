@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description explicitly states "closes #51922" and only that single issue. The commit message is "BUG: info raising when use_numba is set", directly matching the issue. The PR comment mentions "xref #44952" but does not claim to fix that issue, only noting a related discussion.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>N/A. The test_patch uses `assert result == expected` where both values are runtime-generated (calling `df.info()` with and without `use_numba`), with no hardcoded literal string assertions. The patch only adds `.astype(np.intp)` without introducing any new fixed-string constants.</ul_evidence>
+<suspicious_clues>The test in test_patch has a bug: `buf = StringIO()` is created but `df.info()` is called without `buf` as the argument, so `buf.getvalue()` would be empty string in both cases, making the test trivially pass without actually verifying anything meaningful. This is a test correctness issue but not an SC or UL concern.</suspicious_clues>
+</sub_agent_result>

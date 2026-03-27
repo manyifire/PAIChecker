@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue description clearly states the problem: "freq 'm' (as alias of deprecated 'M') raises an error" - a regression fix. The PR description title matches exactly: "REGR: freq 'm' (as alias of deprecated 'M') raises an error" and closes only #56847. The commit message "dont raise if users use (undocumented) 'm' for 'month end', warn to use 'ME' instead" aligns with the issue scope. No additional issues or unrelated functionality are claimed in PR text.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch asserts the warning message "'m' is deprecated and will be removed in a future version, please use 'ME' instead." However, the patch does not introduce this as a new hardcoded literal - it uses `c_OFFSET_DEPR_FREQSTR.get(name.upper())` to retrieve the value from an existing dictionary. Per UL rules, "Literals from function names/docstrings/object metadata surfaced by forwarding logic are NOT 'new literals introduced by patch'". The warning message is propagated from pre-existing configuration, not newly defined as a fixed runtime constant in the patch.</sc_evidence>
+<suspicious_clues>The issue discussion mentions "better to give a good message" which could be interpreted as requesting specific warning text, but no exact message string was specified in the issue. The PR implements a FutureWarning with specific text that matches the test assertion, but this text comes from existing `c_OFFSET_DEPR_FREQSTR` mapping rather than being newly hardcoded in the patch.</suspicious_clues>
+</sub_agent_result>

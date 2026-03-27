@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>Issue description states "CI: pyarrow 11 broke ci" with "4 tests" failing and pyarrow pinned to "< 11". PR description explicitly states "Unpins pyarrow and fixes `test_from_sequence_of_strings_pa_array` which was xfailed for pyarrow duration types." The PR scope (unpinning pyarrow and fixing the duration type test) directly aligns with the issue baseline (CI broken by pyarrow 11). Commit messages like "unpin pyarrow, fix failing test" and "handle NaT/NaN" are implementation details within the same scope, not unrelated enhancements.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains literals like `"1000"`, `"NaT"`, and `pa.array([1000, None], type=pa_type)` in `test_duration_from_strings_with_nat`. However, these are test input data values, not new hardcoded runtime constants introduced by the patch. The patch code does not define any new literal strings or numbers as fixed constants—it only contains logic to handle duration type casting. The "NaT" string is standard pandas terminology for missing temporal values, not a newly introduced literal.</sc_evidence>
+<suspicious_clues>The issue description mentions "4 tests" failing but the PR description only explicitly names fixing `test_from_sequence_of_strings_pa_array`. However, this is not SC because the other tests may have been fixed by simply unpinning pyarrow (no code change needed). The patch includes a comment referencing "GH51175" which differs from the issue number 51146, but this appears to be an internal tracking reference, not evidence of cross-issue work.</suspicious_clues>
+</sub_agent_result>

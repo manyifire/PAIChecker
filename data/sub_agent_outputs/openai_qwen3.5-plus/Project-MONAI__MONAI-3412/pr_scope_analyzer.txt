@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue description reports a PersistentDataset RuntimeError bug. The PR description states "This PR added support to set other pickle related args for `torch.save`, especially for big cache content as user requested in #3402" - this is framed as the fix approach for the reported issue, not an unrelated enhancement. The PR only references issue #3402, commit messages show "[DLMED] add support for other pickle" aligned with the single issue, and there is no explicit textual evidence of fixing multiple distinct issues or unrelated functionality beyond the target issue scope.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch uses `pickle.HIGHEST_PROTOCOL` which is a pre-existing Python standard library constant, not a newly introduced hardcoded literal in the patch. The patch only forwards this constant as a parameter (`pickle_protocol=pickle.DEFAULT_PROTOCOL` in init, then passed to `torch.save`). Per UL rules, literals from existing modules/constants that are forwarded/exposed are NOT counted as UL. The `rtol=1e-3` change in test_scale_intensity_range_percentiles.py is a test tolerance adjustment without corresponding production code literal introduction.</ul_evidence>
+<suspicious_clues>The test_patch includes an unrelated `rtol` tolerance change (1e-4 to 1e-3) in test_scale_intensity_range_percentiles.py that is not mentioned in PR description and has no corresponding production code change. However, this is a test-only modification without supporting patch changes, which per SC rules does NOT count as scope creep evidence.</suspicious_clues>
+</sub_agent_result>

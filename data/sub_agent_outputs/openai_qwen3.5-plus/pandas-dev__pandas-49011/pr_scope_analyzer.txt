@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The PR explicitly claims to fix an additional issue beyond the baseline scope. A reviewer asked "Does this fix the defaultdict mutation issue? #47527" and the PR author confirmed "Yes, these changes does fix the defaultdict mutation issue." The commit messages include 'code review: added testcase for defaultdict mutation'. However, the Issue Description for #48813 only requests fixing the NaN mapping behavior ("the first case to output... c"), not the mutation issue. The mutation issue (#47527) is a distinct problem referenced in PR comments but not in the issue baseline.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>All literals in test_patch are specified in the Issue Description. The test uses literals like "missing", "a", "b", "c", 1, 2, 3 which all appear in the issue's Reproducible Example section (e.g., `defaultdict(lambda: "missing", {1:'a', 2:'b', np.nan: 'c'})`). The patch does not introduce new hardcoded runtime constants - it only adds NaN normalization logic (`np.nan if isinstance(x, float) and np.isnan(x) else x`). No new literals are asserted that weren't already specified in the issue.</sc_evidence>
+<suspicious_clues>The mutation fix (#47527) appears to be a side-effect of fixing the NaN mapping issue rather than truly unrelated work, since the mutation occurs because NaN keys aren't properly matched. However, the PR text explicitly claims to fix this separate issue number, which technically meets SC criteria. The test_patch modifies an existing test's expected value from `[10, 0, 0]` to `[10, 42, 0]` to reflect the corrected NaN handling behavior.</suspicious_clues>
+</sub_agent_result>

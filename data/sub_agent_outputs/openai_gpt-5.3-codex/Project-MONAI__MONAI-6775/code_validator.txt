@@ -1,0 +1,8 @@
+<classification>
+<label>IS</label>
+<reason>The issue text reports that with `batch=True` class weighting effectively cancels out unless values are aggregated before division, and the patch implements exactly that by summing weighted intersection/denominator before dividing (`(intersection * w).sum(...)` and `(denominator * w).sum(...)`). The code also switches reduction behavior via `final_reduce_dim = 0 if self.batch else 1`, which is consistent with the evolved requirement that batch mode produce aggregated output rather than per-class channels. The updated test expectations include a shape change from multi-channel outputs to single aggregated values in relevant cases, confirming the discussion-aligned scope evolution is reflected in behavior.</reason>
+</classification>
+<classification>
+<label>UL</label>
+<reason>The test patch replaces multiple expected constants with newly asserted literals such as `0.469964`, `0.414507`, `0.829015`, `0.250023`, and `-0.097833`, plus a reshaped expected tensor with new values. These exact numeric targets are not present in the issue description, which describes formula/aggregation semantics but not concrete output numbers. Since the patch changes computation and the tests lock in new precise numerics not issue-specified, the Coordinator’s UL label is supported.</reason>
+</classification>

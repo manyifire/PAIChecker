@@ -1,0 +1,12 @@
+<classification>
+<label>IS</label>
+<reason>The test_patch modifies `test_show_filter` to assert `f"{div} params.yaml:{i} {div}"` and `f"{div} metrics.yaml:{i} {div}"` instead of plain `{i}`, directly reflecting the evolved scope of handling duplicate column names (one metric and one param both named `foo`). The patch implements this via a new `_normalize_headers` with a shared counter across metrics and params, confirming the code handles the maintainer-clarified edge case.</reason>
+</classification>
+<classification>
+<label>SC</label>
+<reason>The patch adds a complete `--show-csv` feature (new CLI argument, ISO timestamp formatting, CSV rendering path via `show_csv=True`, empty fill_value for CSV) AND fixes duplicate column header disambiguation via a refactored `_normalize_headers` — two unrelated concerns in one PR. The test_patch confirms this dual scope by adding both `test_show_csv` (new feature) and modifying `test_show_filter` (bug fix for duplicate names).</reason>
+</classification>
+<classification>
+<label>UL</label>
+<reason>The patch introduces `datetime_obj.isoformat()` in `_format_time` and the `f"{path}:{name}"` column header format in `_normalize_headers`, both newly introduced. The test_patch asserts exact literals like `"metrics.yaml:foo,params.yaml:foo"` and `"2021-08-02T16:48:14"` which are derived from these new implementation choices, not from any issue description specification of these formats.</reason>
+</classification>

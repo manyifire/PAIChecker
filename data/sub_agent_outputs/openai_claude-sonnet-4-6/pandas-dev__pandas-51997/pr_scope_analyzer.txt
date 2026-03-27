@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue numbers include both #51045 and #51254, and the PR title explicitly states "DEPR: DFGB.dtypes, rolling axis, Categorical.to_list" — covering multiple separate deprecations. The PR description shows it "closes #51045" but also contains substantial changes for rolling/expanding/ewm axis deprecations (issue #51778) unrelated to GroupBy.dtypes. The commit message "DEPR: DFGB.dtypes, rolling axis, Categorical.to_list" confirms the PR explicitly claims scope beyond the single GroupBy.dtypes issue.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>In `patch` (groupby/generic.py), a new warning message is introduced: `f"{type(self).__name__}.dtypes is deprecated and will be removed in a future version. Check the dtypes on the base object instead"`. In `test_patch` (test_allowlist.py), the assertion `msg = "DataFrameGroupBy.dtypes is deprecated"` matches against this newly introduced literal. Neither this exact string nor the rolling/expanding/ewm warning strings like "Support for axis=1 in DataFrame.rolling is deprecated" appear anywhere in the issue description or discussion.</ul_evidence>
+<suspicious_clues>The PR initially included Categorical.to_list deprecation but reverted it (as shown by strikethrough in PR description and revert commit). The whatsnew entry has duplicate/overlapping entries for rolling axis deprecation. The test_patch also changes `.all().bool()` to `.all().all()` — a non-scope-creep bug fix unrelated to deprecations.</suspicious_clues>
+</sub_agent_result>

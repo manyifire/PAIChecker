@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description states "closes #47844" only, and the single commit message is "DEPR: Series.astype(np.datetime64)". The PR implements a deprecation warning for unit-less datetime64 in Series.astype(), which directly addresses the single issue's request. No additional issues are referenced or unrelated functionality added.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The `patch` introduces a new hardcoded warning literal: `"Passing unit-less datetime64 dtype to .astype is deprecated and will raise in a future version. Pass 'datetime64[ns]' instead"`. The `test_patch` asserts this exact message via `msg = "Passing unit-less datetime64 dtype to .astype is deprecated and "` with `tm.assert_produces_warning(FutureWarning, match=msg)`. This exact string does not appear in the issue description or discussion, which only says to "document" or "deprecate" without specifying any message text.</ul_evidence>
+<suspicious_clues>The patch also modifies `pandas/core/indexes/base.py` to raise a TypeError for DatetimeIndex.astype with unitless dtype, which is a slightly different code path than what the issue specifically reports (Series.astype). However, this is within the same logical scope of fixing the unitless datetime64 astype behavior.</suspicious_clues>
+</sub_agent_result>

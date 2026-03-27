@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue requests that `create_vpc_endpoint` use a default policy document if none is specified. The PR description explicitly matches this baseline scope exactly, stating "EC2: create_vpc_endpoint() should use default policy doc if not provided" and does not claim any additional bugfixes or enhancements. The patch and tests are entirely focused on implementing this specific fallback behavior.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The `patch` introduces a new fixed dictionary literal `DEFAULT_POLICY = {"Version": "2008-10-17", "Statement ": [{"Effect": "Allow", "Principal": "*", "Action": "*", "Resource": "*"}]}` in runtime code, which the `test_patch` explicitly asserts using `json.loads(vpc_end_point["PolicyDocument"]).should.equal(default_policy)`. This exact literal is not specified in the issue description (which only abstractly requests a "default policy that allows full access") and differs from the partial JSON snippet given in the issue discussion.</ul_evidence>
+<suspicious_clues>The dictionary literal introduced in the patch and asserted in the test has a highly noticeable typo in its key: `"Statement "` (with a trailing space), which deviates from the standard AWS IAM policy syntax (`"Statement"`). This suggests either a faithful replication of a quirk/bug in AWS's API output or an accidental typo by the PR author.</suspicious_clues>
+</sub_agent_result>

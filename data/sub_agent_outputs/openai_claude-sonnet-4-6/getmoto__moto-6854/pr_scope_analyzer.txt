@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR explicitly claims only one scope: "IAM: list_groups() now returns the CreateDate-attribute" (PR title) and "Fixes #6843" (PR description). The issue description requests exactly this: "IAM list_groups method didn't return 'CreateDate' field" and identifies the missing field in the response template. There is no textual evidence in PR descriptions, comments, or commit messages claiming additional functionality beyond fixing list_groups CreateDate.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>N/A. The patch adds `<CreateDate>{{ group.created_iso_8601 }}</CreateDate>` which references an existing model attribute without introducing new hardcoded literal constants. The test_patch asserts presence of CreateDate with `assert all([g["CreateDate"] for g in groups])` but does not assert any specific literal value. No literal is both newly introduced in patch and explicitly asserted in test_patch.</ul_evidence>
+<suspicious_clues>The test_patch modifies test_list_roles() to add assertions for CreateDate and MaxSessionDuration on roles (not groups), which appears functionally unrelated to the list_groups issue. However, since there is no textual claim in PR-side text about fixing roles, this constitutes test improvement rather than scope creep per the evidence-requirement rules.</suspicious_clues>
+</sub_agent_result>

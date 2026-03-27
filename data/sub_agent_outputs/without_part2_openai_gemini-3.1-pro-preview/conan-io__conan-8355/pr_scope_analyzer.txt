@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description and commit messages ("Fix SCM by making user and password url-encoded", "Fix ssh test cases", "test git scheme") focus entirely on fixing the URL encoding for SCM credentials and updating related tests. There are no explicit textual claims in the PR of addressing multiple distinct issues or adding unrelated functionality beyond the requested scope of fixing SCM password encoding.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The PR introduces new warning message literals in the `patch` that are not specified in the issue, such as `"Password in URL cannot be set for 'ssh' SCM type, removing it"`. This exact literal is then explicitly asserted in `test_patch` via `self.assertIn("WARN: Password in URL cannot be set for 'ssh' SCM type, removing it", output.out)`.</ul_evidence>
+<suspicious_clues>The PR actually changes functional behavior by actively stripping passwords from `ssh://` and `git://` URLs, which wasn't requested in the issue. However, since the PR text only mentions fixing tests ("Fix ssh test cases") and does not explicitly claim this behavioral change as an added enhancement or bugfix, it does not trigger SC under the strict text-primary rule. Also, new test credential literals (`"el niño"`, `"la contra%seña"`) are introduced in tests but do not trigger UL as they aren't defined in the production patch.</suspicious_clues>
+</sub_agent_result>

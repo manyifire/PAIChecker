@@ -1,0 +1,8 @@
+<classification>
+<label>SC</label>
+<reason>The PR makes distinct changes addressing different issues: `selfattention.py` switches from `einops.rearrange()` to the torchscript-compatible `Rearrange` nn.Module layer, while `vit.py` fixes a separate torchscript incompatibility by replacing `if self.classification:` attribute checks with `hasattr()` calls, and `patchembedding.py` adds an `int()` cast for torchscript compatibility. These are separate bug fixes for distinct issues (#3422 and #3432), confirming that a single PR addresses multiple independent issues.</reason>
+</classification>
+<classification>
+<label>IS</label>
+<reason>The code change in `selfattention.py` specifically switches from calling `einops.rearrange()` as a function to using `Rearrange` as an nn.Module (from `einops.layers.torch`), which is the Einops v0.4.0 torchscript-compatible approach — precisely reflecting the evolved issue requirement to keep einops but use v0.4.0's torchscript support rather than removing einops entirely. The test_patch's `test_script` method validates `torch.jit.script(net)`, directly testing the evolved scope (torchscript compatibility with einops retained), which was not the original issue's implied fix direction of removing einops.</reason>
+</classification>

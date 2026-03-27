@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue description (#52404) specifically focuses on `pd.DataFrame({}).columns` returning wrong index type, with no mention of Series. However, the PR title explicitly states "API: Series/DataFrame from empty dict should have RangeIndex" and the commit message repeats "API: Series/DataFrame from empty dict should have RangeIndex". The whatsnew entry also documents both: "- :class:`DataFrame` created from empty dicts..." AND "- :class:`Series` created from empty dicts...". This is explicit textual evidence that the PR claims to fix Series behavior beyond the issue-description scope which only requested DataFrame column fix.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains literals like `RangeIndex(0)` and `Index([("a",)], tupleize_cols=False)` which are standard pandas constructor calls, not newly introduced hardcoded constants. The patch uses `default_index(0)` which is a function call, not a literal string/number. No new error messages or fixed runtime constants are introduced in the patch that are asserted in tests.</sc_evidence>
+<suspicious_clues>The PR expanded scope from DataFrame-only (issue description) to Series+DataFrame (PR title/commits). The issue discussion mentions DataFrame axes behavior but never explicitly requests Series fixes. Test changes in json/parquet tests appear to be consequential fixes due to the RangeIndex change, not independent scope additions.</suspicious_clues>
+</sub_agent_result>

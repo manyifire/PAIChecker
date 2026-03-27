@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue requests that Cognito operations (specifically `GetId`) be allowed when Access Control is enabled, noting that "Authorization may not be included in some Cognito operations". The PR claims to fix this issue (stating "Fixes #7320" in its description) by explicitly allowing public actions for Cognito Identity Provider without IAM authorization. Although the PR mistakenly fixed `CognitoIDP` operations instead of the specific `CognitoIdentity` `GetId` operation requested in the title (which was later addressed in a follow-up PR), it aims at the core described bug and does not explicitly claim any additional unrelated scope.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test patch asserts literals such as `"ResourceNotFoundException"` and `"CONFIRMED"`, but these are not newly introduced or defined as fixed runtime constants in the patch. The patch only introduces operation name strings in `PUBLIC_OPERATIONS` (e.g., `"AWSCognitoIdentityProviderService.ConfirmSignUp"`), which are not explicitly asserted as literals in the test patch.</ul_evidence>
+<suspicious_clues>The PR author misunderstood the issue scope initially and fixed `CognitoIdentityProvider` operations instead of `CognitoIdentity` operations like `GetId`, missing the specific target highlighted in the issue title. However, because the PR was aimed at the stated problem ("some Cognito operations") and did not add unrelated features, it does not constitute Scope Creep.</suspicious_clues>
+</sub_agent_result>

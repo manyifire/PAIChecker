@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue_number field contains multiple issues ['6423', '6476', '6484'], immediately triggering SC. The PR description explicitly states "Fixes #6476, fixes #6423 and closes #6484," and the commit message mirrors this: "Fixes #6476, fixes #6423 and closes #6484." This confirms the PR addresses multiple distinct issues beyond any single baseline scope.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The `patch` introduces no new hardcoded literal runtime constants; it rolls back monkeypatching via variable reference (`c_make_encoder = encoder.c_make_encoder`) and simplifies `merge_params`. Test literals like `{"foo": "foo"}`, `"foo.bar"`, and `"baz"` appear only as test setup/input values, not as fixed constants newly introduced in production code. Therefore, no literal satisfies the condition of being newly defined in `patch` AND explicitly asserted in `test_patch`.</ul_evidence>
+<suspicious_clues>The test_patch adds `assert encoder.c_make_encoder` in multiple test functions, directly verifying the monkeypatch rollback behavior. It also adds a new parametrize case `[{"foo.bar": "baz"}, {"foo": {"bar": "baz"}}]` to `test_merge_params_on_empty_src`, which tests keypath syntax support - this appears to be a regression test for issue #6476 (empty params bug) bundled with the monkeypatching fix for #6423.</suspicious_clues>
+</sub_agent_result>

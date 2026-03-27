@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue description explicitly requests "DynamoDB BatchGetItem should return UnprocessedKeys when response exceeds 16MB" and states the expected behavior is returning "a partial result, with any unprocessed keys being returned under a separate key in the response." The PR description claims "DynamoDB: batch_get_item() now only returns up to 16MB of data" and "Closes #5081" - this directly matches the issue scope. The PR mentions moving tests and adding one new test (`test_batch_items_should_return_16mb_max`), which is test organization and validation for the requested feature, not additional unrelated scope.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The patch introduces `16 * 1024 * 1024` as the size limit constant, but this literal is explicitly specified in the issue description which quotes AWS documentation: "A single operation can retrieve up to 16 MB of data". The test_patch contains literals like `75`, `55`, `20` for test assertions, but these are test setup parameters derived from the test's own data generation (items with `"x" * 300000` size), not new hardcoded runtime constants introduced in the patch. The patch contains no new string literals that are asserted in tests.</sc_evidence>
+<suspicious_clues>None. The PR scope aligns precisely with the issue description - implementing the 16MB limit for BatchGetItem with UnprocessedKeys support. Test reorganization is a refactoring activity, not scope creep.</suspicious_clues>
+</sub_agent_result>

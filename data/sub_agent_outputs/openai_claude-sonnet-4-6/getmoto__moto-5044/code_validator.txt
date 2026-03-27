@@ -1,0 +1,8 @@
+<classification>
+<label>SC</label>
+<reason>The test_patch adds `test_launch_config_with_block_device_mappings__volumes_are_created` in `test_launch_configurations.py`, testing AutoScaling LaunchConfiguration with block device mappings via an ASG — entirely outside the issue's scope of `run_instances` with LaunchTemplate. The patch also modifies `moto/autoscaling/models.py` and `moto/autoscaling/responses.py` to fix LaunchConfiguration block device mapping parsing (key format changes from snake_case to PascalCase), confirming this is additional out-of-scope work in both code and tests.</reason>
+</classification>
+<classification>
+<label>DP</label>
+<reason>The code in `add_instances` shows that when `block_device_mappings` is present (from launch_template or launch_config), it processes those mappings and then falls through to the `else: new_instance.setup_defaults()` branch only when there are no mappings — meaning custom mappings replace defaults rather than being added alongside them. This is consistent with the textual claim that PR #5050 was needed to fix exactly this behavior where "user-defined mappings replaces the default device."</reason>
+</classification>

@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue description reports a specific bug where time series interpolation yields all zeros or NaNs when resampling to unaligned frequencies. However, the PR expands its scope to address a separate issue with `MultiIndex` interpolation, explicitly stating in its commit messages: "feat: Raise error on attempt to interpolate a MultiIndex data frame, providing a useful error message". This constitutes an unrelated enhancement beyond the requested scope.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The PR introduces a new hardcoded error message string in `pandas/core/resample.py` starting with `"Direct interpolation of MultiIndex data frames is not supported"`. This exact literal is explicitly asserted in `pandas/tests/resample/test_time_grouper.py` using `match="Direct interpolation of MultiIndex data frames is not supported"`, but it was never specified in the issue description.</ul_evidence>
+<suspicious_clues>The PR modifies multiple existing test cases (e.g., `test_interp_basic_with_non_range_index`, `test_nan_irregular_index`) claiming their previous mathematical expectations were fundamentally flawed ("wrong test case assumption"). The PR review reveals that the `MultiIndex` `NotImplementedError` was added because developers realized `MultiIndex` interpolation was already fundamentally broken (GH 35325), prompting them to add a dedicated exception.</suspicious_clues>
+</sub_agent_result>

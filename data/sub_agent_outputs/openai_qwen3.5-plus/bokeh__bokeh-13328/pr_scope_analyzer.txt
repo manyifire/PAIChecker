@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue description reports "Unable to plot a polars.Series with bokeh 3" with error "SerializationError: can't serialize <class 'polars.series.series.Series'>". The PR description states "fixes #13210" and the commit message says "Serialise objects supporting __array__". The issue discussion explicitly suggested a broader approach: "Offhand, I think it would be OK to have a catch-all codepath for anything that can be 'turned into a list'" and the contributor asked "Any objections if I have a stab at implementing this bit?" which was approved. The PR's __array__ protocol implementation aligns with this discussed approach rather than adding unrelated scope.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains literals like "uint32", "ndarray", "bytes", and shape [2, 3] which are standard numpy/serialization type descriptors used to verify the serialization output format. These are not newly introduced hardcoded runtime constants in the patch—the patch only adds `if hasattr(obj, "__array__") and isinstance(arr := obj.__array__(), np.ndarray): return self._encode_ndarray(arr)` which forwards to existing encoding logic. The literals in tests are standard type metadata, not unspecified literal implementations.</ul_evidence>
+<suspicious_clues>None</suspicious_clues>
+</sub_agent_result>

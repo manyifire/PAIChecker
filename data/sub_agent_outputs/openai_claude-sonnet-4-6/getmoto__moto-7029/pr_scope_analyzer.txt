@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description states "Fixes #7027" and covers exactly the requested functionality: "Adds support for tagging Tasks using the `tag_resource`/`untag_resource`/`list_tags_for_resource` trinity. Fixes a bug where `describe_tasks` would actually delete the tags if called without the `include`-parameter." The issue explicitly reports all three methods (`run_task`, `describe_tasks`, `list_tags_for_resource`) not handling tags correctly, so the PR scope aligns with the single issue. Only one issue number is referenced in the PR.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The `test_patch` uses hardcoded literals like `{"key": "k1", "value": "v1"}` and `{"key": "k2", "value": "v2"}`, but these are test-only input values that are passed through the system as variable data, not introduced as fixed constants in the production `patch`. The `patch` modifies only logic (tag inclusion/exclusion in responses, `_get_resource` support for task ARNs) without introducing any hardcoded string literals. Therefore no literal appears as a newly introduced fixed runtime constant in `patch` that is then asserted in `test_patch`.</ul_evidence>
+<suspicious_clues>The PR adds `tag_resource`/`untag_resource` support that wasn't explicitly mentioned in the issue (which only mentioned `run_task`, `describe_tasks`, and `list_tags_for_resource`), but this is a natural part of implementing full tagging support and is framed as a single cohesive fix. The test file `test_ecs_task_tags.py` is new and replaces/extends the deleted `test_describe_tasks_include_tags` test from `test_ecs_boto3.py`.</suspicious_clues>
+</sub_agent_result>

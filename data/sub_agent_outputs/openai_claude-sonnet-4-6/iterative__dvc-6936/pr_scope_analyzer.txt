@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR explicitly states "Fixes #6935" and its title "webhdfs: expose kerberos and https options" directly matches the issue's request to "Allow passing fsspec options to WebHDFS to enable Kerberos and https." The removal of old hdfscli options was also explicitly mentioned in the issue as "an opportunity to remove the no longer used hdfscli options." No unrelated functionality or additional issue closures are claimed in the PR text.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>In `patch`, a new hardcoded dict structure `config["kerb_kwargs"] = {"principal": principal}` is introduced with the literal key `"principal"`. In `test_patch`, this is asserted as `assert fs.fs_args["kerb_kwargs"] == {"principal": kerberos_principal}`. The issue description only mentions enabling "Kerberos" generally and links to fsspec docs, but does not specify the exact `kerb_kwargs` dict key `"principal"` as a fixed literal string — this is a newly introduced runtime constant in patch that is explicitly asserted in test_patch without appearing in the issue text.</ul_evidence>
+<suspicious_clues>The PR also renames `webhdfs_token` to `token` (noted in PR description: "I have renamed `webhdfs_token` to `token`") which is a breaking change for existing users. This renaming was not explicitly requested in the issue, but it is a minor convention alignment rather than unrelated functionality. The PR reviewer later questioned whether `requests-kerberos` should be added as a dependency, suggesting some scope boundary discussion around the dependency addition.</suspicious_clues>
+</sub_agent_result>

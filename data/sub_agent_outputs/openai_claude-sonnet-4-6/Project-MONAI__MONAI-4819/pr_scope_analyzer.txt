@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description explicitly states "Fixes #2948" and "adds API to prune metadata keys when loading," which directly addresses the issue's request to handle heterogeneous DICOM metadata keys. All commit messages ("prune metadata keys," "adds tests," "update based on comments") relate solely to this feature. No other issues are mentioned or fixed.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch uses literals like "glmax" (prune_meta_pattern) and "qform_code" (asserted absent) in test_load_image.py, and ".*_code$"/"qform_code" in test_load_imaged.py. However, these strings are not introduced as hardcoded runtime constants in the patch; rather, the patch adds a parameterized API (`prune_meta_pattern`, `prune_meta_sep`) that accepts user-supplied regex values. The test literals are inputs to this API (or pre-existing metadata keys in test files), not new fixed constants defined in production code.</ul_evidence>
+<suspicious_clues>The patch also includes a minor bug fix to `DeleteItemsd._delete_item` (changing `k` to `f"{k}"` for string conversion in regex matching), which is a supporting implementation fix for the new feature rather than an unrelated scope addition. The `prune_meta_sep="%"` in test_load_image.py uses "%" as separator, which ensures "glmax" won't appear as a sub-key - this is a clever test design but doesn't constitute a new literal introduced by patch.</suspicious_clues>
+</sub_agent_result>

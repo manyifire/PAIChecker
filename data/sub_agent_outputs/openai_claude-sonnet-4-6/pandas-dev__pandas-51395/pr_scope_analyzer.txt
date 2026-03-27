@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR closes only issue #51203 as stated in PR description "closes #51203". The PR title "DEPR: DataFrame.groupby(axis=1)" matches exactly the issue title. The additional `Grouper` constructor deprecation (mentioned in whatsnew: "Deprecated axis=1 in DataFrame.groupby and in Grouper constructor") is logically connected to the same deprecation effort and no separate issue numbers are referenced.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The `patch` introduces specific warning messages: `"DataFrame.groupby with axis=1 is deprecated. Do `frame.T.groupby(...)` without axis instead."` and `"Grouper axis keyword is deprecated and will be removed in a future version. To group on axis=1, use obj.T.groupby(...) instead"`. The `test_patch` explicitly asserts these exact strings via `tm.assert_produces_warning(FutureWarning, match=msg)` with `msg = "DataFrame.groupby with axis=1 is deprecated"` and `msg = "Grouper axis keyword is deprecated and will be removed"`. These exact literal strings are not specified anywhere in the issue description, which only states "DEPR: DataFrame.groupby(axis=1)".</ul_evidence>
+<suspicious_clues>The Grouper constructor deprecation is added alongside the DataFrame.groupby deprecation; while related, it wasn't explicitly mentioned in the issue. The PR also modifies internal usage in resample.py and pivot.py to avoid the deprecated API, which is standard cleanup for deprecation PRs.</suspicious_clues>
+</sub_agent_result>

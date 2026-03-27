@@ -1,0 +1,12 @@
+<classification>
+<label>IS</label>
+<reason>The test patch adds `pa.large_string()` as a new test case with `str` as the expected type, directly corresponding to the `NotImplementedError: large_string` bug. The `dtype.py` patch adds `or pa.types.is_large_string(pa_type)` to the condition, confirming the issue scope evolved through maintainer-requested traceback to reveal this specific error path.</reason>
+</classification>
+<classification>
+<label>SC</label>
+<reason>The patch adds handling for `is_dictionary`, `is_list`/`is_large_list`, and `is_map` types in `dtype.py`, while the original issue only reported `NotImplementedError: large_string`. The test patch confirms this extra scope with parametrized test cases for `pa.list_()`, `pa.large_list()`, `pa.map_()`, and `pa.dictionary()` — none of which appear in the original issue.</reason>
+</classification>
+<classification>
+<label>UL</label>
+<reason>The patch newly introduces `CategoricalDtypeType`, `list`, and `dict` as return values for dictionary, list/large_list, and map pyarrow types respectively. The test patch explicitly asserts these as expected values (`pa.list_(pa.int64()) → list`, `pa.map_(...) → dict`, `pa.dictionary(...) → CategoricalDtypeType`), confirming these are unilateral implementation decisions with no specification in the issue discussion.</reason>
+</classification>

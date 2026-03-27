@@ -1,0 +1,8 @@
+<classification>
+<label>IS</label>
+<reason>Kept. The issue text explicitly requires AWS-like behavior: when `PolicyDocument` is not specified, attach a default full-access policy; the patch implements exactly that fallback via `self.policy_document = policy_document or json.dumps(VPCEndPoint.DEFAULT_POLICY)` in `moto/ec2/models/vpcs.py`. The new test `test_create_vpc_endpoint__policy` in `tests/test_ec2/test_vpcs.py` confirms both discussion-consistent paths (default when omitted, pass-through when provided), so code evidence supports the Coordinator’s scope-evolution alignment rather than contradicting it.</reason>
+</classification>
+<classification>
+<label>UL</label>
+<reason>Kept. The issue description states only the general requirement (“attach a default policy that allows full access”) and does not specify exact JSON literals such as `"Version": "2008-10-17"` or the exact key/value structure. The patch introduces those concrete literals in `DEFAULT_POLICY` and the test asserts strict equality against the same exact object (`json.loads(...).should.equal(default_policy)`), which is consistent with UL as stricter literalization beyond explicit issue wording.</reason>
+</classification>

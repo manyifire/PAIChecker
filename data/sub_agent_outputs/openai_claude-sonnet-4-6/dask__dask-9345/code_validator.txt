@@ -1,0 +1,8 @@
+<classification>
+<label>IS</label>
+<reason>The patch adds `if not collections: return expr, ()` which directly implements the evolved requirement that dataclasses with no embedded dask collections should succeed (be treated as opaque values). The test_patch confirms this by adding `test_delayed_with_dataclass_with_eager_custom_init` and `test_delayed_with_eager_dataclass_with_set_init_false_field` which test that non-delayed dataclasses with custom `__init__` or `init=False` fields successfully compute, covering requirements not present in the baseline issue.</reason>
+</classification>
+<classification>
+<label>UL</label>
+<reason>The patch newly introduces two error message literals ("Note that using a custom __init__ is not supported." and "Note that using fields with `init=False` are not supported.") that are not pre-existing code. The test_patch explicitly asserts these literals via `e.match(r"custom __init__ is not supported")` and `e.match(r"\`init=False\` are not supported")`, satisfying the UL requirement that the literal is both newly introduced in `patch` AND asserted in `test_patch`. The `init=False` field case represents an additional scenario beyond what the issue discussion specified.</reason>
+</classification>

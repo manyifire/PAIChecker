@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue baseline is a single bug: “PkgConfigDeps: -F &lt;frameworkdir&gt; on macOS leads to clang: error...”. On the PR side, the description explicitly says: “Fixes #11867 and probably #12106”, which is a direct multi-issue closure claim beyond the single target issue scope. This satisfies SC condition 3.1 (explicit multiple issue coverage in PR text).</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The patch introduces a new fixed literal formatting in runtime flags: `return ["-F\"%s\"" % ...]` (replacing `"-F %s"`). The test patch explicitly asserts the same literal form, e.g., `assert '\''-F/my/framework/file1'\'' in client.out` and many unit expectations like `'\''-F\"/root/Frameworks\"'\''`. This exact quoted `-F\"...\"` literal is not specified in the issue text/discussion, so it matches UL.</ul_evidence>
+<suspicious_clues>The functional test assertion `-F/my/framework/file1` appears inconsistent with the introduced quoted format `-F\"...\"`, suggesting potential normalization/output-format mismatch in test expectations versus raw flag construction.</suspicious_clues>
+</sub_agent_result>

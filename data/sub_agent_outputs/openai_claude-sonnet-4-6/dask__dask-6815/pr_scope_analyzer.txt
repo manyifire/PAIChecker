@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description explicitly states "Closes #6792" and describes itself as "Follow up to #6715 - Originally intended to avoid graph materialization for 'flat' blockwise operations, but now attempts *all* Blockwise layers." This directly matches the issue's request to "expand" `get_output_keys` to "avoid full graph materialization for more-complex (array-based) layers." The PR explicitly excludes serialization work ("I won't include any attempts at serialization here"), keeping the scope focused on the single issue.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch uses `select = (1, 1)` and asserts `out_keys == {(layer.output, *select)}`, but this literal is defined only in the test as an input selection, not introduced as a fixed runtime constant in `patch`. The `patch` only introduces general coordinate-mapping logic without hardcoding specific block coordinate values. No literal satisfies both conditions of being newly introduced in `patch` as a fixed constant AND asserted in `test_patch`.</ul_evidence>
+<suspicious_clues>The PR removed `BasicLayer` usage and `key_deps`/`non_blockwise_keys` tracking from `make_blockwise_graph`, which represents a refactoring beyond just adding `get_output_keys`. However, this is within the same functional scope (avoiding graph materialization during culling) and there is no explicit PR text claiming a separate unrelated fix, so it doesn't constitute SC.</suspicious_clues>
+</sub_agent_result>

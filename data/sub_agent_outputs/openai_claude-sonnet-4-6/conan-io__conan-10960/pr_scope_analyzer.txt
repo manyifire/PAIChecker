@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue reports that "version is not set correctly when using layout" in the JSON generator, and the PR description states "Bugfix: The `json` generator was showing 'None' in the `version` field of the dependencies when the `layout()` method was used." The PR explicitly closes only #10956 with no additional issues referenced. Commit messages ('json_generator with layout() method accesing dependency version field' and 'small fix') confirm single-issue scope.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test asserts `self.assertEqual(data["dependencies"][0]["version"], "0.1")`, where "0.1" comes from the pre-existing test setup `"Hello/0.1@lasote/testing"`. The patch introduces `res["version"] = self.conanfile.dependencies.get(depname).ref.version` which dynamically fetches the version from the ref object — no new hardcoded runtime constant is introduced in patch. The `description = "foo"` is set in test setup but asserted as `assertIsNone`, not as "foo", so no UL there either.</ul_evidence>
+<suspicious_clues>The test also adds `description = "foo"` to the conanfile and removes assertions `self.assertEqual(deps_info_debug["version"], None)` and `self.assertEqual(deps_info_release["version"], None)`, reflecting that the bug is now fixed. The issue mentioned description might also be affected, but the PR explicitly chose not to fix description (as noted in the discussion: "description is not available anymore at this point"), which is consistent with the PR's limited scope.</suspicious_clues>
+</sub_agent_result>

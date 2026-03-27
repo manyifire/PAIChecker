@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The PR description explicitly states "Fixes #6032" and "Fixes #6050" - closing two distinct issues. The PR also claims "EC2: describe_security_group_rules() now provides the correct value for the IsEgress-parameter" which is a second fix beyond the issue description that only covers the "Type Error when using revoke_security_group_egress" due to IpProtocol not being supported. This matches the SC pattern of multi-issue closure and additional unrelated enhancement beyond the baseline issue scope.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains assertions like `ingress[0]["IsEgress"] is False` and `len(remaining_rules) == 0`, but these are standard boolean/count assertions, not newly introduced hardcoded literal strings. The patch implements `is_egress` as a parameter passed through the code path, not a new hardcoded runtime constant. The IsEgress behavior is explicitly requested in the PR description ("describe_security_group_rules() now provides the correct value for the IsEgress-parameter"), so these test values are specified, not unspecified literals.</ul_evidence>
+<suspicious_clues>The issue_number field contains ['6032', '6050'] indicating this PR targets multiple issues from the start. The PR description confirms both issues are being fixed together, which is a clear SC indicator per the workflow rule "If issue_number contains multiple issue numbers → immediately classify as SC."</suspicious_clues>
+</sub_agent_result>

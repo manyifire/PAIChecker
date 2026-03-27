@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue description only requests support for `ListSecrets` key filters for `primary-region` and `owning-service`. However, the PR description explicitly claims additional features: "New Methods: SecretsManager: remove_regions_from_replication() SecretsManager: replicate_secret_to_regions()" and support for `AddReplicaRegions` and `ForceOverwriteReplicaSecret` in `create_secret()`, showing it implements full replica secrets support beyond the requested filter scope.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The patch introduces new hardcoded error messages, such as `"Operation not permitted on a replica secret. Call must be made in primary secret's region."` and `"Replication failed: Secret name simple already exists in region {backend.region_name}."`. These are explicitly asserted in `test_patch` (e.g., matching the literal string) but were never specified in the issue description.</ul_evidence>
+<suspicious_clues>The error message `"Replication failed: Secret name simple already exists in region {backend.region_name}."` hardcodes the word "simple", which is likely a copy-paste error from another test case where the secret's name was "simple", while the test using it creates a secret named "dup".</suspicious_clues>
+</sub_agent_result>

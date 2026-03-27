@@ -1,0 +1,16 @@
+<classification>
+<label>IS</label>
+<reason>The test patch introduces `test_diag_2d_array_creation` parametrized with `k in [0, 3, -3, 8]`, testing the 1D-vector-to-2D-array direction with non-zero k values. The patch code confirms this with new `elif k > 0: return pad(diag(v), [[0, k], [k, 0]], mode="constant")` and `elif k < 0:` branches — new functionality covering the expanded issue scope of constructing 2D arrays from vectors with k!=0.</reason>
+</classification>
+<classification>
+<label>SC</label>
+<reason>The `diagonal()` function is completely rewritten with a new chunk-following algorithm that only processes chunks containing the k-diagonal (O(N)) instead of the old approach iterating over all chunk combinations using `reduce(getitem,...)` (O(N²)). This performance optimization to `da.diagonal()` goes significantly beyond the issue's request to add `k` parameter support to `da.diag`.</reason>
+</classification>
+<classification>
+<label>UL</label>
+<reason>The patch newly introduces `raise TypeError(f"v must be a dask array or numpy array, got {type(v)}")` at the top of `diag()` as early input validation, and the test explicitly asserts `pytest.raises(TypeError, match="v must be a dask array or numpy array")` in the new `test_diag_bad_input` function. This is a newly introduced literal tested in the patch, absent from the original issue discussion.</reason>
+</classification>
+<classification>
+<label>FP</label>
+<reason>The code changes add `k` parameter support to `da.diag()` (changing signature from `diag(v)` to `diag(v, k=0)`), consistent with being a follow-up to a prior partial implementation that didn't include this parameter. The complete implementation of k-support confirms this is a follow-up PR completing what an earlier PR started for the same issue.</reason>
+</classification>

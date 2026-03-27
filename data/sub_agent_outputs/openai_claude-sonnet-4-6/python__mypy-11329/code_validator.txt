@@ -1,0 +1,8 @@
+<classification>
+<label>IS</label>
+<reason>The test_patch explicitly adds `testCmdlineMultipleExclude` (testing `--exclude abc --exclude b/`) and `testCmdlineCfgMultipleExclude` (testing multiline config format), which represent a specific interface design choice. The patch itself implements `action="append"` for `--exclude` (enabling multiple flags) and newline-splitting in config_parser.py - these specific design decisions go beyond the baseline exclude feature and reflect requirements that were finalized through discussion rather than stated in the original issue.</reason>
+</classification>
+<classification>
+<label>DP</label>
+<reason>The patch changes `config_parser.py` to split the `exclude` config value by newlines (`lambda s: [p.strip() for p in s.split('\n') if p.strip()]`), which changes how existing config files with single-line exclude patterns (previously treated as one regex) are parsed. This implementation could cause regression issues for users with existing `|`-joined patterns in their config files, which is consistent with the claim that PR #11881 was needed to revert this behavior and fix regressions #11830 and #11825.</reason>
+</classification>

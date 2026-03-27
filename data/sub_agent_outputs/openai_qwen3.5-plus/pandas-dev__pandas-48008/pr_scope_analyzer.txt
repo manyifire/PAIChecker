@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description explicitly states "BUG: Fixed ignoring of nanoseconds when adding to series #47856" which directly matches the issue baseline "BUG: The `nanoseconds` in pd.DateOffset was ignored when add to pd.Series". The PR comment mentions "While working on this, I also fixed a couple typos I noticed along the way" but typo fixes are non-functional changes that do not count as SC per the rules. All commit messages reference only issue #47856 with no additional issues mentioned.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains literals like `nanoseconds=18`, `nanoseconds=3`, and Timestamp strings like "2022-01-01 00:07:00.000000018" for test assertions. However, the patch does not introduce these as new hardcoded runtime constants - it uses `getattr(self, "nanoseconds", 0)` to dynamically access the nanoseconds attribute. The literal values in tests are test input parameters, not newly introduced fixed constants in the production code patch.</sc_evidence>
+<suspicious_clues>The PR comment mentions fixing "a couple typos" which is visible in the patch as comment formatting changes in offsets.pyx (adding commas in comments). This is correctly classified as non-functional and does not constitute SC. The test function name has a typo "test_dataoffset_add_sub_timestamp_with_nano" (dataoffset vs dateoffset) that was not corrected, but this is unrelated to the analysis.</suspicious_clues>
+</sub_agent_result>

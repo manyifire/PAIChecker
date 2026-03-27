@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue describes exactly one bug: CDS stream broken when `rollover > len(col)` causing mismatched column lengths. The PR description states "fixes #13314" and "If `rollover >= len(L)`, there's no need to delete items from `L`" — directly addressing the single reported issue. No other issues are referenced, and no unrelated functionality is mentioned in PR text or commit messages.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The patch only adds a guard condition `if rollover is not None and len(L) > rollover:` with no hardcoded literal constants introduced as fixed runtime values. Test literals like `rollover=5`, `[10, 20, 30]`, and `[40]` are defined entirely within the test setup code, not introduced by the patch as fixed runtime constants. Since the patch introduces no new literals that are also asserted in test_patch, UL does not apply.</ul_evidence>
+<suspicious_clues>No significant anomalies detected. The fix is minimal and precisely targeted. The issue discussion mentions a prior PR (#13239) that fixed `rollover=0` but broke `rollover > len(col)`, and the current PR only addresses the latter case as requested. Both test cases (list and numpy array) are natural extensions of existing test patterns already present in the file for the `rollover=0` case.</suspicious_clues>
+</sub_agent_result>

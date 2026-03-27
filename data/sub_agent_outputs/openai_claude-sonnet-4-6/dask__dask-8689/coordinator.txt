@@ -1,0 +1,46 @@
+I'll systematically evaluate each Tier 1 agent's conclusion against their submitted evidence.
+
+**Step 1 & 2: Review and Judge Each Agent's Conclusion**
+
+**issue_analyzer → IS**
+Evidence: A commenter in the issue discussion explicitly introduced a new failing case (vector-to-2D-array direction with `k!=0`), distinct from the baseline issue (2D-array-to-diagonal extraction). This is a clear, textually documented scope expansion within the issue discussion prior to merge. The evidence directly supports `IS`.
+
+**pr_scope_analyzer → SC**
+Evidence: The PR title says "increased performance of k-diagonal extraction in da.diag() and da.diagonal()" and the PR description explicitly describes an algorithmic complexity improvement to `da.diagonal()` (O(M N_axis1 N_axis2) → O(M max(1, N_k))). The issue (#2726) only requested adding `k` support to `da.diag`. The commit messages confirm "reduced complexity of `diagonal()` from O(N**2) to O(N)". This is clearly extra scope beyond what the issue requested. The evidence supports `SC`.
+
+**pr_scope_analyzer → UL**
+Evidence: The patch introduces a specific error message `"v must be a dask array or numpy array, got {type(v)}"` and the test asserts this exact text. This literal string is not found in the issue description or discussion — the issue only mentions `TypeError: diag() got an unexpected keyword argument 'k'`. However, I need to consider whether this is truly a misalignment or just an implementation detail. The error message is for a *different* input-validation path (wrong type for `v`), not the `k` parameter issue. This is a new behavior introduced without issue specification. The evidence supports `UL`.
+
+**pr_connection_analyzer → FP**
+Evidence: PR #4431 was previously merged for issue #2726 on 2019-02-19, and PR #8689 explicitly states "Closes #2726" while being a later, higher-numbered PR. The issue remained open after #4431's merge, confirming #4431 was a partial implementation. PR #8689 is thus a follow-up PR for the same issue — this is the textbook definition of FP (Follow-up PR). The evidence directly supports `FP`.
+
+**pr_connection_analyzer → NO_DP**
+Evidence: No post-merge PRs correcting #8689 were found. This is supported and `DP` is correctly excluded.
+
+**Step 3: Gather Final Labels**
+
+- `IS`: Supported — issue discussion explicitly extended scope to vector-to-2D-array direction.
+- `SC`: Supported — PR adds performance optimization to `da.diagonal()` beyond issue scope.
+- `UL`: Supported — new error message literal introduced without issue specification.
+- `FP`: Supported — prior merged PR #4431 exists for the same issue, making #8689 a follow-up PR.
+- `DP`: Not supported — excluded.
+
+<classification>
+<label>IS</label>
+<reason>The issue_analyzer found that the original issue (#2726) only described failure when extracting a diagonal from a 2D array using `k`, but a commenter in the discussion explicitly introduced a new, distinct failing direction: constructing a 2D array from a vector with `k!=0` (i.e., `da.diag(v, k=1)`). This textually documented scope evolution within the issue discussion before merge qualifies as a sanctioned Issue Scope expansion.</reason>
+</classification>
+
+<classification>
+<label>SC</label>
+<reason>The pr_scope_analyzer found that the PR title and description explicitly describe a performance optimization to `da.diagonal()` — reducing algorithmic complexity from O(M N_axis1 N_axis2) to O(M max(1, N_k)) — which goes beyond what issue #2726 requested (only adding `k` parameter support to `da.diag`). Commit messages confirm "reduced complexity of `diagonal()` from O(N**2) to O(N)", establishing extra unrelated functional scope not sanctioned by the issue.</reason>
+</classification>
+
+<classification>
+<label>UL</label>
+<reason>The pr_scope_analyzer found that the patch introduces a specific new error message literal — `"v must be a dask array or numpy array, got {type(v)}"` — for a type-validation path, and the test explicitly asserts this exact string. This literal is entirely absent from the issue description and discussion, which only mention `TypeError: diag() got an unexpected keyword argument 'k'`, making it an unspecified literal introduced without issue backing.</reason>
+</classification>
+
+<classification>
+<label>FP</label>
+<reason>The pr_connection_analyzer found that PR #4431 ("np.diagonal implementation") was previously merged on 2019-02-19 for the same issue #2726, yet the issue remained open, indicating only a partial implementation. PR #8689 then explicitly states "Closes #2726" in its description, confirming it is a later follow-up PR completing what #4431 started — a classic Follow-up PR relationship for the same issue chain.</reason>
+</classification>

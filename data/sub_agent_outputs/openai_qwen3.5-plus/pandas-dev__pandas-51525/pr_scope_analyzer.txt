@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue description (#47305) specifically reports a flaky ImportError with "undefined symbol: pandas_datetime_to_datetimestruct" related to datetime functions. However, the PR description explicitly states "Ok I implemented the parser capsule" in comments and the PR patch creates both `pandas._libs.pandas_datetime` AND `pandas._libs.pandas_parser` extensions. The PR description also mentions "This also should help @jbrockmendel work in #51368" indicating additional scope beyond the target issue. The commit messages include "Hacked together parser capsule" and "Resolved all undefined symbols in parsers.pyx" which are unrelated to the datetime symbol issue reported in #47305.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch adds `_pandas_datetime_CAPI` and `_pandas_parser_CAPI` to the API test, but these are module-level attribute names exposed through the capsule mechanism, not hardcoded runtime constants. The patch creates capsule infrastructure that forwards existing C function pointers rather than introducing new literal string values. No new error messages or fixed string literals are introduced in the patch that are asserted in tests without being specified in the issue.</ul_evidence>
+<suspicious_clues>The PR is unusually large with extensive C file restructuring. The parser capsule work appears to have been added during PR development (comment: "Ok I implemented the parser capsule") rather than being part of the original scope. The issue discussion mentions tokenizer.c race conditions separately from the datetime symbol issue, and the PR addresses both through separate capsules.</suspicious_clues>
+</sub_agent_result>

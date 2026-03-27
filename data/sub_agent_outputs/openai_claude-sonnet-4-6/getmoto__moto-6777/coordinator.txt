@@ -1,0 +1,65 @@
+# Coordinator Analysis
+
+## Step 1: Review Tier 1 Results
+
+I have received results from three Tier 1 agents:
+- **issue_analyzer**: Found `IS` (Issue Scope Evolution)
+- **pr_scope_analyzer**: Found `NO_SC` but `UL` (Unspecified Literal)
+- **pr_connection_analyzer**: Found `NO_DP` and `NO_FP`
+
+## Step 2: Validate Each Tier 1 Conclusion Against Its Evidence
+
+### Issue Analyzer - IS Judgment
+**Claimed**: IS (Issue Scope Evolution)
+**Evidence Provided**: "The discussion adds a NEW behavioral requirement: 'lock it behind a setting that defaults to False' and later specifies 'an environment variable (in settings.py)'. This finalizes a requirement (opt-in behavior via environment variable) that was not part of the original problem scope."
+
+**Validation**: The evidence clearly supports the IS conclusion. The issue discussion evolved from simply "implement API Destinations" to adding a new behavioral constraint (opt-in via environment variable). This is sanctioned scope evolution within the issue itself before the PR was merged.
+
+**Decision**: ✅ KEEP `IS`
+
+### PR Scope Analyzer - UL Judgment
+**Claimed**: UL (Unspecified Literal)
+**Evidence Provided**: "The patch introduces the literal 'MOTO_EVENTS_INVOKE_HTTP' in settings.py... The issue discussion only mentions 'an environment variable' without specifying the exact name."
+
+**Validation**: The evidence supports the UL conclusion. The issue discussion specified that an environment variable should be used, but never defined the exact name "MOTO_EVENTS_INVOKE_HTTP". The PR implementation chose this specific literal name, which is an implementation detail not specified in the issue.
+
+**Decision**: ✅ KEEP `UL`
+
+### PR Scope Analyzer - NO_SC Judgment
+**Claimed**: NO_SC (No Scope Creep)
+**Evidence Provided**: "The PR description states 'Fixes #3820' and implements 'put_events() now support HTTP targets,' which directly matches the issue's request... No additional issues or unrelated functionality are claimed."
+
+**Validation**: The evidence supports NO_SC. The PR stays focused on issue #3820 with no additional unrelated functionality.
+
+**Decision**: ✅ No SC label to add
+
+### PR Connection Analyzer - NO_DP, NO_FP
+**Claimed**: NO_DP, NO_FP
+**Evidence**: N/A
+
+**Validation**: No evidence of disconnected or false-positive PRs.
+
+**Decision**: ✅ No DP or FP labels to add
+
+## Step 3: Gather Final Supported Labels
+
+Based on validated Tier 1 evidence:
+- ✅ **IS**: Supported by issue_analyzer evidence showing sanctioned scope evolution in issue discussion
+- ✅ **UL**: Supported by pr_scope_analyzer evidence showing unspecified literal name
+- ❌ **SC**: No evidence of scope creep
+- ❌ **DP**: No evidence of disconnected PR
+- ❌ **FP**: No evidence of false-positive linkage
+- ❌ **Others**: No textual mismatch that doesn't fit existing labels
+- ❌ **No Misalignment**: Cannot apply because IS and UL are present
+
+## Step 4: Final Output
+
+<classification>
+<label>IS</label>
+<reason>The issue_analyzer found that the issue discussion evolved from the baseline request to implement API Destinations, adding a new behavioral requirement to "lock it behind a setting that defaults to False" via "an environment variable (in settings.py)". This scope evolution occurred within the sanctioned issue discussion before the PR was merged, representing legitimate requirement refinement.</reason>
+</classification>
+
+<classification>
+<label>UL</label>
+<reason>The pr_scope_analyzer identified that while the issue discussion specified "an environment variable" should control the feature, the exact literal name "MOTO_EVENTS_INVOKE_HTTP" was never specified in the issue text. The PR implementation chose this specific environment variable name as an implementation detail beyond what was explicitly requested.</reason>
+</classification>

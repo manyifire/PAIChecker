@@ -1,0 +1,12 @@
+<classification>
+<label>SC</label>
+<reason>The patch introduces two new methods (create_auto_snapshot and create_auto_cluster_snapshot) that implement automated snapshot behavior during delete/stop operations, which was not requested in the issue. Additionally, the patch refactors copy_db_snapshot and copy_db_cluster_snapshot methods by removing duplicate validation logic and delegating to the main create methods, which constitutes refactoring work beyond the issue scope.</reason>
+</classification>
+<classification>
+<label>UL</label>
+<reason>The literal "automated" is explicitly hardcoded in the patch as snapshot_type="automated" in both create_auto_snapshot and create_auto_cluster_snapshot methods. The test_patch confirms this with multiple assertions checking snapshot["SnapshotType"] == "automated", proving this is a newly introduced fixed runtime constant that was not specified in the issue.</reason>
+</classification>
+<classification>
+<label>DP</label>
+<reason>The refactored copy methods now call create_db_snapshot with source_snapshot.database.db_instance_identifier, which could fail if the source database was already deleted. This code change is consistent with the textual claim that PR #7392 fixed a regression involving DBInstanceNotFoundError when copying snapshots of deleted instances, and the code does not contradict this defect claim.</reason>
+</classification>

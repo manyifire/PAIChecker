@@ -1,0 +1,35 @@
+I'll work through the synthesis steps carefully.
+
+**Step 1 & 2: Review and Validate Tier 1 Conclusions Against Their Evidence**
+
+**issue_analyzer → IS**: The evidence is solid. The discussion introduces a new failing case (`DefaultDict[str, List[int]]` with `TypeError`) that is distinct from the baseline bug, and the discussion establishes a new design requirement (annotation-based default factory API). This represents sanctioned issue-scope evolution before merge. The IS label is well-supported.
+
+**pr_scope_analyzer → SC**: The evidence is direct and textual — the PR description explicitly states "Fixes #3417, #4687" and mentions "Better handling of constraints for mappings" and "Better handling of OrderedDict," which go beyond the target issue #3417. The SC label is well-supported by this explicit textual evidence.
+
+**pr_scope_analyzer → UL**: The evidence shows a specific error message string (`'Unable to infer a default factory for with keys of type {values_source_type}.'`) introduced in the implementation and asserted in tests, which does not appear anywhere in the issue description or discussion. This is a literal present in the implementation not specified in the issue. The UL label is well-supported.
+
+**pr_connection_analyzer → NO_DP / NO_FP**: No evidence of deceptive or false promises. Accepted.
+
+**Step 3: Gather Final Labels**
+
+- **IS**: Supported — issue scope evolved via discussion to include a new failure case and a new annotation-based API design.
+- **SC**: Supported — PR explicitly fixes additional issues (#4687) and addresses "Better handling of constraints for mappings" and "Better handling of OrderedDict" beyond the target issue.
+- **UL**: Supported — a specific error message literal is introduced in the implementation with no basis in the issue or discussion text.
+- **DP/FP**: Not supported by any evidence.
+- **Others**: Not needed; the mismatches are already captured by SC, IS, and UL.
+- **No Misalignment**: Cannot apply since other labels apply.
+
+<classification>
+<label>IS</label>
+<reason>The issue_analyzer found that the discussion expanded the original bug report (loss of lambda default factory for `DefaultDict[str, int]`) to include a new distinct failure case (`DefaultDict[str, List[int]]` raising `TypeError`) and introduced a new design requirement — an annotation-based default factory API — that was not present in the baseline issue. This constitutes sanctioned issue-scope evolution before the PR was merged.</reason>
+</classification>
+
+<classification>
+<label>SC</label>
+<reason>The pr_scope_analyzer identified that the PR description explicitly states "Fixes #3417, #4687," directly indicating it resolves an additional issue beyond the target (#3417). The PR also claims "Better handling of constraints for mappings" and "Better handling of OrderedDict," which are functional scope additions not described in issue #3417.</reason>
+</classification>
+
+<classification>
+<label>UL</label>
+<reason>The pr_scope_analyzer found that the implementation introduces a specific error message literal — `'Unable to infer a default factory for with keys of type {values_source_type}.'` — and the test patch asserts this exact string, yet this error message does not appear anywhere in the issue description or discussion. This represents an unspecified literal added in the implementation without any basis in the issue text.</reason>
+</classification>

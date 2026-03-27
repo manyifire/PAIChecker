@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue description reports "uint16 inserted as int16 when assigning row with dict" as the bug. The PR description states "REGR: maybe_convert_objects ignoring uints" and "closes #47294" - this directly addresses the reported issue scope. While the PR mentions "#37258" it explicitly states "it does not impact any code examples there" - not claiming to fix it. The whatsnew entry references issue #47294 specifically for "unsigned integer scalars" which aligns with the issue's uint16 problem generalized to all uint types.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains literals like `np.uint8(1)`, `np.uint16(1)`, `np.uint32(1)`, `np.uint64(1)` which are test input values for verifying dtype preservation - these are standard numpy type constructors, not newly introduced runtime constants. The patch code changes `PyObject_TypeCheck(val, &PyUnsignedIntegerArrType_Type)` which is type-checking logic, not introducing new literal string/numeric constants. No hardcoded error messages or specific output literals are introduced in the patch that are asserted in tests.</ul_evidence>
+<suspicious_clues>The test_patch includes tests referencing GH#47475 (test_constructor_np_signed/test_constructor_np_unsigned in test_numeric.py) which is a different issue number than the target issue #47294. However, the PR-side text (description/commits) does not explicitly claim to fix #47475, so this does not meet the SC criteria requiring explicit textual evidence of multi-issue closure.</suspicious_clues>
+</sub_agent_result>

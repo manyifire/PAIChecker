@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR closes only #1668 and the core change is a single removal of the restriction on defaults list interpolation in nested configs. While the PR description states "This also resolves the issues custom resolvers in nested configs," this is a natural consequence of the same code fix (removing the `if not parent.primary` restriction) rather than a distinct separate bugfix. Custom resolvers (`${oc.decode:...}`) are a variant of OmegaConf interpolation syntax, and the issue description describes the problem as interpolation in nested defaults lists being blocked, which inherently includes resolver-based interpolations.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The production patch (`hydra/_internal/defaults_list.py`) introduces no new hardcoded literals — it only removes a restriction. The literals appearing in `test_patch` (e.g., `"interpolation_ext"`, `"file1"`) are test infrastructure values defined in test fixture yaml files, not fixed runtime constants introduced in the production code patch. Since no new literal is introduced as a fixed runtime constant in the production `patch`, the UL condition is not met.</ul_evidence>
+<suspicious_clues>The PR modifies `tests/defaults_list/data/group1/interpolation.yaml` by changing the test fixture from a two-entry defaults list (`group2: file1` + `group3: ${group2}`) to a single-entry one (`group2: ${group1}_ext`). This restructuring of existing test data is notable but appears to be test cleanup rather than scope creep, since no explicit PR text claims this as an additional fix.</suspicious_clues>
+</sub_agent_result>

@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue baseline is about mean precision/type parity: “BUG: np.mean(pd.Series) != np.mean(pd.Series.values)” and expects “The output of np.mean(a) should be the same as np.mean(a.values).” PR-side text explicitly expands scope to another operation/type set: comment says “Integer mean should also be opted out of… I'\''m adding int types to the unit test as well,” and tests parametrize both functions with “@pytest.mark.parametrize(&quot;func&quot;, [&quot;nanmean&quot;, &quot;nansum&quot;]).” This is additional scope beyond the baseline mean-focused request.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test patch only asserts a boolean condition: “assert not nanops._bn_ok_dtype(dtype, func)” over dtype/function parameter lists, with no newly asserted runtime message/output literal. While patch adds literals like “name not in [&quot;nansum&quot;, &quot;nanprod&quot;, &quot;nanmean&quot;],” the same strings are configuration/function-name controls rather than a new fixed runtime constant asserted as output text/value. Therefore UL criteria are not met.</ul_evidence>
+<suspicious_clues>PR description says “closes #42878” (single issue), but PR comments/commits show expansion to integer handling and nansum-related test coverage (“extend unit tests with (u)int dtypes”, func includes nansum), indicating scope broadened during review.</suspicious_clues>
+</sub_agent_result>

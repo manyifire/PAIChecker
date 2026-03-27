@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue description states the bug is "style.background_gradient() fails on nullable series (ex: Int64) with null values" due to `gmap = data.to_numpy(dtype=float)` not providing a `na_value`. The PR description and commit messages only reference issue #50712 and claim to "Fix style.background_gradient() for nullable dtype (ex: Int64) series with pd.NA values" - exactly matching the issue baseline scope. No multiple issues are closed, no unrelated functionality is claimed, and no additional issue work is referenced in commits or reviews.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains `assert ctx1 == ctx2` which compares two context objects without asserting specific hardcoded string/number literals. The patch introduces `na_value=np.nan` but `np.nan` is a standard numpy constant (not a newly defined literal), and it's used as a parameter value rather than a hardcoded assertion. No literal in test_patch is both newly introduced in patch AND asserted as a specific expected value that wasn't specified in the issue.</sc_evidence>
+<suspicious_clues>One commit message mentions "check results against expected values from a regular float series" which aligns with the test comparing nullable Int64 output against float baseline - this is within issue scope (verifying the fix produces correct behavior), not scope creep. The whatsnew entry and test both correctly reference GH #50712.</suspicious_clues>
+</sub_agent_result>

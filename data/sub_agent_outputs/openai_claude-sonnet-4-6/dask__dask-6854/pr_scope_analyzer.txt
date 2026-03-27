@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue requests adding the `observed` keyword to groupby for categorical variables. The PR title is "Add observed keyword to groupby" and explicitly states "closes #4371" only. All commit messages ("Initial fixes for groupby(observed=x)", "Pass observed to _meta_nonempty", "Add observed to apply as well") are focused solely on implementing the `observed` keyword with no references to other issues or unrelated functionality.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The `patch` introduces the error message literal "``observed`` is only supported for pandas >= 1.0.0" in `_groupby_aggregate`, but this string is never asserted in `test_patch` — instead, the test uses `@pytest.mark.skipif(not dd._compat.PANDAS_GT_100, ...)` to skip tests for older pandas rather than testing for the error. The `test_patch` uses `assert_eq()` to compare dask vs pandas outputs without any hardcoded output literals, so no literal is both introduced in `patch` as a runtime constant AND explicitly asserted in `test_patch`.</ul_evidence>
+<suspicious_clues>The PR description contains an extensive debug trace showing an intermediate state where `observed=False` was producing zeros instead of NaN values, suggesting the PR went through significant debugging iterations. The test skips several combinations (cov, corr, nunique, sum/count/prod with multi-column groupby, std/var with observed) which could indicate incomplete implementation for those cases.</suspicious_clues>
+</sub_agent_result>

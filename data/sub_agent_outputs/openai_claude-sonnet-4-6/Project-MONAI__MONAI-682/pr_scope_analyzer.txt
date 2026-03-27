@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue description only requests "add PyTorch Tensor support for DataStats transform to debug post transforms." However, the PR implements a breaking change by renaming the parameter from `intensity_range` to `value_range` throughout the entire codebase (visible in patch lines like `-intensity_range: bool = True,` to `+value_range: bool = True,`). The PR description explicitly marks this as a "Breaking change" in the checklist, which is an additional scope item beyond simply adding Tensor support as requested.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The patch introduces new literal strings "Value range:" (line `lines.append(f"Value range: ({np.min(img)}, {np.max(img)})")`) and "not a PyTorch or Numpy array, type:" (line `lines.append(f"Value range: (not a PyTorch or Numpy array, type: {type(img)})")`). These exact strings are asserted in test_patch (e.g., `"test data statistics:\nShape: (2, 2)\nValue range: (0, 2)"`). The issue description does not specify these exact output format strings.</ul_evidence>
+<suspicious_clues>The parameter rename from `intensity_range` to `value_range` appears to be a design decision made during implementation rather than a requirement from the issue. This semantic change (intensity → value) suggests broader applicability to tensor types, but represents scope expansion beyond the stated requirement.</suspicious_clues>
+</sub_agent_result>

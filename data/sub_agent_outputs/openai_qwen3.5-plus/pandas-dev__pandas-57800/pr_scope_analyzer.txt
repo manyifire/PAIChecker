@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description explicitly states "closes #57775" and describes fixing "groupby apply in case func returns None for all groups" which directly matches the issue description's scope: "BUG: groupby.apply when func always returns None returns empty dataframe". The issue discussion mentions this should "return a DataFrame with the same columns and dtypes as the input" and the PR description confirms "the original dataframe's columns and dtypes are now part of the empty result dataframe" - this is alignment, not expansion. No additional issues or unrelated functionality are claimed in PR text or commits.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch uses `DataFrame(columns=test_df.columns)` and `expected.astype(test_df.dtypes)` which are dynamic references to the test input DataFrame's properties, not newly introduced hardcoded literal constants. The patch implements `result = self.obj._constructor(columns=data.columns)` and `result = result.astype(data.dtypes)` which propagates existing column/dtype information from the input data rather than introducing new fixed string/number literals. These are forwarded metadata values, not new runtime constants defined in the patch.</sc_evidence>
+<suspicious_clues>Commit messages show version was moved from 2.2.2 to 3.0.0 ('move from 2.2.2 to 3.0.0'), indicating this fix was deferred to a later release. Multiple 'Fix doc' commits suggest documentation was iteratively refined. The whatsnew entry was moved to v3.0.0.rst instead of v2.2.2.rst as initially planned.</suspicious_clues>
+</sub_agent_result>

@@ -1,0 +1,12 @@
+<classification>
+<label>UL</label>
+<reason>The patch introduces `modin = CachedAccessor("modin", ExperimentalFunctions)` in `modin/pandas/dataframe.py` - a newly added string literal `"modin"` with no basis in the issue text. The test_patch in `modin/pandas/test/test_api.py` explicitly asserts this literal with `ignore_in_modin = ["modin"]` and `allowed_different = ["to_hdf", "hist", "modin"]`. This satisfies the UL condition: literal newly introduced in patch AND asserted in test_patch.</reason>
+</classification>
+<classification>
+<label>DP</label>
+<reason>The `modin/utils.py` change removes the `Experimental` prefix from `get_current_execution()` (changing from `f"{'Experimental' if IsExperimental.get() else ''}{StorageFormat.get()}On{Engine.get()}"` to `f"{StorageFormat.get()}On{Engine.get()}"`), which decouples experimental mode from execution naming. This architectural change is consistent with the claimed downstream problem where importing `modin.experimental.pandas` no longer strictly gates experimental execution, which reportedly required a follow-up PR #6817 to fix. The code evidence supports (does not contradict) the DP claim.</reason>
+</classification>
+<classification>
+<label>Others</label>
+<reason>The patch delivers a DataFrame accessor pattern (`df.modin.to_pickle_distributed()` via `CachedAccessor("modin", ExperimentalFunctions)`) rather than the context manager API (`modin.utils.enable_exp_mode()`) proposed in the issue. The test in `test_io_exp.py` is updated to use `df.modin.to_pickle_distributed(filename, ...)`, confirming the accessor pattern as the implemented approach. This represents a fundamental API design deviation from the issue's proposal that is code-confirmed.</reason>
+</classification>

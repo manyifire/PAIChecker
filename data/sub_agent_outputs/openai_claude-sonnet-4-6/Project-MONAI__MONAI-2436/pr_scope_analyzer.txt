@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description says "Fixes #2290" only and "This PR added support to update data after several epochs in Datasets," directly matching the issue's request for "capability of changing the input training dataset on the fly." All commit messages are under the `2290-rerun-cachedataset` branch and implement `set_data()` across dataset classes. No separate unrelated issues or functionality are explicitly claimed.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test assertions like `np.testing.assert_allclose([[data_list1[i] * 10]], d)` derive from a lambda transform `Lambda(func=lambda x: np.array([x * 10]))` defined entirely within the test, not introduced as fixed constants in patch. The file path strings like `"test_image1_new.nii.gz"` are defined in `test_data_new` within the test setup, and `patch`'s `set_data()` simply stores `self.data = data` (forwarding), making these test-side literals rather than patch-introduced constants.</ul_evidence>
+<suspicious_clues>The `_try_shutdown` method in `SmartCacheDataset` gains `self._start_pos = 0` and `self._compute_data_idx()` which looks like a potential bugfix beyond just adding `set_data()`, but the PR text doesn't frame it as a separate fix - it's embedded as implementation detail for restart-after-set_data to work correctly.</suspicious_clues>
+</sub_agent_result>

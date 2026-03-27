@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue description requests fixing one crash: “Dataclasses: field function called with ** ... results in internal error,” with a minimal repro using `field(**{...})`. PR-side text matches this single scope: the PR title is “Fixes mypy crash on `dataclasses.field(**unpack)`” and description says “Closes #10879.” Commit messages do not reference additional issue IDs or unrelated features, only crash handling and related error behavior.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The patch adds a new hardcoded runtime diagnostic: `ctx.api.fail(&#39;Unpacking **kwargs in "field()" is not supported&#39;, expr)`. The test patch asserts that exact literal in output: `main:7: error: Unpacking **kwargs in "field()" is not supported` and also inline `# E: Unpacking **kwargs in "field()" is not supported`. That exact string does not appear in the issue description/discussion, so this is an unspecified literal implemented and asserted.</ul_evidence>
+<suspicious_clues>PR intent is framed as crash fix, but implementation deliberately adds a user-facing explicit error path for `**kwargs` in `field()`, which is a design choice within scope but introduces new fixed wording (triggering UL).</suspicious_clues>
+</sub_agent_result>

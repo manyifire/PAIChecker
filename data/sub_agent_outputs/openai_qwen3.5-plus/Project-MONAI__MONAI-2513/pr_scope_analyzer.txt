@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The PR description explicitly states a behavioral change beyond the issue baseline: "previously gamma=0 reduces it to `nn.CrossEntropyLoss`, now gamma=0 reduces it to `nn.BCEWithLogitsLoss`". The issue description only reports the bug ("Focal Loss returns 0 for all entries when input consists of only one channel") and suggests a potential fix ("Should this be `F.logsigmoid()` in this case?"), but does not specify changing the gamma=0 equivalence behavior. This PR-side claim of additional scope (changing the fundamental algorithm equivalence) constitutes scope creep per Example B pattern.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains assertion literals like `self.assertAlmostEqual(float(fg.cpu()), 0.1733, places=3)` and `self.assertAlmostEqual(float(fgbg.cpu()), 0.1116, places=3)`, but these are computed output values from the loss function, not newly introduced fixed runtime constants in the patch. The patch introduces algorithmic changes (sigmoid computation) but does not define these numeric literals as hardcoded constants. Per UL definition, literals must be "newly introduced/defined as a fixed runtime constant in patch AND explicitly asserted in test_patch" - this condition is not met.</sc_evidence>
+<suspicious_clues>The test changes (switching from CrossEntropyLoss to BCEWithLogitsLoss, changing target generation from multi-class to binary) are consistent with the algorithmic change but represent significant test scope modifications. The test_foreground test was added with specific expected values that weren't specified in the issue.</suspicious_clues>
+</sub_agent_result>

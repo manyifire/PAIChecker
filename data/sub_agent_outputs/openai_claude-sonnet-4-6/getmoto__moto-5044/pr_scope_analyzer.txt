@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue (#4718) only requests "Support volumes for LaunchTemplates" - specifically that `run_instances` with a LaunchTemplate respects BlockDeviceMappings. The PR description explicitly states it also fixes "launch_config/launch_template" (not just launch_template), and the PR title is "Autoscaling - pass BlockDeviceMapping from launch_config/launch_template." The test_patch adds a separate test `test_launch_config_with_block_device_mappings__volumes_are_created` for AutoScaling LaunchConfiguration block device mapping support, which is entirely outside the issue's requested scope.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The key assertion literals in the first test (`"gp3"` and `20`) exactly match the issue description's code example (`"VolumeType": "gp3"` and `"VolumeSize": 20`). The literals in the second autoscaling test (`10`, `False`, `"standard"`) are test-setup inputs passed through the system rather than hardcoded new runtime constants introduced in the patch - the patch simply propagates whatever values are provided, analogous to the counter-example of propagated config values.</ul_evidence>
+<suspicious_clues>The PR description mentions "Also parse the VolumeType in EC2, as that was missing until now" which could be considered an additional fix beyond the issue scope, but it's closely related to the core issue of volumes not being configured correctly from LaunchTemplates. The autoscaling LaunchConfiguration support (launch_config path) is the clearer scope creep addition.</suspicious_clues>
+</sub_agent_result>

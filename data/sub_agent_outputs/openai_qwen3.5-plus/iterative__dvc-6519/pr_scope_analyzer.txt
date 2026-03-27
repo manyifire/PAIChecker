@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue description states "DVC Pull Ignores identityfile in the SSH config" where the user's SSH config has `identityfile ~/.ssh/id_kitware_ed25519` but DVC was using the wrong key. The PR description says "Resolves #6508" and the PR title is "ssh: support multiple keys." The discussion clarified the root cause: DVC was using `first()` to only take the first IdentityFile when multiple exist in SSH config. The PR scope (supporting multiple keys from SSH config) directly addresses the issue baseline without claiming additional unrelated functionality.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains literals `"file_1"` and `"file_2"` in the mock SSH config (`mock_ssh_multi_key_config = """IdentityFile file_1...Host example.com IdentityFile file_2"""`) and asserts `fs.fs_args.get("client_keys") == ["file_1", "file_2"]`. However, these are test fixture/mock data values, not newly introduced hardcoded runtime constants in the patch. The patch code only processes config values via `raw_keys.extend(user_ssh_config.get("IdentityFile"))` and `os.path.expanduser(key)` without introducing any new literal constants. Per UL rules, mock test data values that are not new runtime constants in the patch do not count as UL.</sc_evidence>
+<suspicious_clues>None. The PR scope aligns well with the issue baseline - the issue reported DVC ignoring SSH identityfile config, discussion identified the root cause (using only first key), and PR implements support for multiple keys from SSH config. No scope creep or unspecified literals detected.</suspicious_clues>
+</sub_agent_result>

@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The PR description explicitly claims two fixes: (1) the main issue #10000 about custom `__new__` causing wrong type inference, and (2) an additional bug stated as "In addition, the added code was buggy in that it didn't only consider class attributes as enum members, but also instance attributes assigned to self.* in __init__." The issue description only requests fixing the wrong tuple type inference for subclass members with custom `__new__`; it does not request fixing the instance-attribute-as-enum-member bug. This additional fix constitutes scope creep.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>N/A. The test_patch contains literals like "bar" and "Number %d" % value, but these are defined only in the test code itself as setup values. The production patch (mypy/plugins/enums.py) does not introduce any new hardcoded string literals or exception messages - it only adds logic for checking `_implements_new()` and filtering implicit nodes. Since the literals are not newly introduced in the patch, UL does not apply.</ul_evidence>
+<suspicious_clues>None. The scope creep is clearly documented in the PR description with the phrase "In addition" introducing the second fix. The issue discussion does mention the instance attribute problem as an explanation for why the bug manifests, but the issue description itself never requests this as a fix target.</suspicious_clues>
+</sub_agent_result>

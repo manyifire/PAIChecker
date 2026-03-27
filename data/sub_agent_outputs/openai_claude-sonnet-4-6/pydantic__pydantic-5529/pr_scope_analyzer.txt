@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description says "Fixes #5517" and only references a single issue. The PR title "Fix a couple of bugs in `@model_validator`" aligns with the issue discussion which explicitly described two bugs: `@model_validator` not executing in subclasses and not auto-applying `@classmethod`. Both fixes are within the scope of the original issue request for `@model_validator` to work correctly as the v2 replacement for `@root_validator` with context.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch introduces hardcoded literals like `28` and `56` in `assert Person(age=28).age == 56`, but these are purely test-internal values — the production `patch` only adds `res.model_validator.update(...)` and `f = _decorators.ensure_classmethod_based_on_signature(f)` with no corresponding fixed runtime constants. Since no new literal value is simultaneously defined as a fixed constant in `patch` AND asserted in `test_patch`, UL does not apply.</ul_evidence>
+<suspicious_clues>The PR title claims to fix "a couple of bugs" which hints at multiple fixes, but both are explicitly discussed in the issue thread as related problems with `@model_validator`. The commit messages include "revert changes to serializers" and "more revert" which suggest some serializer-related changes were attempted and then reverted — this is worth noting but since the reverts removed those changes, there's no remaining scope creep in the final PR.</suspicious_clues>
+</sub_agent_result>

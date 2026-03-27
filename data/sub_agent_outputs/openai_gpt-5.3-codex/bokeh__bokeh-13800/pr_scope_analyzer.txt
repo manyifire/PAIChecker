@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue baseline asks for two things: “`server_document` should have a `with_credentials: bool = False` option” and a CORS-header option for the app response. PR text includes those, but also explicitly expands scope: “I ended up adding the same `with_credentials` behavior to `server_session` as it uses the same template as `server_document`.” That is additional functionality beyond the issue-description’s requested `server_document` scope, so this is scope creep.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The patch introduces a new fixed literal: `raise ValueError(&quot;'headers' and 'with_credentials' are mutually exclusive&quot;)` in embed server APIs. The test patch asserts this exact new runtime constant via `with pytest.raises(ValueError): ... headers={&quot;foo&quot;: &quot;bar&quot;}, with_credentials=True`, checking the mutual-exclusivity error path tied to that literal behavior. This literal is not specified in the issue text, so UL applies.</ul_evidence>
+<suspicious_clues>Issue requested an app-level option to specify `Access-Control-Allow-Headers`, but patch hardcodes CORS behavior (`Access-Control-Allow-Credentials: true`, origin reflection on cookies) instead of exposing a clear configurable option exactly as phrased. Also, test additions for `TestServerSession` call `server_document` in two places, which looks inconsistent.</suspicious_clues>
+</sub_agent_result>

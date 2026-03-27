@@ -1,0 +1,12 @@
+<classification>
+<label>SC</label>
+<reason>The patch includes extra enhancements to handle automated snapshots upon deleting/stopping DB instances and clusters (`create_auto_snapshot` and `create_auto_cluster_snapshot`), explicitly setting their `snapshot_type` to "automated". It also refactors snapshot copying functions and strips out duplicate validation logic (e.g., `DBSnapshotAlreadyExistsError`), confirming the scope creep beyond the initial target issue.</reason>
+</classification>
+<classification>
+<label>UL</label>
+<reason>The code explicitly introduces the hardcoded string literal `"automated"` to set the `snapshot_type` inside `create_auto_snapshot` and `create_auto_cluster_snapshot`. This new literal is heavily verified in the modified test files, including `test_snapshot_type_filter` and `test_delete_database`.</reason>
+</classification>
+<classification>
+<label>DP</label>
+<reason>The patch refactors `copy_db_snapshot` to delegate snapshot creation to `self.create_db_snapshot(db_instance_identifier=...)`. Since `create_db_snapshot` relies on accessing the database from active instances, copying a snapshot of an already deleted DB instance will crash, directly substantiating the claim that a regression was introduced.</reason>
+</classification>

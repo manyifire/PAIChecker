@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue description only requests fixing LoadImageD/NibabelReader to preserve original data type ("LoadImageD NibabelReader preserve original data type...it always converts to float"). However, the PR description explicitly claims broader scope: "provides an option to preserve the input dtype when: - `LoadImge(dtype=None, ...)` - `SaveImage(output_dtype=None, ...)`". The SaveImage dtype preservation functionality is an additional feature not requested in the issue baseline, representing clear scope creep beyond the single-issue request.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains the assertion `self.assertIn(dtype.__name__, str(data.dtype))` which uses dynamically parameterized dtype values (`np.int16`, `float`, `np.float64`) passed as test parameters, not hardcoded literal constants. The patch does not introduce any new fixed string literals or runtime constants that are asserted in tests. The changes use `get_equivalent_dtype(dtype, np.ndarray)` which forwards existing dtype values rather than defining new hardcoded literals.</ul_evidence>
+<suspicious_clues>The PR title mentions "5505" but the description adds SaveImage functionality alongside the requested LoadImage fix. The commit messages are generic ("preserve input dtypes", "compatible dtypes") without referencing multiple issue numbers, but the PR description text clearly expands scope beyond the issue baseline.</suspicious_clues>
+</sub_agent_result>

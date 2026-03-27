@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The PR description explicitly claims two separate changes: "Changelog: Feature: Added `bindir` to generated `.pc` file in `PkgConfigDeps`" (requested in issue #13532) and "Changelog: Bugfix: Removed `libdir1` and `includedir1` as the default index. Now, `PkgConfigDeps` creates the `libdir` and `includedir` variables by default in `.pc` files" (NOT requested in issue #13532). The second item is an additional bugfix/enhancement beyond the issue scope, which the PR description acknowledges affects multiple recipes (gdk-pixbuf, glib, gstreamer) requiring migration.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The test_patch contains assertions like `assert "bindir=${prefix}/mybin" in pc_content` and `assert "includedir=${prefix}/include" in pc` with specific literal formats. The patch introduces these formats via the Jinja template (e.g., `{{ "bindir{}={}".format((loop.index0 or ""), path) }}`). Issue #13532 only requests providing a "bindir variable" without specifying the exact format or literal values like "bindir=${prefix}/mybin".</ul_evidence>
+<suspicious_clues>The PR comments reveal this change was contentious, with discussion about whether to backport to Conan 1.x and whether the `libdir`/`libdir1` naming change is breaking. The PR description mentions needing to fix recipes in conan-center-index, suggesting the scope expansion has downstream impact beyond the original feature request.</suspicious_clues>
+</sub_agent_result>

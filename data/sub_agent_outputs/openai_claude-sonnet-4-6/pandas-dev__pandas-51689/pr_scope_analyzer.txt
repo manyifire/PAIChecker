@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue baseline describes only a bug with `DataFrame.mask` with `inplace=True` on mixed-type DataFrames. However, the PR title explicitly states "BUG: mask/where raising for mixed dtype frame and no other" and the commit message likewise says "BUG: mask/where raising for mixed dtype frame and no other" — explicitly extending scope to `where` beyond the issue. The test_patch also adds `test_where_inplace_no_other()` in `test_where.py`, which is an additional test for `where` not requested in the issue description.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The only meaningful change in `patch` is adding `or value is lib.no_default` to the condition in `_check_inplace_setting`, which uses an existing library constant (`lib.no_default`), not a newly introduced fixed string/number literal. The `np.nan` and other values in `test_patch` assertions (e.g., `{"a": [np.nan, 2], "b": ["x", np.nan]}`) are results of the masking logic, not hardcoded constants introduced in `patch`. No new fixed literal is introduced in `patch` that is then asserted in `test_patch`.</ul_evidence>
+<suspicious_clues>The fix modifies `_check_inplace_setting`, a shared code path affecting both `mask` and `where`. While fixing `mask` naturally also fixes `where` in the shared path, the PR explicitly claims both in its title/commit message, going beyond the issue scope. The issue discussion mentions the cause was PR #49156 that changed default from `np.nan` to `lib.no_default`, which the fix directly addresses.</suspicious_clues>
+</sub_agent_result>

@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR explicitly closes only issue #13666 with title "BUG: groupby.nth should be a filter." The issue description requests restoring 0.17.1 behavior where "nth() produces a label keyed by the selected row" (filter behavior). The issue discussion concludes with "I think nth should have the result of a filter here" which the PR directly addresses. No additional issues or unrelated functionality are claimed in PR description, commits, or comments.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch uses `df.iloc[[0, 2]]`, `df.iloc[[1, 2]]` etc. which are positional indexing references to test data rows, not newly introduced hardcoded literal constants in the patch. The patch modifies the `nth` method implementation to return filtered rows directly (`out = self._mask_selected_obj(mask); return out`) without introducing new string literals or fixed runtime constants. These test assertions verify the filter behavior, not unspecified literal values.</sc_evidence>
+<suspicious_clues>The issue is quite old (pandas 0.17 to 0.18 era) but the PR implements a significant behavioral change. However, this change was extensively discussed in the issue comments over time, with the final consensus being that nth should behave as a filter. The test changes are substantial but all align with the documented scope change from reducer to filter behavior.</suspicious_clues>
+</sub_agent_result>

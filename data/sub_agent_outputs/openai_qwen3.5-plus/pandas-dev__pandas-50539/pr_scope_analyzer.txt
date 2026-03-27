@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue description only asks about Series behavior: "API: should creating a Series from a Series return a shallow copy?" However, the PR description explicitly claims broader scope: "This changes the Series and DataFrame constructors to return a proper shallow copy...for the case of `Series(s)` or `DataFrame(df)`". While the issue discussion mentions DataFrame has "the same issue", the issue description baseline only covers Series, and the PR text explicitly claims to fix both Series AND DataFrame constructors, which is additional scope beyond the stated issue description.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains standard test assertions like `assert s2._mgr is not s._mgr` and `s2.index = ["a", "b", "c"]` which are test setup values, not newly introduced runtime constants. The patch implements `data._mgr.copy(deep=False)` which is a method call, not a hardcoded literal. No new error messages, fixed strings, or specific output literals were introduced in the patch that are asserted in tests.</sc_evidence>
+<suspicious_clues>The PR addresses both Series and DataFrame as mentioned in the issue discussion, but the formal issue description baseline only covers Series. This creates a boundary case where discussion-expanded scope matches PR scope, but technically exceeds the issue description baseline. The commit messages are generic ("add tests", "fix implementation") without referencing multiple issue numbers.</suspicious_clues>
+</sub_agent_result>

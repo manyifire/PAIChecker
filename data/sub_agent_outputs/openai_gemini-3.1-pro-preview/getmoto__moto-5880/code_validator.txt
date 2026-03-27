@@ -1,0 +1,12 @@
+<classification>
+<label>IS</label>
+<reason>The PR modifies `moto/ecs/models.py` to bypass checking for active container instances when `launch_type == "FARGATE"`. Additionally, `test_run_task_default_cluster()` in `test_ecs_boto3.py` was specifically updated to remove `client.register_container_instance` calls and use `launchType="FARGATE"`, validating the requirement that the system functions without instance registration.</reason>
+</classification>
+<classification>
+<label>SC</label>
+<reason>The implementation extends far beyond the scope of "run_task" in Fargate mode by introducing completely new API endpoints and backend functionality. Specifically, `moto/ecs/responses.py` and `moto/ecs/models.py` add `update_cluster` and `put_cluster_capacity_providers`, which are unrelated to simply running a Fargate task.</reason>
+</classification>
+<classification>
+<label>UL</label>
+<reason>The code introduces specific hardcoded values that were not detailed in the original request, such as `asg_details["managedScaling"]["instanceWarmupPeriod"] = 300` in `moto/ecs/models.py` and cluster/service deletion statuses of `"INACTIVE"`. These values are explicitly asserted as literal constants in tests like `test_ecs_capacity_provider.py` and `test_ecs_cloudformation.py`.</reason>
+</classification>

@@ -1,0 +1,35 @@
+# Coordinator Analysis
+
+## Step 1: Review of Tier 1 Results
+
+**Issue Analyzer**: Reports NO_IS - the issue description was complete from the start with clear reproduction code and expected behavior. No scope evolution occurred through discussion.
+
+**PR Scope Analyzer**: Reports SC (Scope Creep) - found strong textual evidence that the issue explicitly requested only `__name__` support, but the PR implementation added BOTH `__name__` AND `__doc__` properties. The PR title itself acknowledges this: "Pass __name__ and __doc__ through on DelayedLeaf". Reports NO_UL - the test literals are forwarded metadata, not hardcoded constants.
+
+**PR Connection Analyzer**: Reports NO_DP and NO_FP - this is a standalone PR with no follow-up corrections and no earlier PRs to follow up on.
+
+## Step 2: Label Assessment
+
+**SC (Scope Creep)**: The pr_scope_analyzer provides clear textual evidence:
+- Issue description: requests only `__name__` support ("if you wrap a function in `@delayed`, you can no longer get `__name__` from it")
+- PR title and implementation: explicitly adds both `__name__` AND `__doc__` 
+- The `__doc__` property was not requested in the issue baseline
+
+This constitutes scope creep with strong textual evidence from both issue and PR artifacts.
+
+**IS**: Not applicable - no scope evolution in issue discussion.
+
+**DP/FP**: Not applicable - no follow-up corrections or prior PRs.
+
+**UL**: Not applicable - sub-agent correctly identified that forwarded metadata does not constitute unrelated literals.
+
+**Others**: No evidence of systemic mismatch beyond the SC finding. The PR doesn't indicate refactoring for another context or other abnormal patterns.
+
+**No Misalignment**: Cannot apply - SC label is supported by evidence.
+
+## Step 3: Final Classification
+
+<classification>
+<label>SC</label>
+<reason>The issue explicitly requested only `__name__` support for the `@delayed` decorator, stating the expected behavior as "__name__ should be my_function". However, the PR implementation added both `__name__` AND `__doc__` properties, as evidenced by the PR title "Pass __name__ and __doc__ through on DelayedLeaf". The `__doc__` functionality represents additional scope beyond the baseline issue request.</reason>
+</classification>

@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue baseline is narrowly: “BUG: groupby.ohlc returns Series rather than DataFrame if input is empty,” expecting an empty DataFrame in the zero-row case. On the PR side, the title/commit are “BUG: Resampler.ohlc with empty data,” and the PR description states only “closes #42902,” with no explicit claim of fixing other issues or unrelated enhancements. There is no PR-text evidence of multi-issue closure or additional unrelated scope.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The patch introduces fixed runtime literals for OHLC columns, e.g., `obj = obj.reindex([\"open\", \"high\", \"low\", \"close\"], axis=1)` and `MultiIndex.from_product([obj.columns, [\"open\", \"high\", \"low\", \"close\"]])`. The test patch explicitly asserts these same literals in expected outputs, e.g., `columns=[\"open\", \"high\", \"low\", \"close\"]` and `MultiIndex.from_product([df.columns, [\"open\", \"high\", \"low\", \"close\"]])`. These exact bracketed/comma-separated literal strings are not exactly present in the issue text (which says “open/high/low/close”), so under exact-match rules this is UL.</ul_evidence>
+<suspicious_clues>Issue discussion mentions “several incorrect tests ... testing for the wrong behavior,” and test changes also remove an old xfail path while adding OHLC-specific expectations; this aligns with the same bug area but is a notable test-behavior correction context.</suspicious_clues>
+</sub_agent_result>

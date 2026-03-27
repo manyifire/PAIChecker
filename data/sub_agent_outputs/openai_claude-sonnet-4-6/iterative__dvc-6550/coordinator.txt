@@ -1,0 +1,44 @@
+## Synthesis and Analysis
+
+### Step 1: Review Tier 1 Results
+
+- **issue_analyzer**: Judges `IS` — the issue discussion introduced a new requirement (changing default template, renaming templates) not in the original baseline scope.
+- **pr_scope_analyzer**: Judges `SC` (yes) and `NO_UL` — the PR implements a full architectural refactoring (migrating templates to JSON package data) well beyond the original hover annotation request. A reviewer explicitly flagged scope expansion. No unlabeled literals found.
+- **pr_connection_analyzer**: Judges `NO_DP` and `NO_FP` — no follow-up bug-fix PRs and no earlier merged PRs for the same issue.
+
+### Step 2: Judge Tier 1 Conclusions Against Their Evidence
+
+**IS (issue_analyzer):**
+The evidence is solid. The baseline issue is about hover annotations only. The discussion introduces a separate, distinct requirement — making 'linear' the default and renaming existing templates — which was clearly not in the original issue body. This constitutes sanctioned issue-scope evolution (the discussion, visible before the PR merge, expanded what was expected from this work). The `IS` label is well-supported.
+
+**SC (pr_scope_analyzer):**
+The evidence is strong and direct. The PR explicitly states it is "moving templates from within the code to package data" and is labeled a "Prerequisit to #6389" (a separate issue). A reviewer explicitly commented that the PR "seems to extend pretty far beyond the original title." The PR introduces a full architectural refactoring (new lookup order, JSON package data migration) not requested by the issue. The `SC` label is well-supported.
+
+**NO_UL (pr_scope_analyzer):**
+The evidence supports `NO_UL`. No new runtime hardcoded literals introduced and independently tested without issue specification. Confirmed.
+
+**NO_DP / NO_FP (pr_connection_analyzer):**
+Both negative conclusions are supported by clear absence of evidence (empty merged_prs lists). Confirmed.
+
+### Step 3: Gather Final Supported Labels
+
+- **IS**: Supported — issue discussion introduced new template-renaming and default-changing requirements beyond the original hover annotation scope.
+- **SC**: Supported — PR implements architectural template migration to JSON package data, explicitly marked as prerequisite to a separate issue (#6389), with reviewer confirming scope overshoot.
+- **UL**: Not supported — `NO_UL` is correct.
+- **DP**: Not supported — `NO_DP` is correct.
+- **FP**: Not supported — `NO_FP` is correct.
+- **Others**: No remaining textual mismatch not covered by IS and SC.
+
+### Step 4: Handle Empty/Clean
+
+Both `IS` and `SC` are supported. `No Misalignment` does not apply.
+
+<classification>
+<label>IS</label>
+<reason>The baseline issue was solely about adding hover annotations to default plots without a Vega spec. During the discussion, @dberenbaum introduced an entirely new, distinct requirement — making 'linear' the default template and renaming the existing default to something like 'simple' or 'basic' — which was never part of the original issue scope. This constitutes sanctioned issue-scope evolution, where the discussion expanded the expected deliverables before the PR was merged.</reason>
+</classification>
+
+<classification>
+<label>SC</label>
+<reason>The PR implements a full architectural refactoring — migrating all plot templates from Python classes to JSON package data with a new lookup order — well beyond the original hover annotation request. The PR description explicitly states it is "moving the templates from within the code to package data" and marks itself as "Prerequisit to #6389," a separate issue. A reviewer directly confirmed the scope overshoot by noting "It might be good to rename the PR since it seems to extend pretty far beyond the original title."</reason>
+</classification>

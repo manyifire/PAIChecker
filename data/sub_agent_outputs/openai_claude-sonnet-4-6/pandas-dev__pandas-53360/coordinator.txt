@@ -1,0 +1,32 @@
+## Step 1: Review Tier 1 Results
+
+**issue_analyzer**: Judges `IS` — The issue scope evolved during discussion. A new user added a `usecols` failing case (distinct from the original `index_col` problem), and a maintainer expanded scope to include standard pandas dtypes (not just ArrowDtype). This is supported by direct textual evidence from the issue discussion.
+
+**pr_scope_analyzer**: Judges `NO_SC` and `NO_UL` — The PR text only claims to fix `index_col` + dtype, never explicitly mentions the `usecols` fix. However, the suspicious clues note that the production patch adds logic specifically targeting `usecols` scenarios, and tests cover `usecols` + dtype, even though the PR text doesn't claim this.
+
+**pr_connection_analyzer**: Judges `NO_DP` and `NO_FP` with no suspicious clues.
+
+## Step 2: Judge Tier 1 Conclusions Against Their Evidence
+
+**IS (issue_analyzer)**: The evidence is strong and direct — the discussion contains textual quotes from other users and maintainers introducing new problem scopes (`usecols` scenario, standard pandas dtypes). The IS label applies when the issue scope expanded through discussion before merge, which is clearly supported here. The IS label is **upheld**.
+
+**NO_SC (pr_scope_analyzer)**: The agent correctly applies the rule that tests alone without PR-text claims don't constitute SC. However, the suspicious clues reveal something important: the *production patch* (not just tests) adds logic specifically for the `usecols` scenario ("Ignore non-existent columns from dtype mapping like other parsers do"), yet the PR text never claims this fix. This is the SC pattern — the PR implements something not stated in its own description. But the agent's own SC rules say tests alone don't constitute SC... yet this is about the production code logic, not just tests. The agent's evidence *does* show extra implementation scope in production code not claimed in PR text. I should reconsider whether this warrants `SC`.
+
+However, the IS label already covers this: since the `usecols` fix was introduced into the issue's discussion (sanctioned scope evolution), the PR implementing it doesn't become "scope creep" — it becomes part of the expanded, sanctioned issue scope. The IS label absorbs this situation.
+
+**NO_UL and NO_FP/NO_DP**: These are well-supported by their evidence. Upheld.
+
+## Step 3: Gather Final Supported Labels
+
+- **IS**: Supported by the issue_analyzer's direct textual evidence showing the issue scope expanded in discussion to include `usecols` scenario and standard pandas dtypes, both introduced before the PR merged.
+- **SC**: Not warranted because the expanded scope (usecols) was introduced in the issue discussion (captured by IS), and the PR implementing that expanded scope is not unrelated creep.
+- **No other labels**: DP, FP, UL all lack supporting evidence.
+
+## Step 4: Final Classification
+
+The IS label is the only appropriate label, supported by direct textual evidence from the issue discussion.
+
+<classification>
+<label>IS</label>
+<reason>The issue_analyzer found direct textual evidence that the issue scope expanded significantly during discussion: a new user explicitly introduced the `usecols` failing case as a separate reproduction path, and a maintainer demonstrated that standard pandas dtypes (not just ArrowDtype) also trigger the error — both contradicting the original baseline's scope. These additions represent sanctioned issue-scope evolution in the discussion thread before the PR was merged, which the pr_scope_analyzer's suspicious clues confirm is reflected in the actual production patch logic ("Ignore non-existent columns from dtype mapping like other parsers do") and new tests for `usecols` + dtype combinations.</reason>
+</classification>

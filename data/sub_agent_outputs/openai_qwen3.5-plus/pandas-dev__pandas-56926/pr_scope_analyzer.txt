@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue description reports a bug where `Resample.quantile(q=0.5, interpolation='nearest')` produces inconsistent results compared to `Resample.apply(lambda x: x.quantile(0.5, interpolation='nearest'))`. The PR description states "BUG: fix `groupby.quantile` inconsistency when interpolation='nearest'" and explicitly closes only #47942. The issue discussion clarifies that "This looks to be an inconsistency in groupby.quantile" which the PR addresses - this is clarifying the root cause, not adding new scope. The PR text does not claim to fix multiple issues or add unrelated functionality beyond the reported bug.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch only removes an xfail marker from an existing test (`def test_quantile(interpolation, a_vals, b_vals, q):` without the xfail condition) - it does not introduce new hardcoded assertion literals. The patch changes a condition from `q_val > .5` to `idx % 2 == 1` with a comment explaining the behavior matches `np.quantile`, but does not introduce new literal constants that are asserted in tests. No new literal values appear in both patch and test_patch that are absent from the issue description.</sc_evidence>
+<suspicious_clues>The issue title mentions `Resampler.quantile` but the actual fix targets `groupby.quantile` in `pandas/_libs/groupby.pyx`. This is not scope creep because the issue discussion explicitly identified groupby.quantile as the root cause ("This looks to be an inconsistency in groupby.quantile"). The PR correctly addresses the underlying implementation issue rather than the surface-level API symptom.</suspicious_clues>
+</sub_agent_result>

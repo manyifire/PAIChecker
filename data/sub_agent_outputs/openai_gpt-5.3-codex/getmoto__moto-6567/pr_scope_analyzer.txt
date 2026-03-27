@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue baseline is narrowly: \"Missing vpc security group name from rds.create_db_cluster response\" and says the response returns \"&#39;VpcSecurityGroups&#39;: []\". The PR-side text stays within that scope: title/commit \"RDS: create_db_cluster() now supports the VpcSecurityGroupIds-parameter\" and description \"Fixes #6467\". There is no PR text claiming additional issue closures or unrelated enhancements.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>Test additions assert literals such as {\"VpcSecurityGroupId\": \"sg1\", \"Status\": \"active\"} and {\"VpcSecurityGroupId\": \"sg2\", \"Status\": \"active\"}. In patch, \"sg1\"/\"sg2\" are not introduced as fixed constants; they are propagated from request input via `unpack_list_params(\"VpcSecurityGroupIds\", \"VpcSecurityGroupId\")`, and \"active\" was already present in XML generation (`&lt;Status&gt;active&lt;/Status&gt;`) rather than newly defined by this patch. Therefore the required UL condition (new literal introduced in patch and asserted in tests) is not met.</ul_evidence>
+<suspicious_clues>The test file refactors by removing a separate `test_create_db_cluster_with_database_name` and folding `DatabaseName=\"users\"` into another test; this is test restructuring, not explicit scope expansion in PR text.</suspicious_clues>
+</sub_agent_result>

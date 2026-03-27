@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue description clearly states the problem: "running `dvc exp run` results in +x permissions being removed from files." The PR description explicitly states "Will fix #4850" and describes the implementation approach: "`BaseTree.upload()` now supports `file_mode` kwarg" to "preserve file permissions across tmpdir execution." The PR text does not claim to fix multiple issues or add unrelated functionality beyond the single reported bug about permission loss. The commit messages ('experiments: preserve file_mode for files in the workspace') align with the issue scope.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains `mode = 0o755` as a test input value, but this is NOT a newly introduced hardcoded runtime constant in the patch. The patch code uses `mode = stat.S_IMODE(stat_func(from_info).st_mode)` to dynamically read the source file's actual mode and pass it through via `file_mode=mode`. The literal `0o755` is a test setup value to verify executable permissions are preserved, not a fixed constant introduced by the patch. The patch propagates existing file metadata rather than defining new literal values.</ul_evidence>
+<suspicious_clues>None. The PR scope aligns precisely with the issue description (preserving file permissions during experiment execution), and the test literals are test inputs rather than newly introduced runtime constants in the patch.</suspicious_clues>
+</sub_agent_result>

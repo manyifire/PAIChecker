@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue description specifically requests fixing `_order_` attribute rejection in Enum classes ("Defining _order_ in an enum class rejected"). However, the PR description explicitly claims broader scope: "Special cases `Enum` and some special props to be non-final" (plural). The test_patch confirms this expanded scope by testing multiple properties beyond `_order_`: `name`, `value`, `_name_`, `_value_`, `_order_`, and `__order__`. The issue discussion also mentions the broader problem ("a lot of things like `value = 1` work just fine in runtime, but mypy is not really happy"), and the PR addresses this additional problem beyond the baseline `_order_` scope.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains literals like `'a'`, `'b'`, `'X Y'`, `1`, `2` which are test data values, not newly introduced runtime constants in the patch. The patch introduces `ENUM_SPECIAL_PROPS: Final = frozenset(('name', 'value', '_name_', '_value_', '_order_', '__order__'))` but these are property names used for logic, not asserted literal values. The error messages in tests ("Cannot assign to final attribute") are pre-existing mypy error messages, not newly introduced literals. No hardcoded literal is both newly defined in patch AND explicitly asserted as a specific output value in test_patch.</ul_evidence>
+<suspicious_clues>None</suspicious_clues>
+</sub_agent_result>

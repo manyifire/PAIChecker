@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR directly addresses the issue by claiming to "Add support for json schema creation with ByteSize type" and adding the corresponding schema. The commit messages and PR description only mention changes relevant to generating the JSON schema and testing integer inputs. Refactoring module globals to class variables is a pure implementation detail, and there is no text claiming to fix additional issues or introduce unrelated enhancements.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The `patch` introduces the number literal `0` as a fixed runtime constraint in `core_schema.int_schema(ge=0)`. The `test_patch` explicitly asserts this newly introduced value by checking for `{'minimum': 0, 'type': 'integer'}`. The issue description and discussion only request a union of `int` and `str` types, without ever specifying a minimum bound or the number `0`.</ul_evidence>
+<suspicious_clues>The test `pytest.raises(ValidationError, match='parse value')` was changed to `match='should match'`. While this string is in `test_patch` and absent from the issue, it is not newly defined in `patch`; it is an internal error message from `pydantic-core`'s string pattern validator, so it correctly does not trigger UL.</suspicious_clues>
+</sub_agent_result>

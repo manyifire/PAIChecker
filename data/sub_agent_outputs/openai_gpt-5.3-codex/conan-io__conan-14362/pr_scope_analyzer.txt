@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue baseline is a single bug scope: “[bug] CMAKE_SYSTEM_PROCESSOR set incorrectly on armv8 arch” and it says the value “should be set to 'aarch64'.” The PR stays on that same scope: title “fix the arch_host naming for armv8 (-> aarch64)” and description “Fix CMake system processor name on armv8/aarch64” with “fixes #14361.” Although comments discuss per-OS mapping, they are refinements of the same processor-naming bug, not an explicit unrelated or multi-issue expansion.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The patch introduces fixed runtime literals for armv8 mapping: `arch_host = {"Windows": "ARM64", "Macos": "arm64"}.get(os_host, "aarch64")`. The tests assert these exact literals: `assert "set(CMAKE_SYSTEM_PROCESSOR aarch64)"`, `assert "set(CMAKE_SYSTEM_PROCESSOR ARM64)"`, and `assert "set(CMAKE_SYSTEM_PROCESSOR arm64)"`. Exact issue text specifies `'aarch64'` but does not exactly specify `'ARM64'` or `'arm64'`, so these newly introduced-and-asserted literals meet UL criteria.</ul_evidence>
+<suspicious_clues>A minor unrelated test edit appears (`expected = None` in `test_android_legacy_toolchain_flag`), but there is no PR-side textual claim of extra functionality, so it is not SC by the scope-first rule.</suspicious_clues>
+</sub_agent_result>

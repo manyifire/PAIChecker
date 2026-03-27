@@ -1,0 +1,12 @@
+<classification>
+<label>SC</label>
+<reason>The test_patch parametrizes `raw` over both `True` and `False`, and the patch in `apply.py` adds `prepare_function_arguments` calls in code paths handling both `raw=True` (via `generate_apply_looper`) and `raw=False` (via `apply_with_numba`). The original issue title ("BUG: No kwargs in df.apply(raw=True, engine='numba')") scopes only to `raw=True`, confirming the PR deliberately expanded scope to `raw=False` paths.</reason>
+</classification>
+<classification>
+<label>UL</label>
+<reason>The patch in `numba_.py` replaces the old error message `"numba does not support kwargs with nopython=True: "` with the new fixed string `"numba does not support keyword-only arguments"`. Both `test_frame_apply.py` and `test_numba.py` explicitly assert against this exact new literal string via `match="numba does not support keyword-only arguments"`, confirming it is a newly introduced fixed runtime constant tested in the test patch but absent from the original issue description.</reason>
+</classification>
+<classification>
+<label>DP</label>
+<reason>The patch introduces a new utility function `prepare_function_arguments` in `numba_.py` that is applied only to `DataFrame.apply` paths, while groupby and rolling numba paths are not covered by this PR. This structural incompleteness is consistent with the Coordinator's claim that a subsequent PR #58995 extended `prepare_function_arguments` to additional numba contexts (groupby.agg, groupby.transform, rolling.apply) that #58767 did not cover, indicating #58767 was incomplete at merge time.</reason>
+</classification>

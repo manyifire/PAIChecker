@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue description only requests fixing `--cfg job --resolve` with `${hydra:...}` resolver (Bug: "HydraConfig is not set while resolving config with --cfg job --resolve"). However, the PR description explicitly claims additional scope: "We also call `HydraConfig.instance().set_config(cfg)` in the `Hydra.app_help` method. This allows for `python my_app.py --help --resolve` to work even if the help template references the user's `$CONFIG` and the `${hydra:...}` resolver appears in that user config." This `--help --resolve` functionality is an additional enhancement beyond the issue baseline scope.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains literals like `a: my_app` and `dataset.name: my_app`, but these are example outputs from existing test apps (e.g., `tests/test_apps/simple_app/interp_to_hydra.yaml`), not newly introduced hardcoded constants in the patch. The patch only adds logic to call `HydraConfig.instance().set_config(cfg)` and `get_sanitized_cfg()` - it forwards existing config values rather than introducing new literal strings as runtime constants.</ul_evidence>
+<suspicious_clues>The PR commit message "news fragment: mention the --help flag." confirms the --help functionality was intentionally added as extra scope. The test case `id="overriding_help_template:$CONFIG,resolve_interp_to_hydra_config"` in test_patch validates this --help feature that wasn't in the original issue scope.</suspicious_clues>
+</sub_agent_result>

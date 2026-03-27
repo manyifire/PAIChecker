@@ -1,0 +1,8 @@
+<classification>
+<label>UL</label>
+<reason>The patch introduces hardcoded error message literals "float16 indexes are not supported" and "float16 indexes are not implemented" in `pandas/core/indexes/numeric.py`. The test_patch explicitly asserts these exact strings via `match="float16 indexes are not supported"` and `match="float16 indexes are not "`. Neither of these specific string literals appears in the issue description (#49535), which only describes the general problem and expected conversion behavior.</reason>
+</classification>
+<classification>
+<label>Others</label>
+<reason>The issue description (#49535) explicitly states the expected behavior: "the index should be converted to a float32 index." However, the PR raises `NotImplementedError` for float16 Index construction in `numeric.py` instead of performing conversion. While the PR does implement float16→float32 conversion in some paths (algorithms.py, base.py, indexes/base.py), the primary Index-creation path rejects float16 entirely—a fundamental behavioral divergence from the issue's stated expected behavior that doesn't fit neatly into UL alone.</reason>
+</classification>

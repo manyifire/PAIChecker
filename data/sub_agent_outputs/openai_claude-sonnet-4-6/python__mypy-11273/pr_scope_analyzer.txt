@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description states "Closes #11272" — only the single target issue. Commit messages say "Fixes type narrowing for overlaping runtime types, refs #11272" — no additional issue references. The PR comments mention side effects on third-party projects (pydantic, websockets, pandas) but the author characterizes these as observed benefits rather than claiming to fix separate distinct issues.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The patch introduces `return UninhabitedType()` which corresponds to the `"<nothing>"` literal asserted in tests. However, the issue explicitly contains this exact literal: "Revealed type is '<nothing>'" in the interesting variation section. Other revealed type strings like `"builtins.str"` and `"builtins.list[builtins.str]"` are also mentioned verbatim in the issue. No newly-introduced hardcoded constant in the patch is asserted in tests without an exact match in the issue text.</ul_evidence>
+<suspicious_clues>The test patch includes a whitespace-only fix removing trailing whitespace from an unrelated test case in check-inference.test (`self.g() # E: Too few arguments for "g" of "A"   ` → same without trailing spaces). This is a non-functional formatting change that doesn't affect behavior. Also, the mypy_primer bot found that this fix caused new errors in pydantic and pandas, suggesting potential over-narrowing in edge cases, though the PR author acknowledged these as side effects.</suspicious_clues>
+</sub_agent_result>

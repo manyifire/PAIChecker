@@ -1,0 +1,57 @@
+# Coordinator Analysis
+
+## Step 1: Review Tier 1 Results
+
+I have received results from three Tier 1 agents:
+- **issue_analyzer**: NO_IS (no issue scope evolution)
+- **pr_scope_analyzer**: SC (scope creep detected), NO_UL
+- **pr_connection_analyzer**: NO_DP, NO_FP
+
+## Step 2: Judge Tier 1 Conclusions Against Their Evidence
+
+### Issue Analyzer (IS)
+**Conclusion**: NO_IS
+**Evidence**: "The issue discussion is completely empty with no comments, maintainer requests, or reporter follow-ups."
+
+**Assessment**: The evidence clearly supports NO_IS. There is no discussion content that could have evolved the issue scope, so no IS label applies. ✓ VALID
+
+### PR Scope Analyzer (SC)
+**Conclusion**: SC
+**Evidence**: "The issue description only mentions 'break' in nested function causes an internal error' with an example showing a nested function scenario. However, the PR title explicitly states 'Correctly track loop depth for nested functions/classes' (emphasis on both), and the test_patch includes a separate test case 'testNoCrashOnBreakOutsideLoopClass' that addresses break statements in nested classes, which is not mentioned anywhere in the issue description."
+
+**Assessment**: The evidence shows:
+1. Issue mentions only nested **functions**
+2. PR addresses both nested **functions AND classes**
+3. Test case explicitly covers the nested **class** scenario not mentioned in the issue
+
+This is clear textual evidence of scope expansion - the PR handles an additional case (nested classes) beyond what was requested in the issue. ✓ VALID SC
+
+### PR Scope Analyzer (UL)
+**Conclusion**: NO_UL
+**Evidence**: The agent correctly notes that the error message literal `"break" outside loop` is pre-existing in mypy, not newly introduced by the patch.
+
+**Assessment**: Correct - UL requires newly introduced literals in patch code, not pre-existing error messages. ✓ VALID NO_UL
+
+### PR Connection Analyzer (DP/FP)
+**Conclusion**: NO_DP, NO_FP
+**Evidence**: N/A (no issues found)
+
+**Assessment**: No evidence of disconnected or fabricated problems. ✓ VALID
+
+## Step 3: Gather Final Supported Labels
+
+- **SC**: YES - Strong textual evidence from pr_scope_analyzer showing PR addresses nested classes when issue only mentioned nested functions
+- **IS**: NO - No issue discussion content
+- **UL**: NO - Error messages are pre-existing
+- **DP**: NO - No evidence of disconnection
+- **FP**: NO - No evidence of fabrication
+- **Others**: NO - The SC label fully captures the misalignment; no other textual mismatch exists
+
+## Step 4: Final Classification
+
+Only SC applies based on the submitted Tier 1 evidence.
+
+<classification>
+<label>SC</label>
+<reason>The pr_scope_analyzer provided clear textual evidence that the issue description only mentions "'break' in nested function" scenarios, while the PR explicitly addresses both nested functions AND nested classes (as stated in PR title and confirmed by test case "testNoCrashOnBreakOutsideLoopClass"). This constitutes scope expansion beyond the originally requested fix.</reason>
+</classification>

@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue description is titled "Support volumes for LaunchTemplates" and only demonstrates LaunchTemplate usage. However, the PR title explicitly states "Autoscaling - pass BlockDeviceMapping from launch_config/launch_template" and the PR description says "Change the EC2-logic to also look for BlockDevices in launch_config/launch_template" - claiming to fix both launch configurations AND launch templates. The test_patch confirms this with a separate test `test_launch_config_with_block_device_mappings__volumes_are_created` that tests launch configuration functionality not mentioned in the issue baseline.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains literals like VolumeSize=10, VolumeType="standard" that are not in the issue description. However, the patch does NOT introduce these as hardcoded runtime constants - it extracts them from input parameters via `block_device["Ebs"].get("VolumeSize")` and `block_device["Ebs"].get("VolumeType")`. Per UL definition, literals that are only forwarded/propagated from input (not newly defined as fixed constants in patch) do NOT count as UL.</ul_evidence>
+<suspicious_clues>The PR title mentions "Autoscaling" but the core issue is about EC2 LaunchTemplates - the PR handles both autoscaling launch configurations and EC2 launch templates, which is broader than the single-issue scope. The issue discussion only mentions launchtemplate, not launch_config.</suspicious_clues>
+</sub_agent_result>

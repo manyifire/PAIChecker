@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue baseline is narrowly defined as “a bug in convert_mask_to_box, will fail for multi-class detection,” with expected label output changing from -1 to 0 for the provided mask example. The PR-side text matches this same scope: title/description says “correct a bug in convert_mask_to_box, will fail for multi-class detection,” and commit messages only mention “correct a bug in mask_to_box” plus “add test,” with no explicit claims about fixing other issues or unrelated enhancements. Patch/test changes are consistent with that single bugfix (label index source changed and tests added for 2D masks), serving as secondary confirmation rather than evidence of added scope.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>Test literals such as `p([0])`, `p([0, 1])`, and box coordinates `[[0.0, 0.0, 2.0, 2.0]]` are asserted in `test_patch`, but the key literal behavior (`-1` vs `0` label outcome for the same mask) is explicitly specified in the issue text: expected `array([0])` vs actual `array([-1])`. In `patch`, no new standalone literal contract/message is introduced; logic changes from `boxes_b[...]` indexing to `fg_indices[...]` indexing for label extraction. Because asserted literals are either already specified by the issue or not newly introduced as literal definitions in runtime code, UL does not apply.</ul_evidence>
+<suspicious_clues>Issue/PR number mismatch: PR description says “Fixes #4582” while provided instance is MONAI-4583; this may indicate metadata inconsistency but does not, by itself, prove scope creep from the provided texts.</suspicious_clues>
+</sub_agent_result>

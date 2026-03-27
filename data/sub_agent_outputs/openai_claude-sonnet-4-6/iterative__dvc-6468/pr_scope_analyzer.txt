@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue numbers array contains multiple issues ['5989', '5446'], indicating the PR addresses more than one distinct issue. The PR description explicitly states "fix #5446" and focuses on adding `--show-csv` to `dvc exp show`, while commit messages state "put to_csv logic to show_experiments... 4. fix #5989". Issue #5989 is about wrong display values, while #5446 is about a CSV format feature — these are distinct issues combined in one PR.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>In `patch`, a new `_normalize_headers` function with a `counter` parameter produces headers like `"scores.json:featurize.max_features"` and `"metrics.yaml:foo,params.yaml:foo"`, and new ISO timestamp formatting produces `"2021-08-02T16:48:14"`. In `test_patch`, these exact literals are asserted: `"Experiment,rev,typ,Created,parent,State,scores.json:featurize.max_features,scores.json:featurize.ngrams,avg_prec,roc_auc,..."` and `"master,b05eecc,baseline,2021-08-02T16:48:14,,,3000,1,0.5325162867864254..."`. Neither the specific CSV column header format nor the ISO timestamp format are specified in the issue description text.</ul_evidence>
+<suspicious_clues>The test `test_show_filter` was also modified in `test_patch` to change assertions from `f"{div} {i} {div}"` to `f"{div} params.yaml:{i} {div}"` and `f"{div} metrics.yaml:{i} {div}"`, which reflects a behavioral change in the normalized headers logic introduced by the patch — this is related to the fix for issue #5989 (duplicate column handling) but also affects how the filter test works.</suspicious_clues>
+</sub_agent_result>

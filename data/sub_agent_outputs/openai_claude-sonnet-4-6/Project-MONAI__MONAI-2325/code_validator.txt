@@ -1,0 +1,8 @@
+<classification>
+<label>IS</label>
+<reason>The test_patch adds new tests specifically verifying that big-endian arrays (`dtype=">i2"`) are correctly converted with values preserved (using `np.testing.assert_allclose`), which directly tests the evolved understanding from the issue that data was being corrupted (distorted in NiFTI but not PNG). The original `newbyteorder()` only relabeled bytes without swapping, while the fix uses `byteswap().newbyteorder(new)` - the new test explicitly validates this behavior was broken before and is now fixed.</reason>
+</classification>
+<classification>
+<label>FP</label>
+<reason>The code changes refine `switch_endianness` from a 3-argument form (`data, old, new`) to a 2-argument form (`data, new="<"`), indicating this is a refinement of a function introduced in an earlier PR. The critical fix from `data.newbyteorder(new)` to `data.byteswap().newbyteorder(new)` confirms this is a follow-up correction to an incomplete prior fix for the same issue, consistent with the claim that PR #2322 addressed the issue first and this PR (#2325) supplements it.</reason>
+</classification>

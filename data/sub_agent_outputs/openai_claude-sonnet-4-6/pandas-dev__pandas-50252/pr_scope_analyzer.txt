@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description explicitly closes only #50251, matching the single issue baseline. The PR title and description directly mirror the issue: "BUG: empty strings raise in non-ISO8601 formats but parse as NaT elsewhere." While the test patch references GH13044 and GH5195, these are pre-existing tests being updated to reflect the new behavior (not separate bugs being fixed), and no PR text claims to fix these as distinct issues.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>N/A — The patch in `strptime.pyx` introduces only a logic change (`len(val) == 0`) with no new hardcoded string literals. The test_patch assertion literals (e.g., `"2016-03-24"`, `"2016-03-25"`) are test input/expected values not defined as runtime constants in the patch, so the patch/test_patch pairing requirement for UL is not met.</ul_evidence>
+<suspicious_clues>The test `test_to_datetime_with_apply_with_empty_str` previously expected `ValueError` for empty strings with non-ISO8601 format; after the fix, all `errors` modes should return `NaT`. The test now passes `errors` as a parameter and checks that `to_datetime` with `errors` returns the same as `apply` with `errors="coerce"` — which may be logically inconsistent for `errors="raise"` or `errors="ignore"`, but this is a test design concern, not a scope or literal issue.</suspicious_clues>
+</sub_agent_result>

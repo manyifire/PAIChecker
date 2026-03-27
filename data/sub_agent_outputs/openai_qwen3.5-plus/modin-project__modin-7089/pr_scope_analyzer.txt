@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The Issue Description states: "`rank` should raise `No axis named None for object type Series` to align with pandas". The PR Description claims: "FIX-#7088: Make sure `rank` raises `No axis named None...` exception" and only references issue #7088. The PR text does not claim to fix multiple issues or include unrelated functionality beyond the stated issue scope. The Series vs DataFrame difference in the test is the same bug pattern applied to different object types, not scope expansion.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch asserts `ValueError("No axis named None for object type DataFrame")`. The Issue Description explicitly requests the error message pattern: "`No axis named None for object type Series`". The patch introduces `f"No axis named None for object type {type(self).__name__}"` which is a dynamic f-string where the object type is determined at runtime. The core literal "No axis named None for object type" is specified in the issue, and the object type portion is not a hardcoded constant but dynamically derived from the tested object.</ul_evidence>
+<suspicious_clues>The issue mentions "Series" but the test uses "DataFrame" - however this is the same bug pattern being tested on a different object type, not scope creep. The error message literal is dynamically constructed via f-string with type(self).__name__, so the specific "DataFrame" string in tests is not a newly introduced hardcoded constant in the patch.</suspicious_clues>
+</sub_agent_result>

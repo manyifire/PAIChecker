@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue description baseline is a single bug: “crash with generator in list comprehension,” with repro `[(yield from f()) for lel in range(5)]`. The PR explicitly claims broader behavior: “Produce an error when encountering a yield expression (both `yield` and `yield from` clauses) in comprehensions and generator expressions.” This goes beyond the baseline crash case by covering additional constructs (`yield` and generator expressions), so it is scope creep.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The patch adds new fixed runtime error literals: `self.fail(&quot;\&quot;yield\&quot; inside comprehension or generator expression&quot;, ...)` and `self.fail(&quot;\&quot;yield from\&quot; inside comprehension or generator expression&quot;, ...)`. The test patch asserts these exact literals repeatedly, e.g., `# E: &quot;yield&quot; inside comprehension or generator expression` and `# E: &quot;yield from&quot; inside comprehension or generator expression`. These exact strings do not appear in the issue text/discussion, so they are unspecified literals implemented and asserted.</ul_evidence>
+<suspicious_clues>A small unrelated non-functional grammar edit appears in `semanal_main.py` (“were any new names were defined” → “were any new names defined”); this is minor and not a functional SC trigger by itself.</suspicious_clues>
+</sub_agent_result>

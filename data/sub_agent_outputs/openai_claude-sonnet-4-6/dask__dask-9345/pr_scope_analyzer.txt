@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR explicitly states "Closes #9324" and only addresses the single reported issue about `delayed` failing with custom `__init__` dataclasses. All commit messages ('Try to detect a custom __init__', 'Mutate dataclass instances instead of creating new ones', 'Immutable approach to dataclass unpacking') relate to the single issue. While PR review comments mention PR #9361 (namedtuple support), this is explicitly identified as a separate PR and not included in this one.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The patch introduces two specific error message literals: `"Note that using a custom __init__ is not supported."` and `"Note that using fields with \`init=False\` are not supported."`. The test_patch asserts these via `e.match(r"custom __init__ is not supported")` and `e.match(r"\`init=False\` are not supported")`. Neither exact string appears in the issue description; the issue discussion only suggests a paraphrase: `"Failed to unpack dataclass, perhaps it has a custom __init__, which is unsupported"` — which is not an exact match per UL rules.</ul_evidence>
+<suspicious_clues>The PR review discussion reveals a significant back-and-forth about the implementation approach (mutation vs. immutable), with the reviewer pointing out that mutation breaks concurrent use cases like `dask.visualize` followed by `dask.compute`. The final implementation switches to using `dataclasses.replace()` for validation. Additionally, the `init=False` field case is handled differently than originally scoped in the issue discussion, which only mentioned detecting custom `__init__`.</suspicious_clues>
+</sub_agent_result>

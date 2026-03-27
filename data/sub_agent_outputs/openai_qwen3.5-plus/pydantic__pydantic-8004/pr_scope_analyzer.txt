@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue description states the problem: "Use `PrivateAttr` with `Annotated` will cause `AttributeError` when getting private attr." The PR description explicitly claims: "When creating private fields from typing.Annotated, the default method gets thrown out in the current implementation. This Pull-Requests adds functionality to check wether the Default in the `Anntotated[]` definition already is a `PrivateAttr` and uses it straight away." The PR scope directly matches the issue baseline - both address the same bug of PrivateAttr being ignored inside Annotated. The PR only references "fix #7955" with no additional issues or unrelated enhancements claimed.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains `assert model._foo == 1` where `1` is a test input value. However, the patch does not introduce `1` as a new hardcoded runtime constant - it only adds logic to extract PrivateAttr from Annotated metadata (`private_attr = next((v for v in metadata if isinstance(v, ModelPrivateAttr)), None)`). The literal `1` is passed as `PrivateAttr(default=1)` in the test setup, not defined as a fixed constant in the patch itself. This is a test value, not a newly introduced literal per UL definition.</sc_evidence>
+<suspicious_clues>Commit messages include some unrelated maintenance items like "adding necessary changes to pdm.lock, oversight in previous ruff update pr" and "pytest-examples note about still using black", but these are repository maintenance tasks, not functional scope creep. The core fix remains focused on the single issue #7955.</suspicious_clues>
+</sub_agent_result>

@@ -1,0 +1,12 @@
+<classification>
+<label>IS</label>
+<reason>The test_patch adds `testTypedDictFlexibleUpdate` which explicitly tests `a.update(b)` (subset update) and `a.update(a)` (self-update) without errors, and `testTypedDictStrictUpdate` which shows these same cases under `--extra-checks`. These test cases cover same-type and self-update scenarios that evolved during issue discussion, beyond the original subset update rejection case.</reason>
+</classification>
+<classification>
+<label>SC</label>
+<reason>The patch introduces an entirely new `--extra-checks` CLI flag in `mypy/main.py` (deprecating `--strict-concatenate`), adds `validate_star_typeddict_item` and `valid_unpack_fallback_item` methods for TypedDict `**` unpack constructor support in `checkexpr.py`, and modifies `subtypes.py` to wire up the Concatenate behavior — all outside the original TypedDict `update()` incompatibility issue scope. The test_patch adds over 360 lines of new TypedDict unpack tests unrelated to the original `update()` issue.</reason>
+</classification>
+<classification>
+<label>UL</label>
+<reason>The literal `"Unsupported type {} for ** expansion in TypedDict"` is newly introduced in `mypy/messages.py` patch and is directly asserted in `testTypedDictUnpackUntypedDict` as `# E: Unsupported type "Dict[str, Any]" for ** expansion in TypedDict`. Similarly, `"Non-required {} not explicitly found in any ** item"` is newly added in `messages.py` and asserted in `testTypedDictUnpackStrictMode` as `# E: Non-required key "b" not explicitly found in any ** item`. Both literals satisfy the UL criteria of being newly introduced in the patch and asserted in the test_patch.</reason>
+</classification>

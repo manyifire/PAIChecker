@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue description requests fixing "hard-codes output patch size to 4" to ensure output shape matches input shape. The PR adds scope beyond this: (1) introduces a new public utility function `is_sqrt` added to monai/utils/misc.py and exported in monai/utils/__init__.py, (2) adds validation logic checking "patch_size should be square number" and "patch_size should be divisible by img_size". While the discussion mentions these constraints, the issue description itself only requests fixing the hard-coded value. The PR description states "Fix hard-coded `up_kernel_size`" but does not explicitly claim the additional validation scope or utility function addition.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>N/A. The patch introduces new error message literals like "patch_size should be square number, got {patch_size}." and "patch_size={patch_size} should be divisible by img_size={img_size}." However, the test_patch only uses `self.assertRaises(ValueError)` without explicitly asserting these specific message strings. Since the literals are not asserted in test_patch, they do not meet the UL criteria.</ul_evidence>
+<suspicious_clues>The PR adds a reusable utility function to the public API (is_sqrt) that could have broader implications beyond this single issue. The function is properly exported and could be used by other modules, suggesting it might be considered infrastructure work rather than just a focused bugfix.</suspicious_clues>
+</sub_agent_result>

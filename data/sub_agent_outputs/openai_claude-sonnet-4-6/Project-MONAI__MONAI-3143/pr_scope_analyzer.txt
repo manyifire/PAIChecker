@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue describes a bug where two specific transforms "randomly output numpy or tensor that can't collate." The PR description says "Fixes #3142" and "This PR updated 2 transforms to make sure consistent output data type." The commit messages only reference generic merges and "[DLMED] fix data type issue" — no other issues are referenced. The PR scope exactly matches the issue scope with no extra functionality claimed.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch asserts `output.dtype in (np.float32, torch.float32)` and the expected shuffle tensor `torch.as_tensor([[[[6, 1], [4, 3]], ...]])`, but neither of these are newly introduced as fixed runtime constants in the patch. The patch uses `convert_to_dst_type(src=out, dst=img, dtype=self.dtype)` which forwards the pre-existing `dtype` parameter rather than introducing a new hardcoded float32 constant. The shuffle tensor expected values mirror the pre-existing numpy test and are algorithm-derived, not newly hardcoded in the patch.</ul_evidence>
+<suspicious_clues>The test for RandCoarseShuffle adds a torch tensor test case with hardcoded expected output values matching the numpy test case. These values appear to assume deterministic seeding behavior. However, since the same values already existed in the pre-patch numpy test and the patch doesn't introduce them as new constants, this is not a UL violation.</suspicious_clues>
+</sub_agent_result>

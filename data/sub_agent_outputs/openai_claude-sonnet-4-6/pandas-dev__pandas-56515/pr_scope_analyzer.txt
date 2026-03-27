@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description explicitly states only "closes #21351" with no mention of other issues. All commit messages frame additional test changes as corrections of "wrong test case assumptions" that were revealed by the fix (e.g., "Fixes wrong test case assumption for interpolation" and "Fixes wrong test case assumption when using linear interpolation on series with datetime index"). The changes to `missing.py` and test corrections are presented as necessary consequences of correctly implementing the resample interpolation fix, not as independent enhancements.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>N/A. The numeric literals in test assertions (e.g., `9.21131`, `2.6666666666666665`, `2.66667`) are computed interpolation results, not hardcoded fixed constants introduced in the production patch code. The patch in `resample.py` and `missing.py` computes values dynamically through interpolation algorithms rather than defining these specific numbers as fixed runtime constants.</ul_evidence>
+<suspicious_clues>The patch modifies `pandas/core/missing.py` in `get_interp_index` to change how datetime-like indexes are handled (converting to int64 instead of creating a range index), which affects general interpolation beyond just the resample case. This causes pre-existing test cases like `test_nan_irregular_index` and `test_interpolate` to have their expected values changed (e.g., from `3.0` to `2.666...`), suggesting the fix has broader effects on interpolation behavior than just the resample case described in the issue. However, no explicit PR-side text claims this as a separate fix.</suspicious_clues>
+</sub_agent_result>

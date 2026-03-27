@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description states "Fixes #5484" and the commit message says "EC2:run_instances() now validates the provided SecurityGroup", which directly addresses the issue's baseline problem: "Create EC2 instance with nonexistent security group raises exception instead of giving an appropriate error." The PR does not claim to fix multiple issues or add unrelated functionality beyond validating security groups as described in the issue.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch asserts "InvalidGroup.NotFound" and "The security group '{sg_id}' does not exist", but the patch only imports and raises `InvalidSecurityGroupNotFoundError(sg_id)` without defining the exception message itself. The literal message is not newly introduced as a fixed constant in the visible patch, so this does not meet the UL criteria requiring the literal to be defined in both patch and test_patch.</ul_evidence>
+<suspicious_clues>The issue discussion mentions the error message should include "in VPC 'vpc-...'" but the test assertion only checks for "does not exist" without the VPC portion. This suggests either simplified implementation or the exception class handles VPC context elsewhere.</suspicious_clues>
+</sub_agent_result>

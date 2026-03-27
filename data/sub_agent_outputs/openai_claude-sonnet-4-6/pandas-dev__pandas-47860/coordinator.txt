@@ -1,0 +1,30 @@
+## Step 1: Review Tier 1 Results
+
+- **issue_analyzer**: NO_IS — The issue was fully specified from the start, discussion only contains root cause analysis and implementation approach, not scope evolution.
+- **pr_scope_analyzer**: NO_SC (no unrelated scope), UL (the "present at position {i}" literal format string was introduced in the patch and asserted in tests, but was never specified in the issue).
+- **pr_connection_analyzer**: NO_DP, NO_FP — no prior merged PR for same issue, no follow-up PRs indicating regression.
+
+## Step 2: Judge Evidence Against Conclusions
+
+**NO_IS**: The evidence clearly supports this. The issue specifies the problem and expected behavior upfront; discussion is purely implementation guidance. ✓
+
+**NO_SC**: The evidence supports this. The PR only claims to fix #47495, and the "now/today" handling in `parsing.pyx` is described as an implementation detail supporting the fix, not separate scope. ✓
+
+**UL**: The evidence supports this. The issue states the error should indicate "which string the error occurred" (i.e., show "yesterday" not "today"), but never specifies the "present at position {i}" format. The patch introduces this specific literal and the test asserts it exactly, making it an unspecified literal that goes beyond what the issue requested. ✓
+
+**NO_DP**: Evidence directly supports — no follow-up PRs or closed issues reference this PR as incomplete. ✓
+
+**NO_FP**: Evidence directly supports — PR #47597 was never merged, so no prior merged PR exists for the same issue. ✓
+
+## Step 3: Gather Final Supported Labels
+
+- **UL**: Supported by pr_scope_analyzer's evidence. The specific error message format `"present at position {i}"` is a literal introduced in the patch without any specification in the issue. The issue only requested that the correct string ("yesterday") appear in the error message, not this particular format pattern.
+- No SC, FP, DP, IS apply based on the evidence.
+- No "Others" needed — the UL label captures the textual mismatch.
+
+## Step 4: Final Classification
+
+<classification>
+<label>UL</label>
+<reason>The pr_scope_analyzer found that the patch introduces the specific error message format "present at position {i}" (resulting in "Unknown string format: yesterday present at position 1"), which is asserted in the test, but this literal pattern is never mentioned or requested in the issue. The issue only specifies that the error message should indicate which string caused the error (showing "yesterday" instead of "today"), leaving the exact format unspecified. This constitutes an unspecified literal introduced in the implementation beyond what the issue description sanctioned.</reason>
+</classification>

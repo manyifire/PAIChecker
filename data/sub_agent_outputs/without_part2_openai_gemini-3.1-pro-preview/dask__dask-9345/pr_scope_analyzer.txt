@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue title broadly states "`delayed` can't handle some `dataclasses` as inputs" and details a failure with a custom `__init__`. The PR resolves this and also addresses another dataclass unpacking edge case ("fields with `init=False`"). Since both are specific root causes of the requested scope (delayed failing on some dataclasses), this is a comprehensive fix within the original issue boundaries rather than scope creep.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The `patch` newly introduces fixed error message strings, specifically `"Note that using a custom __init__ is not supported."` and `"Note that using fields with \`init=False\` are not supported."`. The `test_patch` explicitly asserts these literals using `e.match(r"custom __init__ is not supported")` and `e.match(r"\`init=False\` are not supported")`. These exact strings were never specified in the issue description or discussion (the discussion only vaguely suggested a different paraphrased string).</ul_evidence>
+<suspicious_clues>The PR initially attempted to mutate the input dataclasses to avoid `__init__` reconstitution issues, which caused a race condition bug mentioned in the review comments. They eventually rolled back to the approach of explicitly catching `TypeError`/`ValueError` and throwing the newly defined literal error messages.</suspicious_clues>
+</sub_agent_result>

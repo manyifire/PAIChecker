@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue baseline requests improving the vague error text for `**kwargs` misuse, explicitly proposing a more informative form like `Argument after ** to "test" has incompatible type ... expected ...` and complaining that `error: Argument after ** must be a mapping` lacks type detail. The PR side stays on that same scope: title/description say `Improve the "Argument must be a mapping" error message` and `Fixes #12070`, with no claim of fixing other issues or unrelated features. Patch/test changes are consistent with only this target (changing message to include `not {type}` and adding a corresponding Optional[Any] test case), not a distinct second problem.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test asserts `Argument after ** must be a mapping, not "Optional[Any]"`, and patch introduces the same literal pattern in runtime code: `self.fail('Argument after ** must be a mapping, not {}'.format(format_type(typ)), ...)`. However, the issue description already specifies this exact literal scaffold `Argument after ** must be a mapping, ...` and explicitly asks to include the concrete incompatible type in the message, so this is not an unspecified literal implementation. N/A</ul_evidence>
+<suspicious_clues>The issue pitch example uses `Union[Any, None]`, while final test expectation became `Optional[Any]` due formatting behavior noted in PR comments; this is a representation change, not scope expansion.</suspicious_clues>
+</sub_agent_result>

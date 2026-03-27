@@ -1,0 +1,53 @@
+# Coordinator Analysis
+
+## Step 1: Review Tier 1 Results
+
+I have received results from three Tier 1 agents:
+- **issue_analyzer**: Concluded NO_IS
+- **pr_scope_analyzer**: Concluded NO_SC and NO_UL
+- **pr_connection_analyzer**: Concluded NO_DP and NO_FP
+
+## Step 2: Judge Tier 1 Conclusions Against Their Evidence
+
+### Issue Analyzer (IS)
+**Conclusion**: NO_IS
+**Evidence Review**: The agent states the baseline issue already contains complete reproduction code, traceback, and environment details. The only discussion comment announces a fix without adding new problem scope or requirements. This evidence directly supports NO_IS—there is no sanctioned issue-scope evolution documented in the issue thread.
+**Verdict**: Evidence supports conclusion. ✓
+
+### PR Scope Analyzer (SC)
+**Conclusion**: NO_SC
+**Evidence Review**: The agent explains that while PR comments show additional crash variations (invariant TypeVar, generic self-types), the commit message indicates these share the same root cause with a single solution. The issue requests fixing "crash for protocol member with contravariant type variable" and the PR addresses this specific crash. The evidence demonstrates that variations are manifestations of the same underlying bug, not unrelated scope.
+**Verdict**: Evidence supports conclusion. ✓
+
+### PR Scope Analyzer (UL)
+**Conclusion**: NO_UL
+**Evidence Review**: The agent found an error message literal in test_patch but correctly identified it as a pre-existing mypy type-checking message that appears after the crash is fixed, not a new literal introduced by the patch. The patch only modifies constraints.py to return empty list instead of raising AssertionError.
+**Verdict**: Evidence supports conclusion. ✓
+
+### PR Connection Analyzer (DP)
+**Conclusion**: NO_DP
+**Evidence Review**: The agent reports no merged follow-up PRs or closed issues mention #11135 after merge. No evidence of bugs introduced or incompleteness requiring correction.
+**Verdict**: Evidence supports conclusion. ✓
+
+### PR Connection Analyzer (FP)
+**Conclusion**: NO_FP
+**Evidence Review**: The agent states PR #11135 is the only merged PR for issue #11020, with no earlier merged PR that this would be supplementing.
+**Verdict**: Evidence supports conclusion. ✓
+
+## Step 3: Gather Final Supported Labels
+
+- **SC**: NO - Evidence shows variations are part of same root cause
+- **IS**: NO - No issue-scope evolution documented
+- **UL**: NO - Error message is pre-existing, not newly introduced
+- **DP**: NO - No follow-up corrections found
+- **FP**: NO - No earlier PR exists for this issue
+- **Others**: NO - No textual mismatch evidence presented; all Tier 1 evidence shows proper alignment
+
+## Step 4: Handle Empty/Clean
+
+All Tier 1 agents reported no issues with supporting evidence. No suspicious clues were flagged by any agent. All judgments are internally consistent with their evidence. The PR appropriately fixes the crash described in the issue with a single-root-cause solution.
+
+<classification>
+<label>No Misalignment</label>
+<reason>All three Tier 1 agents found no misalignment patterns, and their evidence consistently supports proper alignment. The issue describes a crash with contravariant type variables, and the PR fixes this specific crash with a single solution addressing the root cause. No scope creep, issue evolution, unspecified literals, or follow-up corrections were evidenced.</reason>
+</classification>

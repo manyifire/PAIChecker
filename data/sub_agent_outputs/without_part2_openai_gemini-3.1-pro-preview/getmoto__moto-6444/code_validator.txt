@@ -1,0 +1,12 @@
+<classification>
+<label>SC</label>
+<reason>The PR patch removes existing validation code from `copy_db_snapshot` and `copy_db_cluster_snapshot` (such as `DBSnapshotAlreadyExistsError` and `SnapshotQuotaExceededError`) and replaces snapshot creation upon cluster deletion with `create_auto_snapshot`. These changes correspond to the extra enhancements described in the textual claim, extending beyond the issue's baseline scope.</reason>
+</classification>
+<classification>
+<label>UL</label>
+<reason>The code patch introduces a hardcoded literal `"automated"` for snapshot types within `create_auto_snapshot` and `create_auto_cluster_snapshot`. The test patch explicitly asserts this value with `assert snapshot["SnapshotType"] == "automated"`, confirming the literal addition.</reason>
+</classification>
+<classification>
+<label>DP</label>
+<reason>The refactoring in `copy_db_snapshot` replaces direct instantiation of `DatabaseSnapshot` with a call to `create_db_snapshot` using the source DB's identifier. Since `create_db_snapshot` raises a `DBInstanceNotFoundError` if the database no longer exists, this code perfectly explains the regression described in follow-up PR #7392 where copying a snapshot of a deleted DB instance fails.</reason>
+</classification>

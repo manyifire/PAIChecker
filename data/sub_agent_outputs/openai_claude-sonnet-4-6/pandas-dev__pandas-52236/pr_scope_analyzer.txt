@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR only closes issue #52151 as stated in "closes #52151" in the PR description. The fix covers `["first", "last", "min", "max"]` rather than just `min`, but this exact extension was explicitly proposed in the issue discussion: "@jbrockmendel I think the fix here is: `elif self.how in ["first", "last", "min", "max"]: res_values[result_mask==1] = -1`". No additional issues or unrelated enhancements are referenced in any PR text.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The only newly introduced literal constant in the patch is `-1` (in `res_values[result_mask == 1] = -1`), but `-1` is not directly asserted in `test_patch`. The `test_patch` asserts `None` for unobserved categories (the visible output after `_from_backing_data` conversion), and `0.1` which is a test-setup value propagated through, not introduced as a fixed runtime constant in the production patch. No literal satisfies both conditions (newly introduced in patch AND explicitly asserted in test_patch).</ul_evidence>
+<suspicious_clues>The fix applies the literal `-1` as a sentinel value for unobserved category indices, which is an implementation detail not explicitly stated in the issue. However, since it's not directly asserted in tests (tests assert `None`/NaN output), it doesn't qualify as UL.</suspicious_clues>
+</sub_agent_result>

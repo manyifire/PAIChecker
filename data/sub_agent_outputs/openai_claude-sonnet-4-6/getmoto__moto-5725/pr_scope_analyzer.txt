@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description only states "Fixes #5059" and the single commit message says "Route53: Intercept duplicate calls to change_rr_sets," which directly matches the issue baseline requesting that Route53 raise an exception on duplicate `change_resource_record_sets` calls. The PR text makes no claim of fixing additional issues or unrelated functionality beyond the single target issue.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch asserts `err["Code"].should.equal("InvalidChangeBatch")`, and the patch introduces `super().__init__("InvalidChangeBatch", ...)` in the new `ChangeSetAlreadyExists` class. However, "InvalidChangeBatch" is explicitly referenced in the issue description: "botocore.errorfactory.InvalidChangeBatch: An error occurred (InvalidChangeBatch)" — an exact string match. The other introduced literal "Provided Change is a duplicate" appears only in the patch but is not asserted in test_patch, so it does not qualify as UL.</ul_evidence>
+<suspicious_clues>The patch also adds a new `DnsNameInvalidForZone` exception class and refactors the DNS name validation (from returning an error string to raising a proper exception), which is not explicitly mentioned in the issue or PR text. However, this is an internal code quality improvement within the same function scope and is not claimed as a separate feature in PR text, so it doesn't rise to SC level per the rules.</suspicious_clues>
+</sub_agent_result>

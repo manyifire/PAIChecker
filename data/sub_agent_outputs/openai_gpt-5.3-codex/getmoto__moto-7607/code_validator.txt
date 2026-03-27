@@ -1,0 +1,8 @@
+<classification>
+<label>IS</label>
+<reason>The coordinator’s scope-evolution claim is consistent with the patch behavior: in `state_task_service_callback.py`, missing `Task.Token` no longer raises via direct indexing and instead enters a timed wait loop, explicitly matching the “don’t throw, keep running/waiting” direction. The new test flow in `test_stepfunctions_dynamodb_integration.py` expects the execution to remain `RUNNING` and then manually stops it, and `verify_execution_result` was adjusted to allow `expected_status=None`, confirming the sanctioned behavior shift was implemented rather than the original crash path.</reason>
+</classification>
+<classification>
+<label>DP</label>
+<reason>Code-level evidence supports that this PR is an incomplete/interim fix: when no token exists, the implementation sleeps until timeout (`while time.time() < mustend_at`) and returns without resolving callback semantics, and the test explicitly labels it a “Bad Example” and force-stops execution. That test validates non-crash + running state, not a complete callback lifecycle, which is consistent with textual evidence that later PR #7608 was needed to further correct/supplement the same issue area.</reason>
+</classification>

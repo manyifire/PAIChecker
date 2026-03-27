@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue description states: "IAM list_groups method didn't return 'CreateDate' field" and requests adding this field to the response. The PR description explicitly states "Fixes #6843" and the PR title says "IAM: list_groups() now returns the CreateDate-attribute." The PR text claims exactly what the issue requests—no additional issues or unrelated functionality are claimed in the PR description, commit messages, or comments.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains assertions like `assert all([g["CreateDate"] for g in groups])` checking for the CreateDate field. However, the patch only adds `<CreateDate>{{ group.created_iso_8601 }}</CreateDate>` which forwards an existing model attribute, not a newly introduced hardcoded literal. The literal "CreateDate" is an AWS API field name specified in the issue description ("it should returns a field CreateDate"), so it is not an unspecified literal.</ul_evidence>
+<suspicious_clues>The test_patch modifies test_list_roles() to also check CreateDate and MaxSessionDuration for roles, which is beyond the list_groups scope. However, per the rules, test-only additions without corresponding PR text claims do not count as SC. The PR text only claims the list_groups fix.</suspicious_clues>
+</sub_agent_result>

@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue baseline is a single bug: \"[dynamodb] `get_item` of column with binary value not supported\". The PR stays aligned with that scope: title \"DynamoDB: Fix projection expression with binary attribute\" and description \"Fixes #6815\". There is no PR-side text claiming multiple issue closures or unrelated enhancements; references like \"Bug was introduced ... in #6375\" are causal context, not additional delivered scope.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test asserts a concrete value in `test_patch`: `== {\"key\": Binary(b\"value\\xbf\")}`. In `patch`, new fixed literals include encoding/decoding mechanics such as `base64.b64encode(self.value).decode(\"utf-8\")` and `value = base64.b64decode(value)`, but the asserted bytes literal `b\"value\\xbf\"` is not newly defined as a fixed runtime constant in patch. Since UL requires the same literal to be introduced in patch and asserted in tests, this does not meet UL.</ul_evidence>
+<suspicious_clues>The issue title says `get_item`, but the traceback and PR rationale discuss projection-expression conversion paths and query internals; this appears to be the same underlying bug path, not separate scope.</suspicious_clues>
+</sub_agent_result>

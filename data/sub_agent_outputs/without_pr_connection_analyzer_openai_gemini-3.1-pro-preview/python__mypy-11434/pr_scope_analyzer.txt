@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue describes a type inference bug where indexing a `TypeVar` bound to a `TypedDict` incorrectly infers the return type as `object`. The PR correctly addresses this core issue by updating the type inference logic in `visit_index_with_type` to recursively evaluate the `TypeVar`'s upper bound. The PR description and commits note a "corner case" involving a recursive `TypeVar` with an upper bound that implements `__getitem__`; this was merely an refinement of the same fix prompted by a CI regression (`mypy_primer`), not an unrelated scope addition. Additional tests cover variations of the same indexing behavior (e.g., Union bounds, values), which aligns with the issue's request to properly infer types through bounded `TypeVar`s.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The `patch` alters type-checking logic by calling `self.has_member(left_type.upper_bound, "__getitem__")` and adding a recursive call to `visit_index_with_type`. It does not introduce any new hardcoded string or number literal constants into the runtime code that are subsequently asserted in `test_patch`. Thus, there are no unspecified literal values.</ul_evidence>
+<suspicious_clues>None</suspicious_clues>
+</sub_agent_result>

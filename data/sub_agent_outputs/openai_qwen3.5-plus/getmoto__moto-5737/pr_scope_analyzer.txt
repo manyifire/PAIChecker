@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>Issue description states: "New or modified origins passed as part of an `update-distribution` API call are not persisted" with expected behavior that "Changes to origins made via `update-distribution` calls are visible in subsequent `get-distribution-config` & `get-distribution` calls." PR description states "Fixes #5736" and PR title is "CloudFront: Persist origin changes made via update-distribution calls." The PR text claims exactly what the issue requests - no additional issues, unrelated functionality, or scope expansion beyond the baseline.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The patch introduces `self.origin_path = origin.get("OriginPath") or ""` which extracts OriginPath from input data rather than defining a new hardcoded constant. Test assertions like `origin.should.have.key("OriginPath").equals("/updated")` and `origin.should.have.key("OriginPath").equals("/example")` use test data values that are passed through the implementation, not newly introduced runtime constants defined in the patch. The literals are test inputs/expected outputs, not hardcoded values introduced by the patch code.</sc_evidence>
+<suspicious_clues>The test_patch shows an OriginShield assertion change from `{"Enabled": False}` to `{"Enabled": False, "OriginShieldRegion": "None"}` which appears to be a side effect of the origin persistence fix exposing additional fields, but this is not a newly hardcoded literal in the patch - it's existing response structure being properly returned.</suspicious_clues>
+</sub_agent_result>

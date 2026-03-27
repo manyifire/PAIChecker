@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The PR description explicitly states: "It also fixes the following case, in which the chunk function returns a non-array-like type: `array.map_blocks(lambda x: 5, chunks=out_chunks).compute()`" - this is an additional scope claim beyond the issue description which only covers the scalar return case from `np.mean`. The issue baseline only requests fixing the confusing error when `map_blocks` function returns a scalar (like `np.mean`), but the PR text explicitly claims to fix an additional distinct case (non-array-like types like `lambda x: 5`).</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The patch introduces a new error message literal: `raise ValueError(f"Dimension mismatch: expected output of {func} to have dims = {expected_ndim}. Got {out_ndim} instead.")`. The test_patch explicitly asserts this literal: `pytest.raises(ValueError, match="Dimension mismatch:")`. This literal "Dimension mismatch:" does not appear anywhere in the issue description or discussion - the issue only mentions `IndexError: tuple index out of range` as the confusing error.</ul_evidence>
+<suspicious_clues>The PR went through multiple implementation iterations (config option → compute kwarg → enforce_ndim kwarg) as shown in PR comments. The test includes parametrized cases for ndim=[0,1,3,8] which extends beyond the original scalar issue. The PR adds new keyword parameters (`enforce_ndim` to `map_blocks`, `check_ndim` to `assert_eq`) that were not requested in the issue.</suspicious_clues>
+</sub_agent_result>

@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description explicitly states "closes #53574" only and focuses solely on "Perf improvement for `MultiIndex.append` (and `pd.concat` for objects with MultiIndexes)". Commit messages ("improve perf of MultiIndex.append", "fix test", "style") all pertain to the single issue. The test_patch modifications to `test_combine_first.py` and `test_setops.py` appear to be adjustments to existing tests affected by the main change, not separate issue fixes, and no PR text claims these as additional scope.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The `test_patch` only modifies existing tests: changing `[np.nan, 5.0, 6.0, 7.0]` to `[np.nan, 5, 6, 7]` and removing `.set_levels([expected.levels[0].astype(np.float64)])`. The `patch` in `multi.py` introduces no new hardcoded literal constants — it uses `recode_for_categories` with variables. There are no newly introduced fixed runtime constants in `patch` that are then asserted with exact literals in `test_patch`.</ul_evidence>
+<suspicious_clues>The test_patch removes a comment "We don't particularly care about having levels[0] be float64, but it is" and the associated `.set_levels` call, suggesting the PR's changes altered the dtype behavior of `union` results on MultiIndex levels — this is a subtle behavioral side effect but has no explicit PR text claiming it as a separate fix.</suspicious_clues>
+</sub_agent_result>

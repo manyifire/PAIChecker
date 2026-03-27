@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue description states "BUG: can't pass `Colormap` instance when plotting if using matplotlib >= 3.6" and the PR description claims "BUG: Fix passing `Colormap` instance to plot methods with mpl >= 3.6." - these scopes match exactly. The PR only closes #49374 (single issue), and commit messages like "Test hexbin too" represent testing the same bug fix across different plot methods, not a separate unrelated enhancement. No textual evidence shows the PR claims to fix additional distinct issues beyond the baseline scope.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains `cmap = mpl.colors.ListedColormap([[1, 1, 1], [0, 0, 0]])` which is test setup data for creating a Colormap instance, not an asserted output literal. The test does not contain any hardcoded assertion literals (like exception messages or expected output strings) - it simply calls the plot method and expects no exception to be raised. The patch only changes `mpl.colormaps[...]` to `mpl.colormaps.get_cmap(...)` without introducing any new hardcoded runtime constants.</sc_evidence>
+<suspicious_clues>The commit message "Test hexbin too" might initially appear as scope expansion, but hexbin uses the same colormap code path as scatter in the same file (pandas/plotting/_matplotlib/core.py), so this is testing the same bug fix rather than adding unrelated scope. The whatsnew entry correctly references only issue #49374.</suspicious_clues>
+</sub_agent_result>

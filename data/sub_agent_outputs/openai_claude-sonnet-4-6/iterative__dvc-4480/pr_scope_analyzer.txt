@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue description requests a better error message specifically for "Unable to locate credentials" when missing AWS credentials. However, the PR title claims "provide more helpful messages on common errors" (plural), and the patch implements error handling for THREE distinct error types: NoCredentialsError, EndpointConnectionError, and NoSuchBucket. The endpoint connection and bucket existence errors are additional scope beyond the single credentials error described in the issue.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The patch introduces three new error message literals: "Unable to find AWS credentials. {link}", "Unable to connect to '{name}'. {link}", and "Bucket '{bucket}' does not exist. {link}". All three are asserted in test_patch (tests like test_get_s3_no_credentials, test_get_s3_connection_error, test_get_bucket). The issue only mentions "Unable to locate credentials" and suggests something like "Unable to access s3://... Do you have a network connection..." - none of the exact literals in patch/test appear in the issue text.</ul_evidence>
+<suspicious_clues>The PR also removes the "listobjects" configuration option (marked as "obsoleted" in comment) and refactors from using boto3 client to resource API throughout - these are implementation changes beyond error message improvements, though they don't constitute functional scope creep.</suspicious_clues>
+</sub_agent_result>

@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue description only requests "Replace a listener default certificate using the modify_listener function." However, the PR description explicitly claims four improvements beyond this: "Add ProtocolVersion to the response (defaults to HTTP1)", "Expand the number of valid protocols inline with what AWS considers valid atm", "Move modify_target_group_attributes to models.py", and "Fixes a bug so that certificates are always persisted after a modify_target_group." These are additional enhancements and bug fixes not requested in the original issue scope.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The test_patch asserts error messages like "Certificate lalala not found" and "Protocol HTP is not supported", which appear as newly introduced format strings in patch: `raise RESTError("CertificateNotFound", "Certificate {0} not found".format(default_cert_arn))` and `raise RESTError("UnsupportedProtocol", "Protocol {0} is not supported".format(protocol))`. The test also asserts the expanded protocol list `['HTTPS', 'HTTP', 'TCP', 'TLS', 'UDP', 'TCP_UDP', 'GENEVE']` which is newly defined in patch as `valid_protocols`. None of these specific error messages or the complete protocol list are specified in the issue description.</ul_evidence>
+<suspicious_clues>The PR includes a refactoring that moves code to models.py with "no logic changes" claimed, but this still represents structural changes beyond the feature request. The issue discussion mentions IAM certificate problems that were addressed in a separate PR #4823, showing follow-up work that could have been scope creep if included in this PR.</suspicious_clues>
+</sub_agent_result>

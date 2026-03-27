@@ -1,0 +1,8 @@
+<classification>
+<label>SC</label>
+<reason>The issue specifically reports a bug in the `RandAffined` transform. However, the PR's code changes extensively modify multiple unrelated dictionary-based transforms across different modules (e.g., `RandGaussianNoised`, `RandScaleCropd`, `RandFlipd`) to replace `self.keys[0]` with `first(self.key_iterator(d))`, confirming the scope expansion.</reason>
+</classification>
+<classification>
+<label>DP</label>
+<reason>The PR addresses the missing first key by using `first(self.key_iterator(d))` instead of `self.keys[0]`. However, the code lacks a safeguard for the edge case where all keys are missing, as `d[first(...)]` or its subsequent `.shape` access would still raise an error, consistent with the user's report that led to the follow-up PR #3325.</reason>
+</classification>

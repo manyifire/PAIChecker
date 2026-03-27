@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The PR description explicitly states "Closes #11144", "Closes https://github.com/python/mypy/issues/11138", and "Closes #11375" - three distinct issues. The instance only lists issues ['11144', '11375'], meaning #11138 is an additional issue closure beyond the target scope. Additionally, the PR title claims "Now `*CustomType` and `**CustomType` arguments are properly checked" which covers both star and double-star unpacking, while the issue description baseline only focuses on the `*foo` iterator unpacking bug (no mention of `**` mapping unpacking).</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains `reveal_type` assertions with type strings like "builtins.list[builtins.int*]" and error messages like "Argument 1 to 'foo' has incompatible type", but these are mypy's generated type representations, not hardcoded runtime constants newly introduced in the patch. The patch introduces `ArgumentInferContext` as a NamedTuple with `mapping_type: Instance` and `iterable_type: Instance` type fields, but no new literal string constants are defined. No literals in test_patch match the UL criteria of being newly introduced fixed runtime constants.</ul_evidence>
+<suspicious_clues>The PR explicitly references issue #11138 in commit messages and test cases (e.g., `# https://github.com/python/mypy/issues/11138` in testSubtypingIterableUnpacking1), which is outside the instance's listed issue numbers ['11144', '11375']. This confirms the PR handles additional scope beyond the baseline issues.</suspicious_clues>
+</sub_agent_result>

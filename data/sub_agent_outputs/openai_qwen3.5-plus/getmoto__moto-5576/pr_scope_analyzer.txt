@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The PR description explicitly states: "This PR also adds the ability to search for a function by alias, i.e. `get_function(name, alias)` - before it would always return `$latest` if a non-numeric alias was provided." This is an additional feature beyond the issue description, which only requests fixing the bug where "the qualifier value is used as the array index of the version list" instead of matching the version correctly. The PR text clearly claims scope beyond the baseline issue scope (alias search functionality not mentioned in issue).</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains ARN format strings like `f"arn:aws:lambda:us-east-1:{ACCOUNT_ID}:function:{fn_name}:6"` but these are standard AWS ARN patterns, not new hardcoded runtime constants introduced by the patch. The patch only implements lookup logic (`if str(config.version) == version or config.has_alias(version)`) without introducing new literal error messages or fixed output strings that are then asserted in tests.</ul_evidence>
+<suspicious_clues>The test_patch includes test_get_function_using_alias() which tests the alias functionality that was added beyond the original issue scope - this aligns with the SC finding that the PR claims additional functionality.</suspicious_clues>
+</sub_agent_result>

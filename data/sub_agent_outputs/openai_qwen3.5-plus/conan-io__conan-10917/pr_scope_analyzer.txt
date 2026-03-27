@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description states "BugFix: The `find_dependency` called internally in `CMakeDeps` generator to locate transitive dependencies now use the `MODULE/NO_MODULE` following the `cmake_find_mode` property when declared in the dependency" which directly addresses the issue description's core problem about `cmake_find_mode` property being broken for transitive dependencies. The PR only closes #10591 and commit messages reference only feature/10591 branch with no additional issue work claimed. The test changes (including test_system_dep) verify the same cmake_find_mode fix behavior rather than introducing unrelated functionality.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains assertions like `assert 'set(liba_FIND_MODE "NO_MODULE")'` and `assert 'set(ZLIB_FIND_MODE "")'` but these literals ("NO_MODULE", "MODULE", "") are standard CMake keywords already mentioned in the issue description's discussion of `find_dependency(... MODULE/NO_MODULE)` behavior. These are not newly introduced hardcoded runtime constants but expected CMake syntax values that the implementation correctly maps from the cmake_find_mode property. The patch implements `values = {"none": "", "config": "NO_MODULE", "module": "MODULE", ...}` which maps property values to standard CMake keywords, not arbitrary new literals.</sc_evidence>
+<suspicious_clues>None - the PR scope aligns precisely with the issue description's request to fix cmake_find_mode property behavior for transitive dependencies, and all test literals are standard CMake keywords mentioned in the issue context.</suspicious_clues>
+</sub_agent_result>

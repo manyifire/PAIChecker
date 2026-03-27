@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue description requests fixing a bug where `DataFrame#to_json` outputs `Int64` values containing `NA` as floats instead of integers. The PR description states "closes #57224" and the commit message says "REGR: to_json converting nullable ints to floats" - both directly match the issue scope. There is no textual evidence in PR description, comments, or commit messages claiming to fix additional issues or unrelated functionality beyond the stated issue scope.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains expected JSON output literals like `{"a":1,"b":2}` and `{"a":null,"b":null}`. However, these literals match the expected behavior explicitly shown in the issue description (e.g., `{"a":1} <- int` and `{"a":null}`). The patch does not introduce new hardcoded constants - it implements `_values_for_json()` returning `np.asarray(self, dtype=object)` which is a transformation, not a literal definition. The test assertions verify the expected behavior stated in the issue, not unspecified literals.</sc_evidence>
+<suspicious_clues>The test uses pyarrow dtype (`int64[pyarrow]`) in addition to the Int64 dtype mentioned in the issue, but this is consistent with the issue scope covering nullable integer types. The whatsnew entry references the same issue number #57224, confirming scope alignment.</suspicious_clues>
+</sub_agent_result>

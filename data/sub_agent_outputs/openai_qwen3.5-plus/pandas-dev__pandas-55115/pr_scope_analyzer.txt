@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue input contains multiple issue numbers ['54459', '55009'] representing two distinct bugs: (1) usecols in pandas.read_csv with pyarrow engine, and (2) DataFrame.apply not using extra arguments when raw=True. The PR description explicitly states "- [x] closes #54459" while a commit message explicitly states "BUG: This fixes #55009 (`raw=True` caused `apply` method of `DataFrame` to ignore passed arguments)". This PR clearly claims to fix multiple distinct issues beyond a single target issue scope.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains test data literals like column names 'a', 'i', 'x', 'b', 'j', 'y' and usecols=[0, 1], but these are standard test input values, not newly introduced hardcoded runtime constants. The patch introduces logic `f"f{n}" for n in self.convert_options["include_columns"]` which is a transformation pattern, not a fixed literal value. No literal in test_patch is both newly introduced in patch AND asserted as a specific fixed value not mentioned in the issue.</sc_evidence>
+<suspicious_clues>The commit message claims to fix #55009 (DataFrame.apply bug), but the provided patch only shows changes to arrow_parser_wrapper.py for #54459 (read_csv pyarrow issue). The whatsnew entry only documents the read_csv fix. This discrepancy between commit message claims and visible patch content is unusual - the apply fix may be in a different part of the codebase not shown in the provided patch excerpt.</suspicious_clues>
+</sub_agent_result>

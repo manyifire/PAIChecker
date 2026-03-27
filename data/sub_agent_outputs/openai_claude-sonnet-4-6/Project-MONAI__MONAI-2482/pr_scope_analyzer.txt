@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description explicitly states "Fixes #2479" only, with no mention of additional issues. The issue baseline covers three locations needing version comparison improvements (tests/utils.py, monai/utils/module.py, monai/utils/deprecated.py), and the PR addresses exactly those three locations. The PR description and commit messages ("deprecation fixes") are consistent with the single issue scope of enhancing version comparison utility.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The only assertion literal in test_patch is `"fake warning"` in `self.assertEqual(aw.warning.args[0], "fake warning")`, but this is a purely test-internal string used to verify that no deprecation warning was issued (by checking the first warning is the manually triggered fake one), not a fixed runtime constant introduced in the production `patch`. The `patch` introduces logic changes (regex parsing, `is_not_yet_deprecated` checks) but introduces no new hardcoded string constants that are also asserted in `test_patch`.</ul_evidence>
+<suspicious_clues>The test_future test uses `self.next_version` and `self.test_version` which are class attributes not visible in the diff - these may be pre-existing test fixtures. The PR also adds `is_not_yet_deprecated` logic to both `deprecated` and `deprecated_arg` which goes slightly beyond pure version comparison utility enhancement, but is directly tied to the `deprecated.py` location mentioned in the issue.</suspicious_clues>
+</sub_agent_result>

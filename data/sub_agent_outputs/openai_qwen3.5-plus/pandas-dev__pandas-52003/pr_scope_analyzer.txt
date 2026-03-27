@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue description requests adding a "DeprecationWarning on calling this from the pandas objects (DataFrame/Series)" for the `_data` attribute. The PR description explicitly states "closes #33333" and the commit message is "DEPR: NDFrame._data" - both align exactly with the single issue scope. No additional issues, unrelated functionality, or cross-issue additions are claimed in PR text, comments, or commit messages.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains message assertions like `msg = "DataFrame._data is deprecated"` and `msg = "(Series|DataFrame)._data is deprecated"`. However, the patch implements the warning as `f"{type(self).__name__}._data is deprecated and will be removed in a future version. Use public APIs instead."` - this is a dynamic f-string using `{type(self).__name__}`, not a newly introduced fixed runtime constant. The literal strings in tests are regex patterns matching the dynamically generated message, not hardcoded constants introduced by the patch.</sc_evidence>
+<suspicious_clues>The PR commit message "okwarning" corresponds to the `:okwarning:` directive added in the doc patch - this is a documentation/testing configuration change, not scope creep. The test updates in test_patch (changing `_data` to `_mgr` in casting.py) are internal test maintenance to align with the deprecation, not evidence of additional scope.</suspicious_clues>
+</sub_agent_result>

@@ -1,0 +1,38 @@
+## Step 1: Review Tier 1 Results
+
+**issue_analyzer**: NO_IS — The issue clearly defines the problem and desired solution (expose fsspec options for Kerberos/HTTPS). No discussion evolution occurred. Evidence supports NO_IS cleanly.
+
+**pr_scope_analyzer**: NO_SC — PR title and description directly match the issue request. Removal of hdfscli options was mentioned in the issue. Evidence supports NO_SC.
+
+**pr_scope_analyzer**: UL — The `kerb_kwargs = {"principal": principal}` literal key structure is introduced in the implementation and tested, but the issue only mentions "Kerberos" generically without specifying the `"principal"` key name as a required literal.
+
+**pr_connection_analyzer**: NO_DP and NO_FP — No follow-up PRs citing a bug, no predecessor PRs. Evidence clearly supports both negative conclusions.
+
+## Step 2: Judge Tier 1 Conclusions Against Their Evidence
+
+**NO_IS**: The issue_analyzer's evidence directly supports this. The issue's baseline text is clear and no discussion evolution is documented. ✓ Keep NO_IS conclusion (no IS label).
+
+**NO_SC**: The pr_scope_analyzer's evidence shows that even the `webhdfs_token` → `token` rename and hdfscli option removal were at minimum referenced in the issue as an "opportunity." The dependency question raised by a reviewer doesn't constitute unrelated scope in the PR itself. ✓ Keep NO_SC conclusion (no SC label).
+
+**UL**: The pr_scope_analyzer identifies the literal string key `"principal"` in `kerb_kwargs` as a runtime constant not specified in the issue. The issue references fsspec docs for Kerberos support generally but does not specify `"principal"` as a required dict key literal. This is a concrete implementation detail (a hardcoded string key in a dict structure) introduced in the patch and asserted in tests, not traceable to the issue text. This evidence does support UL.
+
+**NO_DP / NO_FP**: Both are well-supported by the absence of related PRs. ✓ Keep both negative conclusions.
+
+## Step 3: Gather Final Supported Labels
+
+- IS: No (NO_IS is well-supported)
+- SC: No (NO_SC is well-supported)
+- DP: No (NO_DP is well-supported)
+- FP: No (NO_FP is well-supported)
+- UL: Yes — the literal `"principal"` key in `kerb_kwargs` dict is a runtime constant introduced in the PR implementation not specified in the issue text
+- Others: No clear textual mismatch beyond UL exists
+- No Misalignment: Cannot apply since UL is present
+
+## Step 4: Final Decision
+
+The only applicable label is **UL**, based on the pr_scope_analyzer's evidence about the `"principal"` literal key in the Kerberos configuration dict.
+
+<classification>
+<label>UL</label>
+<reason>The pr_scope_analyzer found that the PR introduces a hardcoded literal string key `"principal"` within the `kerb_kwargs` dict structure (`config["kerb_kwargs"] = {"principal": principal}`), which is explicitly asserted in tests. The issue description only mentions enabling "Kerberos" support generally by passing fsspec options through, without specifying any particular dict key literal like `"principal"` as a required implementation detail. This runtime constant appears in the patch and test assertions without any textual basis in the issue description.</reason>
+</classification>

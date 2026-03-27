@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue description only requests fixing a segfault crash ("Running mypy on the following program produces a segfault... Expected Behavior: Mypy returns successfully"). However, the PR description explicitly claims additional scope: "The following code optimises make_simplified_union in the common case that there are exact duplicates in the union" and "This is about a 25% speedup on the pydantic codebase and about a 2% speedup on self check". The PR title also states "Speed up make_simplified_union, fix recursive tuple crash" - clearly claiming both a performance optimization AND the crash fix, where the performance optimization was never requested in the issue.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains `Literal[123]` and `Literal[456]` as test data values in the regression test case. However, these literals are NOT newly introduced as fixed runtime constants in the patch code - they are simply test input values used to exercise the recursive union handling. The patch modifies type checking logic (e.g., `right.partial_fallback.type.is_enum`, removing `simple_literal_value_key` function) but does not introduce any new hardcoded string/number constants that are then asserted in tests. This is analogous to the counter-example where test inputs are not considered UL.</ul_evidence>
+<suspicious_clues>None</suspicious_clues>
+</sub_agent_result>

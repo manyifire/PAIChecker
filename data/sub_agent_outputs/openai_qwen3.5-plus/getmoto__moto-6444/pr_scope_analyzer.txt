@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The PR description explicitly claims: "The `snapshot-type`-filter has also been fixed" and "This PR also removes some duplicate validation when copying a snapshot." Neither the snapshot-type filter fix nor the duplicate validation removal are mentioned in the Issue Description baseline, which only requests adding `snapshot_type` attribute and updating `create_db_snapshot` and `describe_db_snapshots` methods. These are additional unrelated enhancements beyond the stated issue scope.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The test_patch contains assertion `assert snapshot["SnapshotType"] == "automated"` for auto-created snapshots. The patch introduces this literal via `create_auto_snapshot` calling `create_db_snapshot(..., snapshot_type="automated")`. However, the Issue Description only specifies `SnapshotType = "manual"` (from AWS documentation) and does not mention "automated" anywhere. The literal "automated" is newly introduced in patch, asserted in test_patch, but NOT specified in the issue text.</ul_evidence>
+<suspicious_clues>The issue mentions "I bet the `create_db_cluster_snapshot` related methods and datamodel has the same issue" as speculation, which the PR addresses. However, the PR goes further by adding filter fixes and validation removal that are not mentioned in the issue at all. The "automated" snapshot type is an implementation decision not specified in the original issue requirements.</suspicious_clues>
+</sub_agent_result>

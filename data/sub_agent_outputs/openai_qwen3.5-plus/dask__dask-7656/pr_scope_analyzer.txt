@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue description focuses on one specific bug: "dataclass issue with fields that have init=False" causing AttributeError when using @dask.delayed. The PR description states "Fix delayed with dataclasses where init=False" and closes #7654. The commit messages ("Allow dataclasses where fields have init=False", "Add init=False to test", "Add comment") all align with the single issue scope. The review comment about updating `to_task_dask` is addressing the same bug in another location within the same codebase, not a separate issue.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch adds `("b", int, dataclasses.field(init=False))` to the test dataclass to verify the fix, but this is the exact scenario described in the issue (init=False fields). The patch adds a filter `if hasattr(expr, f.name)` to skip uninitialized fields - no new hardcoded literal values (strings, numbers, error messages) are introduced. The literal "init=False" is explicitly specified in the issue description as the core problem being fixed.</ul_evidence>
+<suspicious_clues>The PR updates two functions (unpack_collections and to_task_dask) with the same fix pattern, but this is addressing the same bug in multiple locations rather than scope creep. The test modification directly tests the issue scenario without introducing unrelated assertion literals.</suspicious_clues>
+</sub_agent_result>

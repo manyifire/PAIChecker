@@ -1,0 +1,8 @@
+<classification>
+<label>IS</label>
+<reason>Kept. The issue text asks to skip evaluator when validation has zero items, and the patch implements an early return when `self.state.epoch_length == 0` in `workflow.py`, which is consistent with that evolved concrete failure mode. The test patch confirms this behavior with `test_empty_data` calling `evaluator.run()` on an empty dataloader with `epoch_length=0`, and adds a distributed test where one rank has `[]`, matching the discussion-added multi-rank empty-data scenario.</reason>
+</classification>
+<classification>
+<label>SC</label>
+<reason>Kept. Coordinator’s textual SC claim is that scope expanded from only “no data” to also “specified `epoch_length` is 0,” and code evidence aligns because the new guard is explicitly keyed to `epoch_length == 0` (not only dataloader length) in `workflow.py`. The test patch is consistent with that expansion via explicit `epoch_length=0` coverage and distributed empty-rank handling, so there is no contradiction to the stated broader scope claim.</reason>
+</classification>

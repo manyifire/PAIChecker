@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The Issue Description specifically requests fixing "mock_cloudformation with SNS fails to delete stack" due to "duplicated and invalid ARN" for SNS topics. However, the PR Description explicitly states: "Also standardizes/normalizes resource deletion in the CF logic: call `resource.delete()` if the method exists, otherwise call `backend.delete_from_cloudformation_json` if the method exists. This logic is now the same for resources that are removed from a stack, and for resources in stacks that are deleted." This standardization applies broadly to all CloudFormation resources, not just the SNS topic bug described in the issue.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch only refactors existing test code by extracting a `get_template(with_properties)` helper function and adding `@pytest.mark.parametrize("with_properties", [True, False])` to test both cases. No new hardcoded literal values (error messages, strings, numbers) are introduced in the patch that are asserted in tests. The patch only modifies deletion logic flow without introducing new runtime constants.</ul_evidence>
+<suspicious_clues>The PR claims to fix only #6311, but the implementation standardizes deletion logic across all CloudFormation resources (parsing.py changes affect general resource deletion, not just SNS). The test changes add coverage for topics "without properties" which wasn't explicitly mentioned in the issue but is related to the ARN duplication bug.</suspicious_clues>
+</sub_agent_result>

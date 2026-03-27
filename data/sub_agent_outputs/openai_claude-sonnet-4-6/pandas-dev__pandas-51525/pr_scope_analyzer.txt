@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue #47305 only describes a flaky `ImportError: undefined symbol: pandas_datetime_to_datetimestruct` from parallel builds. The PR explicitly goes beyond this by also implementing a parser capsule, as stated in PR comments: "Ok I implemented the parser capsule. Hoping there are no more symbol issues with parallel builds" - with commits "Hacked together parser capsule" and "Resolved all undefined symbols in parsers.pyx". This parser capsule work addresses a separate parallel compilation issue with `tokenizer.c` not requested by the issue.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The patch newly introduces fixed constants `#define PandasDateTime_CAPSULE_NAME "pandas._pandas_datetime_CAPI"` and `#define PandasParser_CAPSULE_NAME "pandas._pandas_parser_CAPI"` in `pd_datetime.c` and `pd_parser.c`. The test_patch then explicitly asserts these as expected API attributes: `"_pandas_datetime_CAPI"` and `"_pandas_parser_CAPI"` in `pandas/tests/api/test_api.py`. Neither of these literal attribute names appears anywhere in the issue description or discussion.</ul_evidence>
+<suspicious_clues>The PR description mentions "This also should help @jbrockmendel work in #51368" referencing a separate issue. The PR comment also notes "there is still some risk of file clashing due to the tokenizer.c inclusion...which can be tackled in another PR" - yet the PR proceeds to tackle it anyway with the parser capsule, suggesting scope was consciously expanded during development.</suspicious_clues>
+</sub_agent_result>

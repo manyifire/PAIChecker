@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue description requests "ENH: DatetimeTZDtype is missing `__from_arrow__`" to enable pyarrow's `to_pandas` method. The PR description states "Closes #52200" (single issue) and the PR title says "ENH: add `__from_pyarrow__` support to `DatetimeTZDtype`" (note: typo for `__from_arrow__`). The commit messages like 'handle empty pyarrow arrays', 'add test with iNaT', and 'add docs for NaT handling' are implementation details within the same scope, not unrelated enhancements. No explicit textual evidence shows the PR claims to fix multiple distinct issues or add unrelated functionality beyond the issue baseline.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains test data values like `EXTREME_VALUES = [0, 123456789, None, iNaT, 2**63 - 1, -(2**63) + 1]` and uses `tm.assert_extension_array_equal(result, expected)` assertions. The `iNaT` literal is imported from `pandas._libs` (pre-existing constant), not newly introduced in the patch. The patch implements `__from_arrow__` method without introducing new hardcoded runtime constants—it uses `array.cast()`, `array.to_numpy()`, and `DatetimeArray()` constructor calls. No literal in test_patch matches a newly defined fixed constant in patch that is absent from issue text.</sc_evidence>
+<suspicious_clues>PR title has a typo: says `__from_pyarrow__` instead of `__from_arrow__` (which is what the issue requests and what the patch actually implements). The whatsnew entry references issue #52201 but the PR closes #52200—this appears to be a documentation numbering discrepancy but not scope creep since it's the same feature implementation.</suspicious_clues>
+</sub_agent_result>

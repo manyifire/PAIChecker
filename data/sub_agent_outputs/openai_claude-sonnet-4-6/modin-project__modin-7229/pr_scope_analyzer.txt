@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description explicitly states "Resolves #7230" and only references one issue. The commit message is "PERF-#7230: Don't preserve bad partition for 'merge'" referencing only the target issue. The PR scope—adding repartition logic to avoid bad partitioning in `merge`—directly matches the issue description "Don't preserve bad partition for `merge`".</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The `patch` introduces `left = left.repartition(axis=0)` as a new explicit constant call with `axis=0`. The `test_patch` asserts `repartition.assert_called_once_with(axis=0)`, verifying this specific literal. The issue description only says "Don't preserve bad partition for `merge`" with no mention of `axis=0` or any specific axis value, so this literal is not in the issue text but is newly introduced in `patch` and explicitly asserted in `test_patch`.</ul_evidence>
+<suspicious_clues>The test also uses `[256]` and `[32, 32, 32, 32]` as partition sizes and a threshold of `0.3` in the patch, none of which are mentioned in the issue description. However, `0.3` is not directly asserted in test_patch (only used to determine behavior), and the partition size literals are test setup data rather than new runtime constants introduced by patch. The `axis=0` value is the clearest UL case as it is both a new fixed constant in patch and explicitly verified in the test assertion.</suspicious_clues>
+</sub_agent_result>

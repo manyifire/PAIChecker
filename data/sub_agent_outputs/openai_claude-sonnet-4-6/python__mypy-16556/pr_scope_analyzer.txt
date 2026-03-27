@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR explicitly states "Fixes #16550" and its description covers only the hashability detection improvement for attrs classes, which is exactly what issue #16550 requests. The added `overwrite_existing` parameter is an implementation detail needed for the fix. While a PR comment reveals an edge case (frozen subclass of non-frozen), the PR author explicitly states "I'll look into handling this case in a new PR," confirming no extra scope was claimed or delivered in this PR.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>In `patch`, `_remove_hashability` introduces `NoneType()` as the fixed type constant for `__hash__`, and in `test_patch` this is asserted as `reveal_type(A.__hash__)  # N: Revealed type is "None"`. The exact literal string `"None"` (for revealed type of `__hash__`) is not mentioned in the issue description. Similarly, the frozen hash type `"def (self: builtins.object) -> builtins.int"` is a new literal in `test_patch` not specified in the issue. These are newly introduced fixed constants in `patch` that are explicitly asserted in `test_patch` with no exact match in the issue text.</ul_evidence>
+<suspicious_clues>A post-merge PR comment by @brianmedigate reveals a regression/new bug: a frozen class inheriting from a non-frozen class is incorrectly typed as non-hashable after this PR (mypy 1.9.0). The PR author acknowledges the issue and defers it to a new PR. This suggests the PR's inheritance logic may be incomplete, but it doesn't affect SC/UL classification.</suspicious_clues>
+</sub_agent_result>

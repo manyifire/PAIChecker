@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue description reports a single bug about field inheritance where inherited fields lose their default values. The PR description states "Fixes #4909" and "fix field inheritance" with no claims of additional issues or unrelated functionality. Commit messages like "first try to fix inherited fields" and "simplify getting inherited field from base class" stay within the single issue scope. The test changes (removing xfail markers, adding test_parent_field_with_default) all relate directly to the field inheritance bug described in the issue.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains literals like `a: int = 1`, `b: int = Field(2)`, `c: int = 3` and assertions `c.a == 1`, `c.b == 2`, `c.c == 3`. These are test input values, not newly introduced runtime constants in the patch. The patch itself contains no new hardcoded string literals or fixed constants—it only modifies logic to retrieve inherited fields from `cls.model_fields[ann_name]`. No literals in test_patch match the UL criteria of being newly introduced constants in patch AND asserted in tests.</sc_evidence>
+<suspicious_clues>The PR description mentions "some more tests are passing now" which could suggest broader impact, but this is consistent with fixing the core inheritance bug rather than scope creep. Multiple xfail markers were removed from existing tests (test_partial_inheritance_config, test_str_method_inheritance, test_repr_method_inheritance, test_json_encoder_inheritance_override), but these are all inheritance-related tests that were blocked on V2 development, not unrelated functionality.</suspicious_clues>
+</sub_agent_result>

@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR explicitly closes only one issue (#49535) as stated in "closes #49535". The additional code in `algorithms.py` and `base.py` handling float16 results from ufuncs was discussed in PR comments as a necessary consequence: "fail on float16, but allow np.exp(int8_arrays)" commit shows this is part of implementing the same fix without breaking existing np.exp behavior on int8 arrays. No separate unrelated issues are claimed.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>In `patch`, new error messages are introduced as fixed constants: `raise NotImplementedError("float16 indexes are not supported")` and `raise NotImplementedError("float16 indexes are not implemented")`. In `test_patch`, these are explicitly asserted: `msg = "float16 indexes are not supported"` with `pytest.raises(NotImplementedError, match=msg)` and `pytest.raises(NotImplementedError, match="float16 indexes are not ")`. The issue description never mentions these specific error message strings — it only states "the index should be converted to a float32 index."</ul_evidence>
+<suspicious_clues>The issue description requested converting float16 to float32 ("the index should be converted to a float32 index"), but the PR instead raises NotImplementedError. The implementation direction changed through PR discussion, resulting in raise behavior rather than conversion behavior. The "float16 indexes are not implemented" vs "float16 indexes are not supported" inconsistency in the patch (two different error messages for similar cases) is minor but notable.</suspicious_clues>
+</sub_agent_result>

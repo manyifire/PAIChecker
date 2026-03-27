@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description explicitly closes only issue #47985 ("closes #47985") and the PR title states "BUG: Fix calling groupBy(...).apply(func) on an empty dataframe invokes func" - exactly matching the issue description. No additional issues are referenced in PR description or commit messages beyond backport logistics. All commits focus on the same problem (empty dataframe apply behavior).</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test assertions use `Series([], name="b", dtype="float64", index=Index([], dtype="float64", name="a"))` which derive directly from the test setup's `DataFrame({"a": [], "b": []})`, not from new runtime constants introduced in `patch`. The strings `"mad"`, `"skew"`, `"sum"`, `"prod"` appear in both patch and test_patch but are pre-existing pandas function names, not newly invented literal constants introduced by the patch.</ul_evidence>
+<suspicious_clues>One commit message says "remove unrelated test" which suggests the author recognized some tests were out of scope and removed them. The patch logic changed from a blocklist approach (excluding idxmin, idxmax, nanargmin, nanargmax) to an allowlist approach (only mad, skew, sum, prod), which is a substantive behavior change that narrows the dummy-call scenario, but this is an implementation detail within the issue's scope.</suspicious_clues>
+</sub_agent_result>

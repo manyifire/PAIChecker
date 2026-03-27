@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue_number list contains multiple issues ['6415', '6449'], triggering immediate SC classification. The PR description explicitly states "Fixes #6415 . (also fixes #6449)" and a commit message states "fixes #6449". Additionally, the test_patch modifies `tests/test_auto3dseg_bundlegen.py` to add `@SkipIfBeforePyTorchVersion((1, 11, 1))`, addressing the PyTorch 1.9.x `mem_get_info` error referenced as a separate issue (#6449) in the issue's additional context, which is beyond the primary MLflow handler bug scope.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The main new constant introduced in the patch is `self.run_finish_status = mlflow.entities.RunStatus.to_string(mlflow.entities.RunStatus.FINISHED)`, but the test_patch does not directly assert on this string value. The test_patch uses `create_engine_times = 3` and asserts `self.assertEqual(create_engine_times, run_cnt)`, but `3` is a test-controlled input variable (not a new production-code literal introduced by the patch). No literal is newly introduced as a fixed runtime constant in patch AND explicitly asserted in test_patch.</ul_evidence>
+<suspicious_clues>The test_patch modifies two separate test files: `tests/test_handler_mlflow.py` (directly related to the MLflow bug fix) and `tests/test_auto3dseg_bundlegen.py` (adding a PyTorch version skip decorator for an unrelated auto3dseg bundlegen test failure). This dual test file modification confirms cross-issue scope in the PR.</suspicious_clues>
+</sub_agent_result>

@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description strictly aligns with the issue's scope, claiming only to fix the bug where "histogram weights aren't dropped if NaN values in data" and closing #48884. While a commit message mentions "add out of bounds test and raise ValueError from IndexError", this reflects an implementation improvement (better error handling) in the exact code block being modified, rather than an explicitly claimed unrelated enhancement or secondary issue fix.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The `patch` introduces a new hardcoded error message string: `"weights must have the same shape as data, or be a single column"` when raising a `ValueError`. The `test_patch` explicitly asserts this literal via `msg = "weights must have the same shape as data, or be a single column"` and `pytest.raises(ValueError, match=msg)`. This specific string is not mentioned in the issue description, which only references a different matplotlib error (`ValueError: weights should have the same shape as x`).</ul_evidence>
+<suspicious_clues>The PR author added additional error handling (translating an `IndexError` into a `ValueError` with a custom message) for incorrectly shaped 2D weight arrays, which was not the original bug (failing to drop weights for NaN data values) but occurred in the same code block.</suspicious_clues>
+</sub_agent_result>

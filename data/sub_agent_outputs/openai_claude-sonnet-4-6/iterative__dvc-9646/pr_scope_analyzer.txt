@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description states only "Fixes #9645" and the commit message is "output: check legacy hash name in output.add()" — both align with the single issue baseline about `dvc add dir` not using the new cache location. No multiple issue closures, unrelated enhancements, or cross-issue references appear in any PR text.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>In `patch`, the method `_update_legacy_hash_name()` sets `self.hash_name = "md5"` as a fixed string constant. In `test_patch`, the tests explicitly assert `"hash": "md5"` in the output dictionaries (e.g., `test_add_updates_to_cloud_versioning_dir` adds `"hash": "md5"` to expected outputs). The issue description never specifies the exact string `"md5"` as a hash field value that should appear in DVC files — it describes the symptom of files going to the wrong cache path.</ul_evidence>
+<suspicious_clues>The test `test_add_preserve_fields` also gains `hash: md5` in its expected YAML, suggesting the fix affects multiple test scenarios. The `"md5"` literal appears both as a path component in the issue description (`.dvc/cache/files/md5`) and as a hash name in the code, making it superficially related to the issue but not literally specified as the expected output field value.</suspicious_clues>
+</sub_agent_result>

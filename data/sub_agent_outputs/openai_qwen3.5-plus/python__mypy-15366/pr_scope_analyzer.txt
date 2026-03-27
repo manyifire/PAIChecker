@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue description focuses exclusively on dictionary initialization: "`type-abstract` is falsely missing when initializing a dictionary" with example `my_dict_init: dict[int, type[Class]] = {0: Class}`. However, the PR description explicitly claims additional scope: "Before we were only checking `type[]` type. Now we also check `tuple[type[], ...]` type" and the PR title is "Check tuples of abstract types." This tuple type checking is an enhancement beyond the issue's dict-focused baseline scope.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains the error message literal `"Only concrete class can be given where \"Tuple[int, Type[Class]]\" is expected"`. However, the patch does not introduce this literal as a hardcoded constant—it is dynamically generated via `self.msg.concrete_only_call(callee_type, context)` where `callee_type` is computed from type information. Per UL rules, "Literals from function names/docstrings/object metadata surfaced by forwarding logic are NOT 'new literals introduced by patch'."</ul_evidence>
+<suspicious_clues>The test case is named `testAbstractTypeInADict` but the expected error message references "Tuple[int, Type[Class]]" rather than "Dict[int, Type[Class]]", which is inconsistent. This suggests either a test bug or the error message generation may have an issue, but this doesn't affect SC/UL classification.</suspicious_clues>
+</sub_agent_result>

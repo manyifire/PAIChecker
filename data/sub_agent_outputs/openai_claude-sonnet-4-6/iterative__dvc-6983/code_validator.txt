@@ -1,0 +1,12 @@
+<classification>
+<label>IS</label>
+<reason>The issue scope expanded in discussion to include SSH-specific failures beyond the baseline `dvc exp push` issue. The code changes in the patch directly address SSH authentication behavior (asyncssh write/close becoming async, GitHub SSH compatibility), and while the test covers the technical SSH function rather than `dvc exp list`, the broader SSH-specific scope from the issue discussion is confirmed in the implementation.</reason>
+</classification>
+<classification>
+<label>SC</label>
+<reason>The patch introduces `_process_public_key_ok_gh` with an explicit comment about "Github's SSH server does not strictly comply with the SSH protocol" referencing RFC4252 and RFC8332, and patches `_ClientPublicKeyAuth._packet_handlers` to install this workaround. This GitHub SSH server RSA algorithm compatibility fix addresses issue #2215's concerns, which is extra scope beyond what issue #6920 requested (which only reported connection failures with SSH URLs).</reason>
+</classification>
+<classification>
+<label>UL</label>
+<reason>The byte literals `b"ssh-rsa"`, `b"rsa-sha2-256"`, and `b"rsa-sha2-512"` are newly introduced in the patch as runtime conditionals in `_process_public_key_ok_gh`, and they appear directly in the test patch as parametrized test values in `test_dulwich_github_compat`. These literals are not pre-existing or config-propagated, confirming they are unspecified implementation choices added beyond what was described in the issue.</reason>
+</classification>

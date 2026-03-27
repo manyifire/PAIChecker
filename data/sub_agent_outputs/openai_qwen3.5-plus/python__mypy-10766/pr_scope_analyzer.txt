@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The PR description explicitly states "This fixes these issues:" followed by two distinct bullet points: "Allow variable-length `tuple` (`tuple[int, ...]`) in type aliases" AND "Allow generic built-in types (e.g. `list[int]`) in stubs in all Python versions". The PR then explicitly lists "Fixes #9980. Fixes #10303. Fixes #10731." The target issue description only covers one bug scope (built-in generics in stub files causing "list" is not subscriptable error), but the PR claims additional scope for tuple type aliases beyond the stated issue scope.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains revealed type assertions like "Revealed type is builtins.tuple[builtins.int*]" and "Revealed type is builtins.list[builtins.int]", but these are standard mypy output formats, not newly introduced hardcoded constants in the patch. The patch changes only add conditional logic (e.g., `not self.is_stub_file`, handling `EllipsisExpr`) without introducing new string literals or fixed runtime constants that are then asserted in tests.</ul_evidence>
+<suspicious_clues>The issue_number field contains multiple issue numbers ['10731', '9980', '10303'] which is an immediate SC indicator per the workflow rules. The PR commit message "Allow tuple[int, ...] as type alias and in type application" followed by "Also fix stubs" suggests two distinct scope items being addressed in one PR.</suspicious_clues>
+</sub_agent_result>

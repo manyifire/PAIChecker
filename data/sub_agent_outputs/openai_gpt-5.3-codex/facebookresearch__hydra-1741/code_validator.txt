@@ -1,0 +1,8 @@
+<classification>
+<label>SC</label>
+<reason>The issue text is narrowly about avoiding failure when a frame has no module (`mdl is None`) during stack-trace sanitization, with a suggested local guard. The patch adds broader behavior by wrapping most of `run_and_report` formatting in a new `try/except`, printing a fallback warning, and re-raising the original exception when formatting itself fails, which goes beyond that narrow fix. The test patch confirms this added scope via `test_simplified_traceback_failure`, which explicitly simulates formatter failure (`patch("inspect.getmodule", new=lambda *args: None)`) and asserts fallback behavior.</reason>
+</classification>
+<classification>
+<label>UL</label>
+<reason>The patch introduces a new concrete stderr literal: `An error occurred during Hydra's exception formatting:` inside the new exception-handling fallback path. The issue description does not specify this wording; it only describes preventing a formatter crash when `mdl` is missing. The test patch then enforces that exact message in `test_simplified_traceback_failure` through `expected_traceback_regex`, so UL is supported.</reason>
+</classification>

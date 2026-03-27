@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description states "Fixes #7099" and the title is "Batch: Only join running Threads." This directly addresses the issue description's problem of "RuntimeError: cannot join thread before it is started" occurring at `job.join(0.2)` in the batch models. The issue discussion clarifies the scenario involves array type jobs with `arrayProperties`, which is the same underlying bug, not a new distinct problem. The PR text does not claim to fix multiple issues or add unrelated functionality beyond the reported thread-joining error.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The patch only adds a conditional check `if job.is_alive():` before the existing `job.join(0.2)` call—no new hardcoded literal strings or constants are introduced. The test_patch uses dynamically generated values like `f"echo_{str(uuid4())[0:6]}"` and standard commands `["echo", "hello"]`, which are not fixed runtime constants newly defined in the patch. There are no assertion literals in test_patch that match newly introduced constants in patch.</sc_evidence>
+<suspicious_clues>The test_patch adds a new test `test_submit_job_array_size__reset_while_job_is_running()` which specifically validates the fix for the array job scenario mentioned in the issue discussion. This is consistent with the issue scope, not scope creep. The patch is minimal (only 2 lines changed) and directly targets the reported bug without expanding functionality.</suspicious_clues>
+</sub_agent_result>

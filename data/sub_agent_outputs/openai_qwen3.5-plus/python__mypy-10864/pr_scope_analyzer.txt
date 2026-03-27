@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue description requests mypy to detect assignments to attributes not in `__slots__` (e.g., `self.baz = 42` should error). The PR description states "We can now detect assignment that are not matching defined `__slots__`" and "Closes #10801". The PR comments discussing `__setattr__` support ("One more important case I've missed: `__setattr__` support. Adding tests for it as well") represent edge-case handling within the same `__slots__` detection scope, not a distinct new problem. The "Future steps" mentioning attrs plugin is explicitly marked as future work, not part of this PR.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The patch introduces a hardcoded error message literal: `'Trying to assign name "{}" that is not in "__slots__" of type "{}"'.format(lvalue.name, inst.type.fullname)` in `mypy/checker.py`. This exact error message format is asserted in `test_patch` (e.g., `# E: Trying to assign name "b" that is not in "__slots__" of type "__main__.A"`). The issue description only shows expected output as `"TestClass" has no attribute "baz"` - the specific error message format `"Trying to assign name..."` is not specified in the issue text.</ul_evidence>
+<suspicious_clues>The PR includes extensive mypy_primer diff comments showing the feature detecting real `__slots__` violations in open-source projects (pytest, xarray, werkzeug, etc.), which validates the feature is working as intended. The `__setattr__` handling in comments could be misinterpreted as scope creep, but it's actually necessary edge-case handling to avoid false positives when `__setattr__` allows dynamic assignment.</suspicious_clues>
+</sub_agent_result>

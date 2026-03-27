@@ -1,0 +1,12 @@
+<classification>
+<label>SC</label>
+<reason>The PR patch implements schema version compatibility logic with multiple test cases covering different scenarios (version 2 compatibility, user preset handling, preset merging). While the code appears cohesive, the breadth of changes (adding schema version selection, user preset merging, conditional toolchain file handling) and multiple distinct test functions support the textual claim that this PR addresses multiple related issues simultaneously.</reason>
+</classification>
+<classification>
+<label>UL</label>
+<reason>The patch introduces hardcoded schema version literals (2, 3, 4) as fixed constants in validation logic (`if version < 2`, `if version < 4`), return values (`return 2`), and default parameters (`default=3`, `default=4`). Test assertions explicitly verify these exact values (`assert presets["version"] == 2`), confirming these are newly introduced implementation-specific constants not derived from the issue specification.</reason>
+</classification>
+<classification>
+<label>DP</label>
+<reason>The patch introduces conditional logic that changes preset structure based on schema version: it sets `ret["toolchainFile"]` for schema 3+ but `ret["cacheVariables"]["CMAKE_TOOLCHAIN_FILE"]` for schema 2. This conditional key assignment creates a scenario where code expecting a consistent `toolchainFile` key could encounter a KeyError, which aligns with the Coordinator's claim about the reported regression without contradicting it.</reason>
+</classification>

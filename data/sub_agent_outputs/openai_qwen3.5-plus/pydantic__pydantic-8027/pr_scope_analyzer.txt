@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description explicitly states "Fix #8020" and the commit message says "Correct pydantic dataclasses import, fix #8020" - both reference only the single target issue. The issue description scope is about `pydantic.dataclasses` returning stdlib module instead of pydantic's module after `import pydantic`, and the PR addresses exactly this problem without claiming additional unrelated fixes or enhancements.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains assertions like `pydantic.dataclasses.__name__ == 'pydantic.dataclasses'` which is the expected behavior explicitly described in the issue description (showing `pydantic.dataclasses.__name__` should be `pydantic.dataclasses`). The patch changes `import_module(attr_name, package=package)` to `import_module(f'.{attr_name}', package=package)` - this fixes the import mechanism without introducing new hardcoded literals. The error message changes in `_migration.py` use the `module` variable (existing runtime value), not new hardcoded strings.</sc_evidence>
+<suspicious_clues>The test_migration.py assertion change from `'module 'pydantic._migration'` to `'module 'tests.test_migration'` reflects the actual test module name being tested - this is a correction to match reality, not a new literal introduction. The patch is minimal and focused on the single reported import issue.</suspicious_clues>
+</sub_agent_result>

@@ -1,0 +1,8 @@
+<classification>
+<label>SC</label>
+<reason>The patch demonstrates clear scope creep beyond the pickling fix described in the issue. In `meta_tensor.py`, the code changes affine tensor device placement from `self.device` to `torch.device("cpu")` in both `get_default_affine()` and the affine setter. Test changes confirm this new behavior by replacing device-matching assertions with CPU-specific assertions (`self.assertTrue("cpu" in str(m.affine.device))`), proving this is an additional behavioral constraint not mentioned in the issue.</reason>
+</classification>
+<classification>
+<label>UL</label>
+<reason>The hardcoded `"cpu"` literal is explicitly introduced as a fixed runtime constant in the production code (`device=torch.device("cpu")`) and explicitly asserted in test code (`self.assertTrue("cpu" in str(m.affine.device))`). This meets the UL criteria: the literal is both newly defined in the patch and tested in the test_patch, yet was never specified in the original issue description.</reason>
+</classification>

@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description states "BUG: groupby.apply raising a TypeError when __getitem__ selects multlple columns" which directly matches the issue description reporting "TypeError: Series.name must be a hashable type" when using `df.groupby('A')[['B','C']].apply()`. The PR only references issue #18930 in both description and commit messages, with no claims of fixing additional issues or unrelated functionality. Type annotations and whatsnew entries are standard PR requirements, not scope expansion.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains literals like `np.array([0])`, `Index([1, 2], name="A")`, and `name=("B", "C")`. The column names "B" and "C" appear in the issue description's example code. The patch does not introduce new hardcoded runtime constants—it only adds logic to check `is_hashable(self._selection)` and convert to tuple if needed. The literals in tests are test setup values, not new constants defined in the patch.</sc_evidence>
+<suspicious_clues>The issue discussion mentions recarrays specifically, but the PR implementation takes a more general approach (checking hashability) rather than specifically handling recarrays. This is an implementation refinement within scope, not scope creep. The test uses a simpler return value (`np.array([0])`) than the issue example (`to_records()`), but this is appropriate test simplification.</suspicious_clues>
+</sub_agent_result>

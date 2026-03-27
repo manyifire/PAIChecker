@@ -1,0 +1,12 @@
+<classification>
+<label>SC</label>
+<reason>The code changes in test_patch explicitly test both raw=True and raw=False via `@pytest.mark.parametrize("raw", [True, False])`, and the patch modifies both `generate_apply_looper` (for raw=True) and `generate_numba_apply_func` methods (for raw=False) to support *args. This confirms the PR added raw=False support beyond what the issue title "BUG: No kwargs in df.apply(raw=True, engine="numba")" specified.</reason>
+</classification>
+<classification>
+<label>UL</label>
+<reason>The patch in pandas/core/util/numba_.py introduces the new error message literal "numba does not support keyword-only arguments" (changed from "numba does not support kwargs with nopython=True"). This literal is asserted in test_patch with `match="numba does not support keyword-only arguments"` in both test_frame_apply.py and test_numba.py, confirming it's a newly introduced unspecified literal not mentioned in the original issue.</reason>
+</classification>
+<classification>
+<label>DP</label>
+<reason>The code in get_jit_arguments() explicitly raises NumbaUtilError when kwargs exist (`if kwargs: raise NumbaUtilError(...)`), demonstrating intentional deferral of **kwargs support. The prepare_function_arguments() function only handles convertible kwargs, not keyword-only arguments, which aligns with the deferred patch pattern where full **kwargs support was left for a follow-up PR.</reason>
+</classification>

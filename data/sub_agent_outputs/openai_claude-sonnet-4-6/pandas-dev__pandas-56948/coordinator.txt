@@ -1,0 +1,30 @@
+I'll work through the synthesis steps carefully.
+
+**Step 1 & 2: Review and Judge Tier 1 Conclusions Against Their Evidence**
+
+**issue_analyzer → IS:**
+The evidence is solid. The issue discussion clearly shows scope evolution: baseline reports one narrow case (left join + non-unique values → index name becomes None), but the discussion introduces multiple new failing scenarios, asks an open design question, and settles on a finalized requirement ("keep names from the caller"). This is textbook IS — the issue scope was sanctioned to expand before the PR merged. The evidence supports the IS conclusion.
+
+**pr_scope_analyzer → SC:**
+This requires careful scrutiny. The SC judgment is based on comparing the original issue baseline (narrow left-join + non-unique case) to the PR's broader fix (all join types). However, the IS label was also assigned, meaning the issue scope *was legitimately expanded through discussion* — the discussion explicitly introduced "other inconsistencies" beyond the baseline, and the PR addresses those same broader inconsistencies. The SC evidence notes the issue discussion introduced additional cases, and the PR addresses those. 
+
+The key question: does the PR go *beyond* what the issue discussion sanctioned? The issue discussion mentions "other inconsistencies as well" and establishes "keep names from the caller" as the requirement. The PR patches `_join_via_get_indexer`, `_join_monotonic`, and `_wrap_joined_index` for all `how` options — which aligns with fixing the broader inconsistencies mentioned in discussion. The issue discussion's expanded scope appears to encompass what the PR implements. Therefore, the pr_scope_analyzer's SC conclusion is weakened by the same evidence that supports IS — the broader scope was sanctioned in discussion. SC is not well-supported once IS is established for this same scope expansion.
+
+**pr_connection_analyzer → NO_DP, NO_FP:**
+Clean — no evidence of disconnected PR or fake fix. Preserved.
+
+**Step 3: Gather Final Supported Labels**
+
+- **IS**: Well-supported. The issue discussion legitimately expanded scope before the PR, establishing the broader requirement the PR implements.
+- **SC**: Not well-supported after IS is recognized. The "extra scope" in the PR corresponds to the expanded scope sanctioned by the issue discussion. The pr_scope_analyzer's own evidence shows that "the issue discussion introduced additional cases" — meaning those cases were in-scope, not extra unrelated scope.
+- **UL**: Not supported (NO_UL per evidence).
+- **DP/FP**: Not supported.
+- **Others**: The whatsnew version discrepancy (v3.0.0.rst vs v2.3.0.rst) is a documentation/minor inconsistency with no functional impact — per Decision Rule 4, this does not count as misalignment.
+
+**Step 4: Final determination**
+Only IS is well-supported. SC does not hold once the sanctioned discussion expansion is recognized. No other labels apply.
+
+<classification>
+<label>IS</label>
+<reason>The issue_analyzer found clear evidence that the original report narrowly described a single case (left join + non-unique index values causing index name reset to None), but the issue discussion legitimately expanded scope by introducing multiple new failing edge cases, raising a design question, and settling on a finalized requirement ("keep names from the caller"). This evolution of the issue scope before the PR merge is a canonical instance of Issue Scope evolution, and the PR's broader fix across join types and code paths directly corresponds to the expanded requirements established in discussion.</reason>
+</classification>

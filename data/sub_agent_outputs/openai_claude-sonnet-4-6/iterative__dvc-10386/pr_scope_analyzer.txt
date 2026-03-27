@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue only requests fixing `dvc.api.artifacts_show()` for monorepos, but the PR description explicitly claims: "1) adds support for `artifacts_show()` for monorepos. 2) adds support for `dvc artifacts get` for monorepos." The `dvc artifacts get` support is an additional feature not mentioned in the issue. Additionally, the PR describes breaking behavioral changes ("Always returns the path from `artifacts_show()` as a git root relative path" and "Expects the `name` passed to `artifacts_show()` and `dvc artifacts get` to be a git root relative path (**breaking**)") that go beyond merely fixing the reported bug.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch uses string literals like "myart.pkl", "myart", "subrepo", and "v2.0.0", but these are test setup values (artifact names and paths created within the test), not newly introduced fixed runtime constants in the patch code. The patch changes path resolution logic without introducing new hardcoded string constants (e.g., no new error messages). No literal exists in both patch as a newly defined constant AND in test_patch as an assertion that is absent from the issue text.</ul_evidence>
+<suspicious_clues>The PR introduces breaking API changes (items 3 and 4 in the PR description) that change how path values are returned and how names are interpreted, which goes beyond a simple bugfix. These changes may affect existing users of `artifacts_show()` even in non-monorepo scenarios.</suspicious_clues>
+</sub_agent_result>

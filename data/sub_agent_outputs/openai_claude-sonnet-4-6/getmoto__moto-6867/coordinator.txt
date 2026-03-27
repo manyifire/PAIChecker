@@ -1,0 +1,27 @@
+## Coordinator Analysis
+
+### Step 1: Review of Tier 1 Results
+
+**issue_analyzer**: Reports NO_IS - the issue discussion was empty with no scope evolution beyond the baseline description requesting a fix for "AssertionError with SES Templates containing {{#if}} inside {{#each}}".
+
+**pr_scope_analyzer**: Reports SC (Scope Creep) with strong textual evidence. The PR description explicitly acknowledges adding `delete_template` logic that is unrelated to the bug fix, stating it was needed "just because I needed to actually delete the template after the AWS test finishes." This is additional functionality beyond the issue's scope. Reports NO_UL - test literals are appropriately scoped to test data only.
+
+**pr_connection_analyzer**: Reports NO_DP and NO_FP - this is the sole PR for the issue with no follow-up PRs indicating bugs or missing functionality.
+
+### Step 2: Gather Supported Labels
+
+- **SC**: Supported by strong textual evidence from PR description explicitly acknowledging out-of-scope delete_template implementation
+- **IS**: Not supported - no scope evolution in issue discussion
+- **DP**: Not supported - no defect follow-ups found
+- **FP**: Not supported - this is not a follow-up PR
+- **UL**: Not supported - no problematic hardcoded literals in production code
+- **Others**: Not supported - no additional abnormal textual evidence of systemic mismatch
+
+### Step 3: Final Decision
+
+Only SC has strong textual evidence. The PR author explicitly acknowledged adding functionality (delete_template) that was not requested in issue #6862, though the rationale was test cleanup rather than feature expansion.
+
+<classification>
+<label>SC</label>
+<reason>The PR description explicitly states "This PR also contains the logic for `delete_template`, just because I needed to actually delete the template after the AWS test finishes." Issue #6862 only requested fixing an AssertionError with nested Handlebars templates and made no mention of delete_template functionality, making this a clear scope addition beyond the issue requirements.</reason>
+</classification>

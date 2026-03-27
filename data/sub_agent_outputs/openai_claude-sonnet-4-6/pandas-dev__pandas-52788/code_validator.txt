@@ -1,0 +1,12 @@
+<classification>
+<label>IS</label>
+<reason>The test patch modifies `test_apply_multi_level_name` to change `expected_values = [20.0, 25.0, 0.0]` to `expected_values = [20, 25, 0]`, removing the comment `# GH#40669 - summing an empty frame gives float dtype`, directly addressing the maintainer-introduced edge case about integer dtype incorrectly returning float. The new `TestEmptyDataFrameReductions` class further validates this evolved scope with tests for empty nullable integer DataFrame reductions preserving correct integer dtypes.</reason>
+</classification>
+<classification>
+<label>SC</label>
+<reason>The patch introduces a broad `keepdims` mechanism across multiple array types (arrow, masked, categorical, sparse, base), a `FutureWarning` for backward compatibility via signature inspection in `frame.py`, and whatsnew documentation describing "DataFrame reductions preserve extension dtypes" — all far beyond fixing a specific `timedelta64` TypeError. Changes span `masked_reductions.py`, `nanops.py`, `internals/blocks.py`, and documentation files unrelated to the single target issue.</reason>
+</classification>
+<classification>
+<label>UL</label>
+<reason>The patch newly introduces specific dtype string literals in `masked.py`'s `_wrap_na_result` method (`"float32"`, `"float64"`, `"int32"`, `"int64"`, `"uint32"`, `"uint64"`) that did not exist before. The test patch in `masked_shared.py`'s `check_reduce_frame` method explicitly asserts against specific dtype mappings (`cmp_dtype = "Float64"`, `"Int64"`, `"UInt64"`, `"Int32"`, `"UInt32"`) that are nowhere specified in the original issue, confirming both the introduction and assertion conditions for the UL label.</reason>
+</classification>

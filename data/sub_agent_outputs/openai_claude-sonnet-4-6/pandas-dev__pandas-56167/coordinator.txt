@@ -1,0 +1,33 @@
+## Step-by-Step Synthesis
+
+### Step 1: Review Tier 1 Results
+
+- **issue_analyzer**: NO_IS — empty discussion, unresolved design question about `name` attribute in nested selection, but no sanctioned evolution.
+- **pr_scope_analyzer**: NO_SC (PR directly addresses the issue), UL (new error message literal not present in issue).
+- **pr_connection_analyzer**: NO_DP, NO_FP — only downstream activity is a backport, no bugs introduced, no prior PRs.
+
+### Step 2: Judge Tier 1 Conclusions Against Their Evidence
+
+**NO_IS**: The evidence clearly supports this — the discussion section is empty, so no IS conditions can be met. ✓
+
+**NO_SC**: The evidence clearly supports this — the PR closes only the target issue and the functionality described directly matches the issue request. ✓
+
+**UL**: The pr_scope_analyzer provides direct textual evidence: the PR introduces a new error message literal `"name_or_index must be an int, str, bytes, pyarrow.compute.Expression, or list of those"` and the test asserts against a truncated version of it (`"name_or_index must be an int, str,"`). This exact string does not appear anywhere in the issue description or discussion. The evidence directly supports UL. ✓
+
+**NO_DP**: The only downstream PR is a backport with no causal language suggesting a bug. ✓
+
+**NO_FP**: No prior merged PRs for the issue exist. ✓
+
+### Step 3: Gather Final Supported Labels
+
+- **UL**: Supported. The PR introduces a specific error message string that is not mentioned anywhere in the issue. This is a textual literal in the implementation that the issue does not specify.
+- **Others**: I consider whether the unresolved design question about `name` attribute handling constitutes a mismatch that doesn't fit UL. The issue explicitly says "The one bit that needs discussion is how to handle the `name` when doing nested selection" — this is an open design question in the issue itself. The PR would have had to make an independent implementation choice here. However, the Tier 1 agents did not submit concrete textual evidence showing what choice the PR made vs. what the issue implied. Since this remains speculative without direct textual evidence from the PR's implementation choices documented in Tier 1 results, I cannot add `Others` based on inference alone.
+
+### Step 4: Final Labels
+
+Only `UL` is clearly supported by direct Tier 1 textual evidence.
+
+<classification>
+<label>UL</label>
+<reason>The pr_scope_analyzer identified that the PR introduces a new, specific error message literal — "name_or_index must be an int, str, bytes, pyarrow.compute.Expression, or list of those" — which replaces the old error message and is explicitly tested via pytest.raises match assertion. This exact string does not appear anywhere in the issue description or its (empty) discussion, constituting an Unlabeled Literal introduced by the implementation without issue-side specification.</reason>
+</classification>

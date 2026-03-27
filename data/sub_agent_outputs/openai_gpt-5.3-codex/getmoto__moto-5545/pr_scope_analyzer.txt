@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue description requests closing file handles on `s3.reset()` for keys and multipart parts. The PR description says "S3: close FileHandles on reset. Fixes #5545" and the commit message is "S3: close FileHandles on reset" — both aligned with the single issue scope. The test_patch includes an extra test `test_deleting_large_upload_closes_file_handles` that tests deletion, but the patch contains no production-code change for delete behavior and the PR text does not claim any extra scope beyond the reset fix, so per rule 6.1 this does not qualify as SC.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>N/A. The patch introduces no new hardcoded literal runtime constants — it only adds calls to `key._value_buffer.close()` and `part._value_buffer.close()`. The test_patch assertions check for absence of `ResourceWarning` in warning types, which is not a literal newly defined in the patch.</ul_evidence>
+<suspicious_clues>The test_patch includes `test_deleting_large_upload_closes_file_handles` which tests the delete path, but there is no corresponding production-code change in the patch for deletion behavior. This test may be testing pre-existing behavior or relying on the existing `FakeKey.__del__` implementation, making it a minor anomaly but not sufficient for SC given the lack of PR-side textual claims about delete fixes.</suspicious_clues>
+</sub_agent_result>

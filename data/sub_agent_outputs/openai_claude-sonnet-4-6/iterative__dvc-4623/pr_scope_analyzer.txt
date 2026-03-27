@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue (#4186) requests adding the `allow_agent` parameter to SSH remote configuration in DVC. The PR description states "Add the parameter allow_agent. This parameter is passed to paramiko. Fixes #4186" — only one issue is referenced. The commit message likewise says "remote[ssh]: Add the parameter allow_agent ... Fixes #4186". No additional unrelated functionality or bugfixes are claimed in PR text.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>In `patch`, `self.allow_agent = config.get("allow_agent", True)` introduces the default value `True` as a newly hardcoded runtime constant. In `test_patch`, assertions `({"url": "ssh://example.com"}, True)` and `({"url": "ssh://not_in_ssh_config.com"}, True)` explicitly assert that the default value is `True`. The issue description only mentions needing `allow_agent=False` as a workaround, but never specifies that the default should be `True` — this default is not present as an exact string/value in the issue text.</ul_evidence>
+<suspicious_clues>The default value `True` aligns with paramiko's own default behavior, so it is arguably implied by the existing paramiko API, but it is not explicitly stated in the issue description. The boolean nature of the literals (True/False) makes this a borderline UL case, as these are the only possible values for a boolean parameter.</suspicious_clues>
+</sub_agent_result>

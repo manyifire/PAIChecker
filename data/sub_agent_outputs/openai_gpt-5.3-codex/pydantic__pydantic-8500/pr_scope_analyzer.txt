@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue baseline is narrowly about serialization order after `model_construct`: fields with defaults are moved to the top in `model_dump()` (expected `{'a': 'a', 'b': 'b'}`). The PR scope text matches this directly: title says “Fix ordering of keys in `__dict__` with `model_construct` call,” and description says “Ensure that `__dict__` keys are populated in order that the fields are listed during a call to `model_construct`,” with only one related closure (“Closes #8487”) and no explicit additional feature/fix claims. Patch/test changes are consistent support (moving defaults insertion into ordered `fields_values` and adding one order-retention test), with no textual evidence of unrelated extra scope.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>In `test_patch`, the assertion uses a hardcoded JSON literal: `assert m.model_dump_json() == '{"a":"a","b":"b"}'`. In `patch`, no corresponding new fixed runtime literal is introduced; the change is structural (`fields_values[name] = field.get_default(...)` instead of storing defaults separately, and `_fields_set = fields_set`) and does not define `'{"a":"a","b":"b"}'` or any new fixed output string constant. Therefore UL criteria are not met because the asserted literal is not a newly introduced runtime constant in patch code.</ul_evidence>
+<suspicious_clues>Issue/PR numbering mismatch: provided instance is `pydantic__pydantic-8500`, but PR text says “Closes #8487”; this appears to indicate PR #8500 addressing issue #8487 rather than self-closing its own number.</suspicious_clues>
+</sub_agent_result>

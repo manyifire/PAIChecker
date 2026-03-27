@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue baseline is narrowly about one bug: "`describe_db_clusters` ... should allow passing either `ClusterArn` or `DBClusterIdentifier`" and currently ARN lookup "Failing with cluster not found Error even when the record exists." PR-side text matches that exact scope: title/commit both say "`RDS: describe_db_clusters() now accepts an ARN as identifier`," and PR description says only "`Fixes #6109`" (single-issue closure, no additional feature/bug claims). Issue discussion only says it is "a bug" and does not introduce any distinct additional problem, and the patch/test changes are limited to ARN-to-identifier handling plus one ARN lookup test as secondary confirmation.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>In `test_patch`, the new assertion is `client.describe_db_clusters(DBClusterIdentifier=cluster_arn)["DBClusters"].should.have.length_of(1)`, where the asserted literal is `1`. The `patch` does not newly introduce/define this literal as a behavioral output string/number contract; it only adds `cluster_identifier = cluster_identifier.split(":")[-1]` logic and no new hardcoded response literal. Also, ARN-based lookup behavior is explicitly specified in the issue description, so there is no unspecified new literal pairing between patch and test.</ul_evidence>
+<suspicious_clues>PR says "Fixes #6109" while the provided instance is labeled `getmoto__moto-6114` / PR #6114; this looks like cross-number referencing but does not by itself indicate extra scope.</suspicious_clues>
+</sub_agent_result>

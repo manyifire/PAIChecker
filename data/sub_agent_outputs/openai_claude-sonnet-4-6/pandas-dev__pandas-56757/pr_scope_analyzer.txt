@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue (#56267) only describes `.interpolate()` failing for `float[pyarrow]` dtype specifically. The PR title explicitly states "ENH: Implement interpolation for arrow and masked dtypes" — adding masked dtype support not requested in the issue. Additionally, the test_patch includes tests referencing `# GH#55347` (a distinct issue number different from the target #56267), with `any_int_ea_dtype` and `Float64`/`Float32` masked dtype tests, indicating cross-issue scope additions beyond the baseline issue scope.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch hardcodes assertion values like `[1, 1.5, 2.0, None, 3]` for expected interpolation results, but these are computed outputs of the interpolation algorithm from input data `[1, None, None, None, 3]` with `limit=2`, not newly introduced fixed runtime constants in the patch code itself. The patch introduces an error message `f"interpolate is not implemented for dtype={self.dtype}"` but this is not asserted as a literal string in test_patch. No literal satisfies the condition of being both newly defined as a fixed runtime constant in patch AND explicitly asserted in test_patch.</ul_evidence>
+<suspicious_clues>The test comments consistently reference `# GH#55347` rather than the target issue `# GH#56267`, suggesting these tests were originally written for a different issue. The PR implements interpolation for masked dtypes (IntegerArray, FloatingArray) in addition to ArrowDtype, which is a notable scope extension not present in the issue description which only mentions `float[pyarrow]`.</suspicious_clues>
+</sub_agent_result>

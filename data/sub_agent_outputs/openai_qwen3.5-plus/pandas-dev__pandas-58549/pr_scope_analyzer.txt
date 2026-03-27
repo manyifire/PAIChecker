@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue description only mentions fixing `DatetimeIndex.is_year_start` for double-digit frequencies ("BUG: DatetimeIndex.is_year_start breaks on double-digit frequencies"). However, the PR title explicitly expands scope to "BUG: `DatetimeIndex.is_year_start` and `DatetimeIndex.is_quarter_start` always return False on double-digit frequencies." The PR description and whatsnew entry both claim to fix both `is_year_start` AND `is_quarter_start`, which is additional scope beyond the single issue description that only requested `is_year_start` fix.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains assertions like `assert all(dr.is_year_start)` and `assert all(dr.is_quarter_start)` with frequency strings "10YS" and "10QS". These are test input values, not newly introduced hardcoded runtime constants in the patch. The patch only modifies variable names (freqstr→freq_name) and logic (using `freq.name` and `freq_name.lstrip("B")[0:2]`), without introducing any new literal constants that are asserted in tests.</ul_evidence>
+<suspicious_clues>The PR scope expansion from is_year_start to is_quarter_start is subtle but clear in the PR title. The issue discussion mentions potential solutions but doesn't introduce is_quarter_start as a separate problem - it was added by the PR author. This represents scope creep where the PR claims to fix more than what was originally requested in the issue description.</suspicious_clues>
+</sub_agent_result>

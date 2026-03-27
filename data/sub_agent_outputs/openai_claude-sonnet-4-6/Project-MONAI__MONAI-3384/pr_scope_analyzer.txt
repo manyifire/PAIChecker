@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue requests updating `TileOnGrid` to "support input/output type of `torch.Tensor` and `numpy` while its backend is `numpy` only." The PR description states "This PR updates `TileOnGrid` to support `torch.Tensor` through type conversion while the backend is `numpy`" and explicitly closes only one issue: "Fixes #3379". The commit messages reference only work related to tensor support ("Update TileOnGrid backend to support torch.Tensor as input/output", "Change x_->h_, y_->w_ for consistency" as a refactor), with no additional issue numbers cited.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch uses `assert_allclose(output, tiles, type_test=False)` where `tiles` is dynamically computed by `make_image()`, not a hardcoded assertion literal. The patch introduces no new fixed string constants or error messages — it only adds type conversion calls (`convert_data_type`, `convert_to_dst_type`) and `backend = [TransformBackends.NUMPY]`. No new literal values are both introduced as fixed constants in `patch` and asserted in `test_patch`.</ul_evidence>
+<suspicious_clues>The commit "Add backend to dict version" adds `backend = SplitOnGrid.backend` to `TileOnGridd`, but this is a natural extension since `TileOnGridd` is the dict wrapper of `TileOnGrid`. The rename commit "Change x_->h_, y_->w_ for consistency" is a pure cosmetic refactoring with no functional impact beyond the requested feature.</suspicious_clues>
+</sub_agent_result>

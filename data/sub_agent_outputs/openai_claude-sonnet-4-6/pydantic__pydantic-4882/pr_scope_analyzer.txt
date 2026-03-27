@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description explicitly states "fix #4683 -> V2: config parameter to warning about missing annotations" and only closes one issue. All commits relate to the single feature requested. The additional ForwardRef handling mentioned in the PR description ("Also added small block of code to `build_inner_schema()` that checks if any of the annotations are of type `ForwardRef`") is an internal implementation detail to make the warning work correctly for both annotation approaches, not a separate unrelated bugfix.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The warning message `` f'`{name}` is not fully defined, you should define `{e}`, then call `{name}.model_rebuild()`' `` was pre-existing in the codebase as the MockValidator message before the patch — the patch merely extracts it to a variable called `warning_string`. Since this literal is not newly introduced by the patch but rather pre-existed, it does not qualify as a new hardcoded runtime constant. No other novel literals appear both in patch and test_patch.</ul_evidence>
+<suspicious_clues>The PR uses `raise UserWarning(...)` instead of `warnings.warn(...)`, which is an unusual implementation choice (normally Python warnings are issued via the `warnings` module, not raised as exceptions). This means the warning behaves more like an exception than a warning, which differs from the issue's intent of "a UserWarning so it gets printed by default." This is a code quality concern but not a scope or literal issue.</suspicious_clues>
+</sub_agent_result>

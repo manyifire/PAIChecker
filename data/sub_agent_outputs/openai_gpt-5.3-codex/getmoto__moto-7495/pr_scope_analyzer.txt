@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue baseline scope is singular: after stopping an instance, "`StateTransitionReason` turns empty" and expected output includes "`StateTransitionReason': 'User initiated (...) UTC)'." PR-side text matches that same scope: title/commit both say "Add StateTransitionReason to ec2:DescribeInstances response," and there is no PR text claiming additional fixes or multiple issues beyond "Closes #7486." The patch/test are consistent with only that fix (`<reason>{{ instance._reason }}</reason>` and assertion that transition reason starts with "User initiated"), which supports in-scope delivery rather than extra scope.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test adds `assert instance1.state_transition_reason.startswith("User initiated")`, but the patch does not newly introduce that literal string; it only wires an existing field into the response via `<reason>{{ instance._reason }}</reason>`. Also, the issue itself already specifies the expected literal prefix with "`StateTransitionReason': 'User initiated (2019-04-08 14:29:07 UTC)'", so this asserted literal is not unspecified. Therefore UL criteria (new literal introduced in patch + asserted in tests + absent from issue text) are not met.</ul_evidence>
+<suspicious_clues>PR says "Closes #7486" while the analyzed instance ID references PR #7495 and issue context about this StateTransitionReason bug; likely cross-number linkage metadata, but no textual evidence of extra functional scope.</suspicious_clues>
+</sub_agent_result>

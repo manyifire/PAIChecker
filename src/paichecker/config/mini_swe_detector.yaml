@@ -1,0 +1,376 @@
+agent:
+  system_template: |
+    You are a helpful assistant that can interact with a computer.
+
+    Your response must contain exactly ONE bash code block with ONE command (or commands connected with && or ||).
+    Include a THOUGHT section before your command where you explain your reasoning process.
+    Format your response as shown in <format_example>.
+
+    <format_example>
+    Your reasoning and analysis here. Explain why you want to perform the action.
+
+    ```bash
+    your_command_here
+    ```
+    </format_example>
+
+    Failure to follow these rules will cause your response to be rejected. 
+    Final answer must obey instance-specific Output Format Requirement.
+  instance_template: |
+    You are an expert software engineer. Your objective is to assess alignment between a GitHub Issue and the corresponding PR.
+
+    You must produce final labels directly (multi-select): `SC`, `FP`, `DP`, `IS`, `UL`, `Others`, `No Misalignment`.
+
+    ## Global Evidence Principle
+    **Text evidence is PRIMARY; code/test evidence is SECONDARY confirmation only.**
+    - Text sources: issue description/discussion, PR description/comments/reviews/commit messages, timeline/cross-reference text.
+    - Code sources (`patch`, `test_patch`, `files`) are mainly for confirmation/disambiguation.
+    - Non-functional-only differences (documentation/comments/`.gitignore`/`.rst`/similar text-only changes) do NOT count unless functional impact appears in patch/test_patch.
+
+    ## IS Definition
+    **IS: Incomplete Specification** means issue scope evolved before PR merge, and PR follows sanctioned later details.
+    IS applies only if at least one condition is met:
+    1. **Maintainer-requested supplementation**:
+      counts only when maintainer explicitly asks and reporter provides follow-up; maintainer self-supplementation does NOT count.
+    2. **Reporter proactive supplementation**:
+      valid supplements only: reproduction code / actual behavior / expected behavior / fixing typos in original issue.
+    3. **Discussion-Added Problem Scope or Finalized Requirement**:
+      - The discussion introduces a **new, distinct problem to be fixed** that was not in the baseline.
+      - OR the baseline raises an ambiguity (e.g., inconsistent names/formats) but doesn't prescribe the exact solution, and the discussion explicitly finalizes the expected behavior/requirement to be implemented.
+      - This must be a change in **what to solve** (new expected/actual behavior, new edge cases, finalizing an undecided interface), NOT **how to solve it** (implementation details, root cause analysis).
+
+    IS do NOT count (Scope Unchanged):
+    - implementation-only notes, coding approach, context-only explanation, acknowledgments;
+    - confirmation/prioritization/rephrasing of issue-already-stated scope;
+    - non-functional-only differences.
+
+    ## SC Definition
+    **SC: PR Scope Creep** means PR contains extra scope beyond issue requested scope.
+    SC applies if at least one condition is met:
+    1. **Multi-issue closure in PR text**: PR description/commits explicitly indicate fixes for multiple distinct issues, beyond the target issue scope.
+    2. **Additional unrelated enhancement/fix**: PR text shows unrelated functionality/bugfix/enhancement not requested by issue.
+    3. **Cross-issue additions in commits/tests**: Commit/review context explicitly references additional issue work outside issue-description scope.
+
+    SC rules:
+    - Issue description is baseline scope.
+    - Issue discussion can support detection of distinct added problems but does NOT automatically broaden baseline.
+    - Do not infer SC solely from large code diffs. Text evidence is PRIMARY.
+    - Test-only guardrail: if `test_patch` looks unrelated but `patch` lacks corresponding production-code change, treat as NO_SC unless PR-side text explicitly claims extra scope.
+
+    ## UL Definition
+    **UL: Unspecified Literal Implementation** means tests assert specific literals not specified in issue.
+    Count UL only if ALL hold:
+    - same literal is newly introduced/defined as a fixed runtime constant in `patch`;
+    - same literal is explicitly asserted in `test_patch`;
+    - literal is not specified in issue text (exact string match required; paraphrases do NOT count).
+
+    UL do NOT count:
+    - literal appears only in patch or only in test;
+    - patch only forwards/exposes existing external variables/values;
+    - forwarded metadata literals like `__name__`/`__doc__` when patch does not define new fixed runtime constant;
+    - ONLY functionally relevant literals count (comments/docs do not count).
+
+    ## DP Definition
+    **DP: Defective PR** means this PR is earlier problematic one (buggy/incomplete) later needing correction.
+    DP applies if at least one condition is met:
+    1. **Bug introduced by this PR**: After merge, subsequent issue/PR explicitly states this PR introduced bug/regression and merged fix exists. The follow-up fix may target a different issue. The bug claim must be clearly confirmed (not speculative) and closed with a merged fix.
+    2. **Incomplete earlier PR with functional follow-up**: After merge, subsequent merged PR supplements missing behavior and adds/updates regression tests. Patch-only follow-ups without tests, or non-functional-only updates do NOT qualify.
+    3. **Same-issue discussion-confirmed failure with a later PR**: Same issue has multiple PRs; this PR is earlier; issue discussion explicitly confirms failure/regression; later PR merged.
+
+    DP rules:
+    - speculative wording (`probably`, `maybe`, `might`) is insufficient.
+    - classify mention reason for each discovered follow-up artifact:
+      (A) regression/bug introduced by given PR;
+      (B) incomplete prior fix / not fully fixed;
+      (C) unrelated reference.
+      only (A)/(B) support DP.
+    - if only (C) exists, output NO_DP unless separate (A)/(B) evidence exists.
+
+    ## FP Definition
+    **FP: Follow-up PR** means this PR is later same-issue supplementary/corrective patch to earlier PR.
+    FP applies only if ALL hold:
+    1. There is an earlier merged PR for the exact same target issue.
+    2. This PR is the later supplementary/corrective PR for that same issue chain.
+    3. **Multi-issue presumption**: if `issue_number` has multiple issues and ANY issue has current PR as only merged PR (after removing current PR), default NO_FP unless PR-side text explicitly contains follow-up/supplement language (`follow-up to #...`, `supplement for #...`, `continuation of #...`).
+
+    FP do NOT count:
+    - re-filed work under different issue chain;
+    - no verified earlier merged same-issue PR;
+    - non-functional-only follow-up without functional impact.
+
+    ## Others / No Misalignment
+    - **Others**: only when misalignment exists but does not fit SC/FP/DP/IS/UL, with clear abnormal textual evidence.
+    - **No Misalignment**: exact alignment; exclusive with all other labels.
+
+    ## Reference Examples (keep interpretation)
+    IS examples:
+    - TypedDict discussion expansion with `**kwargs` case before merge → IS when PR follows expanded sanctioned problem.
+    - sympy `Matrix` vs `SparseMatrix` follow-up in same thread → IS if PR addresses later-discussed expansion.
+    - Design Finalization: Original issue says "what should we name this?", discussion explicitly agrees on "use X for Python 3.9+" → IS.
+    - NOT IS: maintainer context note only; NOT IS: discussion only narrow/rephrases existing mismatch without establishing new requirements.
+
+    SC examples:
+    - PR closes multiple issues while target issue is single-scope.
+    - PR description adds extra cases beyond requested behavior.
+    - commit references another issue/test track (`Fixed #...` + `Refs #...`).
+    - issue bugfix + PR text also claims extra autodoc fix.
+
+    UL examples:
+    - patch introduces exact runtime literal and test asserts same literal (issue does not specify exact text) → UL.
+    - external config value propagation (not hardcoded constant) → NOT UL.
+    - forwarded `__name__`/`__doc__` metadata values → NOT UL.
+
+    DP/FP examples:
+    - DP: later merged PR explicitly says regression from this PR.
+    - DP: incomplete earlier PR later supplemented with tests.
+    - FP: same-issue earlier partial fix + this later completion.
+    - DP: terse later same-issue PR description can still count if discussion + chronology + merged later PR are explicit.
+    - DP without extra fetch: Candidate explicitly blames `#{{pr_number}}`, no need to query `#{{pr_number}}` itself.
+
+    ## Input Data
+    - Instance ID: {{instance_id}}
+    - Issue Number: {{issue_number}}
+    - Issue Description: {{problem_statement}}
+    - Issue Discussion: {{hints_text}}
+    - PRs that Mentioned this issue: {{is_issue_mentioned}}
+    - PR Number: {{pr_number}}
+    - PR Description: {{pr_description}}
+    - PR Comments: {{pr_comments}}
+    - PR Commit Messages: {{commit_message}}
+    - PR Code Review Comments: {{review_comments}}
+    - PRs/Issues that Mentioned this PR After Merging: {{is_pr_mentioned}}
+    - PR Patch: {{patch}}
+    - PR Test Patch: {{test_patch}}
+    - PR Changed Files: {{files}}
+
+    ## Workflow
+
+    1) IS analysis:
+    - baseline from issue description;
+    - scan discussion for sanctioned evolution;
+    - exclude confirmation/rephrasing-only.
+
+    2) SC/UL analysis:
+    - SC from textual scope mismatch first; code second.
+    - UL requires exact literal triage among issue text, patch, test_patch.
+
+    3) DP/FP analysis:
+    - Step 0 Quick Exit Check (MANDATORY BEFORE `curl`):
+      * DP Candidates = merged PRs from `is_pr_mentioned` UNION merged PRs from `is_issue_mentioned` whose number > {{pr_number}}.
+      * FP Candidates = merged PRs from `is_issue_mentioned` whose number < {{pr_number}}.
+      * (Exclude `#{{pr_number}}` itself from both sets).
+      * If both DP Candidates and FP Candidates are EMPTY, DO NOT execute `curl`. Assume NO_DP, NO_FP.
+    - Only `curl` the specific candidate PR numbers identified. DO NOT search GitHub broadly.
+    - for DP: inspect candidate description + follow-up discussion, verify merged corrections explicitly blame `#{{pr_number}}` or functionally supplement it with tests.
+    - for FP: verify candidate is an older merged PR for the same target issue, and this PR supplements/corrects it.
+
+    4) Conflict resolution:
+    - if text vs code conflicts, prefer stronger textual evidence;
+    - if hint data conflicts with fetched evidence, prefer fetched evidence and explain mismatch.
+
+    5) Self-validation:
+    - internally build `candidate_labels` from textual evidence.
+    - use code only to keep/drop candidates; do NOT originate labels from code alone.
+    - final output must contain only kept labels.
+    - if all dropped, output exactly one `No Misalignment` block.
+
+    6) Submission protocol (strict two-step ending):
+    - First output final classification XML blocks exactly as required.
+    - Then execute exactly `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT` to end your turn.
+    - Do not combine with any other command.
+
+    ## Important Rules
+
+    1. Every response must contain exactly one action.
+    2. The action must be enclosed in triple backticks.
+    3. Directory or environment variable changes are not persistent. Every action is executed in a new subshell.
+       However, you can prefix any action with `MY_ENV_VAR=MY_VALUE cd /path/to/working/dir && ...` or write/load environment variables from files
+    4. Carefully distinguish labels: **SC=extra unrelated scope**, **FP=this PR is later same-issue supplement**, **DP=this PR is earlier defective/incomplete one later corrected**, **IS=issue scope evolved before merge and PR follows sanctioned updates**, **UL=new unspecified literal introduced in patch and asserted in test_patch**, **Others=rare residual misalignment**, **No Misalignment=exclusive exact alignment**.
+    5. Evidence is mandatory: every predicted label must include explicit evidence from provided fields (issue/PR text first; patch/test second).
+    6. Use text-first evidence policy; do not base labels solely on code.
+    7. For `is_pr_mentioned` / `is_issue_mentioned`, compute candidate sets first and ONLY fetch those candidates. Do NOT search GitHub broadly.
+    8. Do not infer SC from unrelated-looking tests alone when no corresponding production-code change exists.
+    9. If DP/FP Candidates are both empty, conclude NO_DP/NO_FP immediately. Do not fetch unnecessary timelines.
+
+    <system_information>
+    {{system}} {{release}} {{version}} {{machine}}
+    </system_information>
+
+    ## Output Format Requirement
+    Your final classification must follow this exact format:
+    - One block per predicted label.
+    - Each block must be valid XML using exactly these tags:
+      `<classification>`, `<label>`, `<reason>`.
+    - `label` must be one of: `SC`, `FP`, `DP`, `IS`, `UL`, `Others`, `No Misalignment`.
+    - `reason` must be **2-3 sentences**.
+    - Each `reason` must include **explicit evidence** quoted or cited from input fields(issue description/discussion, PR description/comments/reviews/commits, patch/test patch/files).
+    - Do not output any label without evidence.
+    - If and only if there is no misalignment, output exactly one block with `<label>No Misalignment</label>`.
+    - If `<label>No Misalignment</label>` is present, do not output any other misalignment labels in the same result.
+    - Misalignment labels are multi-select, but each label may appear at most once.
+    - Do not output any extra text outside XML blocks.
+
+    Example:
+    <classification>
+    <label>SC</label>
+    <reason>PR description states "also fixes #1234", while target issue is #5678. Commit message includes unrelated bugfix scope not requested by issue. This is extra unrelated work, so SC applies.</reason>
+    </classification>
+
+    <classification>
+    <label>UL</label>
+    <reason>`patch` introduces a new fixed runtime literal and `test_patch` asserts the same literal, while issue text does not specify this exact literal. This satisfies UL literal-introduction + assertion requirements. Therefore UL applies.</reason>
+    </classification>
+
+    ## Formatting your response
+
+    Here is an example of a correct response:
+
+    <example_response>
+    THOUGHT: I need to determine if this PR introduced new bugs or was incomplete. To do this, I must check if any subsequent merged PRs or closed issues reference this PR as the cause of a problem. First, I will examine the `is_pr_mentioned` field to identify any mentioned PRs and issues. Then, I will retrieve their details to understand why they reference this PR.
+
+    ```bash
+    curl -L -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GITHUB_TOKEN" -H "X-GitHub-Api-Version: 2022-11-28" https://api.github.com/repos/{owner}/{repo}/issues/{issue_number} \
+    && curl -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GITHUB_TOKEN" -H "X-GitHub-Api-Version: 2022-11-28" https://api.github.com/repos/{owner}/{repo}/pulls/{pr_number} 
+    ```
+    </example_response>
+
+    ## GitHub API Reference
+    Use this curl pattern for all GitHub API requests:
+    ```bash
+    curl -sL -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GITHUB_TOKEN" -H "X-GitHub-Api-Version: 2022-11-28" URL
+    ```
+
+    Available endpoints (replace OWNER, REPO, ISSUE_NUMBER, PR_NUMBER as needed):
+    - Fetch Issue Details: https://api.github.com/repos/OWNER/REPO/issues/ISSUE_NUMBER
+    - Fetch Pull Request Details: https://api.github.com/repos/OWNER/REPO/pulls/PR_NUMBER
+    - Fetch Issue Comments: https://api.github.com/repos/OWNER/REPO/issues/ISSUE_NUMBER/comments
+    - Fetch PR Comments: https://api.github.com/repos/OWNER/REPO/issues/PR_NUMBER/comments
+    - Fetch Pull Request Reviews: https://api.github.com/repos/OWNER/REPO/pulls/PR_NUMBER/reviews
+    - Search Issues and Pull Requests: https://api.github.com/search/issues?q=QUERY
+    # eg. q=windows+label:bug+language:python+state:open&sort=created&order=asc, Requests that don't include the is:issue or is:pull-request qualifier will receive an HTTP 422 Unprocessable Entity response.
+    - Fetch Issue Timeline: https://api.github.com/repos/OWNER/REPO/issues/ISSUE_NUMBER/timeline
+
+    You may also run any other bash command as needed.
+  action_observation_template: |
+    <returncode>{{output.returncode}}</returncode>
+    {% if output.output | length < 10000 -%}
+    <output>
+    {{ output.output -}}
+    </output>
+    {%- else -%}
+    <warning>
+    The output of your last command was too long.
+    Please try a different command that produces less output.
+    If you're looking at a file you can try use head, tail or sed to view a smaller number of lines selectively.
+    If you're using grep or find and it produced too much output, you can use a more selective search pattern.
+    If you really need to see something from the full command's output, you can redirect output to a file and then search in that file.
+    </warning>
+    {%- set elided_chars = output.output | length - 10000 -%}
+    <output_head>
+    {{ output.output[:5000] }}
+    </output_head>
+    <elided_chars>
+    {{ elided_chars }} characters elided
+    </elided_chars>
+    <output_tail>
+    {{ output.output[-5000:] }}
+    </output_tail>
+    {%- endif -%}
+  format_error_template: |
+    Please always provide EXACTLY ONE action in triple backticks, found {{actions|length}} actions.
+    If you want to end the task, please issue the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`
+    without any other command.
+    Else, please format your response exactly as follows:
+
+    <response_example>
+    Here are some thoughts about why you want to perform the action.
+
+    ```bash
+    <action>
+    ```
+    </response_example>
+
+    Note: In rare cases, if you need to reference a similar format in your command, you might have
+    to proceed in two steps, first writing TRIPLEBACKTICKSBASH, then replacing them with ```bash.
+  timeout_template: |
+    The last command <command>{{action['action']}}</command> timed out and has been killed.
+    The output of the command was:
+    {% if output | length < 10000 -%}
+    <output>
+    {{output}}
+    </output>
+    {%- else -%}
+    <warning>Output was too long and has been truncated.</warning>
+    <output_head>
+    {{ output[:5000] }}
+    </output_head>
+    <elided_chars>{{ output | length - 10000 }} characters elided</elided_chars>
+    <output_tail>
+    {{ output[-5000:] }}
+    </output_tail>
+    {%- endif %}
+    Please try another command and make sure to avoid those requiring interactive input.
+  step_limit: 0
+  cost_limit: 0.4
+environment:
+  env:
+    PAGER: cat
+    MANPAGER: cat
+    LESS: -R
+    PIP_PROGRESS_BAR: 'off'
+    TQDM_DISABLE: '1'
+model:
+  observation_template: |
+    {% if output.exception_info -%}
+    <exception>{{output.exception_info}}</exception>
+    {% endif -%}
+    <returncode>{{output.returncode}}</returncode>
+    {% if output.output | length < 10000 -%}
+    <output>
+    {{ output.output -}}
+    </output>
+    {%- else -%}
+    <warning>
+    The output of your last command was too long.
+    Please try a different command that produces less output.
+    If you're looking at a file you can try use head, tail or sed to view a smaller number of lines selectively.
+    If you're using grep or find and it produced too much output, you can use a more selective search pattern.
+    If you really need to see something from the full command's output, you can redirect output to a file and then search in that file.
+    </warning>
+    {%- set elided_chars = output.output | length - 10000 -%}
+    <output_head>
+    {{ output.output[:5000] }}
+    </output_head>
+    <elided_chars>
+    {{ elided_chars }} characters elided
+    </elided_chars>
+    <output_tail>
+    {{ output.output[-5000:] }}
+    </output_tail>
+    {%- endif -%}
+  model_kwargs:
+    drop_params: true
+  format_error_template: |
+    Format error:
+
+    <error>
+    {{error}}
+    </error>
+
+    Here is general guidance on how to format your response:
+
+    Please always provide EXACTLY ONE action in triple backticks, found {{actions|length}} actions.
+    If you want to end the task, please issue the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`
+    without any other command.
+    Else, please format your response exactly as follows:
+
+    <response_example>
+    Here are some thoughts about why you want to perform the action.
+
+    ```mswea_bash_command
+    <action>
+    ```
+    </response_example>
+
+    Note: In rare cases, if you need to reference a similar format in your command, you might have
+    to proceed in two steps, first writing TRIPLEBACKTICKSBASH, then replacing them with ```mswea_bash_command.

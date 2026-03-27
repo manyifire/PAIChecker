@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The PR commit messages explicitly reference additional scope beyond the issue baseline: "dulwich: workaround github SSH server in asyncssh vendor - allow mismatched RSA signature algo names in initial SSH_MSG_USERAUTH_PK_OK response" introduces a GitHub-specific SSH protocol workaround not requested in the issue. The commit also says "unit test overridden asyncssh publickey auth compatibility with github ssh server," indicating distinct test additions for this separate fix. While the PR description says "Will fix #6920," it also says "Related to #2215," referencing another issue's work embedded in the PR.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The patch introduces fixed algorithm name constants `b"ssh-rsa"`, `b"rsa-sha2-256"`, `b"rsa-sha2-512"` in `_process_public_key_ok_gh` as new runtime constants checked in conditionals. The test_patch asserts behavior with these exact values: `@pytest.mark.parametrize("algorithm", [b"ssh-rsa", b"rsa-sha2-256", b"rsa-sha2-512"])` and uses `b"ssh-rsa"` explicitly in `strings = iter((b"ssh-rsa", key_data))`. None of these algorithm name literals appear in the issue description or discussion text.</ul_evidence>
+<suspicious_clues>The test uses `b"ed21556"` as a deliberately mismatched algorithm string (to trigger ProtocolError) - this is a typo/obfuscation of "ed25519" which is suspicious but functionally just a non-matching test string. The PR also changes `port=port` to `port=port if port is not None else ()` and `client_keys=[]` to `client_keys=()` which are subtle behavioral changes not explicitly described in the issue.</suspicious_clues>
+</sub_agent_result>

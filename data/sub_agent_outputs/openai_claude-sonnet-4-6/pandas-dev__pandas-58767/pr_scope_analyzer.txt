@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue specifically describes the bug for `raw=True` mode only ("BUG: No kwargs in df.apply(raw=True, engine='numba')"). The PR comment explicitly acknowledges additional scope: "@lithomas1 I notice that `*args` support for raw=False + numba engine can be also added, should I open a another PR or just put them together?" and the commit message confirms it: "add *args for raw=False as well; merge tests together". The PR explicitly adds support beyond the issue-requested `raw=True` case to also cover `raw=False` apply paths (modifying both `FrameRowApply.apply_with_numba` and `FrameColumnApply.apply_with_numba`).</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>In `patch`, the error message in `numba_.py` is changed to: `"numba does not support keyword-only arguments"` (a newly introduced literal, replacing the old "numba does not support kwargs with nopython=True"). In `test_patch`, both `test_frame_apply.py` and `test_numba.py` assert `match="numba does not support keyword-only arguments"` against this new message. This exact literal string does not appear anywhere in the issue description (which only says "kwargs should be passed to njit func"), making it a UL.</ul_evidence>
+<suspicious_clues>The PR also modifies `test_numba.py` to update an existing test's match string from "numba does not support kwargs with" to "numba does not support keyword-only arguments", which is a test for rolling window numba behavior — slightly outside the apply context of the issue.</suspicious_clues>
+</sub_agent_result>

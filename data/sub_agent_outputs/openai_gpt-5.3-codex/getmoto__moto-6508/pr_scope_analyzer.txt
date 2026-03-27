@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue baseline reports a single CloudFront mocking bug: botocore fails parsing because an integer field is `'None'` (`ValueError: invalid literal for int() with base 10: 'None'`). PR-side text is tightly aligned: title/commit say “CloudFront - Add default timeouts for CustomOrigins,” and description says only “Fixes #6504,” with no explicit mention of additional issues or unrelated enhancements. The issue discussion specifically identifies the missing required values (`OriginKeepaliveTimeout` and `OriginReadTimeout`), and the patch implements exactly that by defaulting those two fields, which supports in-scope remediation rather than extra scope.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The patch newly introduces concrete literals: `self.keep_alive = config.get("OriginKeepaliveTimeout") or 5` and `self.read_timeout = config.get("OriginReadTimeout") or 30`. The test patch explicitly asserts those same new literals in behavior checks: `assert custom_config["OriginReadTimeout"] == 30` and `assert custom_config["OriginKeepaliveTimeout"] == 5`. These exact default numbers are not specified in the issue description/discussion (which only says the values are missing/required), so this matches UL.</ul_evidence>
+<suspicious_clues>The PR says “Fixes #6504” while the provided instance is PR #6508 tied to this issue context; likely cross-reference/numbering mismatch in the supplied metadata, but no direct evidence of extra scope from PR text itself.</suspicious_clues>
+</sub_agent_result>

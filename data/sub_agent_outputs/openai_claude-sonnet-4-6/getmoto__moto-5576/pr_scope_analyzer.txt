@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The PR description explicitly states "This PR also adds the ability to search for a function by alias, i.e. `get_function(name, alias)` - before it would always return `$latest` if a non-numeric alias was provided." This alias-based retrieval functionality is an additional enhancement not requested in the issue description, which only describes a bug with "deleting lambda function versions, while using Qualifier parameter." The PR introduces new `has_alias()` method and modifies `get_function_by_name()` to support alias lookups beyond fixing the deletion bug.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The patch introduces the literal `"$latest"` in the conditional check `if qualifier.lower() == "$latest":` (line in get_function_by_name method). The test_patch asserts `"$LATEST"` in the expected version list `["$LATEST", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]`. While the issue description's table shows `$Latest`, the exact case-sensitive string `"$latest"` used in the patch is not specified in the issue text.</ul_evidence>
+<suspicious_clues>The test file includes a completely new test `test_get_function_using_alias` that tests alias-based retrieval with assertions like `FunctionName=fn_name, Qualifier="live"`, confirming the PR's explicit claim of adding alias functionality beyond the issue scope. The literal "$LATEST"/"$latest" may be considered a standard AWS convention, but under strict exact-match rules it qualifies as UL.</suspicious_clues>
+</sub_agent_result>

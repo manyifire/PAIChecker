@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue baseline is narrowly about one failure: \"BUG: to_pydatetime() -&gt; &#39;pyarrow.lib.DataType&#39; object has no attribute &#39;unit&#39;\" for Arrow date dtype usage. PR-side text stays aligned: title/commits repeatedly say \"ERR: Raise a better error message with to_pydatetime and ArrowDtype(pa.date)\", and there is no explicit claim of fixing additional distinct issues. The PR description references only \"closes #52812\" and does not state unrelated enhancements.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The patch introduces a new hardcoded runtime message: \"to_pydatetime cannot be called with {self.dtype.pyarrow_dtype} type. Convert to pyarrow timestamp type.\" via a new ValueError. The test patch explicitly asserts this literal prefix: `with pytest.raises(ValueError, match=\"to_pydatetime cannot be called with\")`. That exact literal is not specified in the issue description/discussion (which mention the original AttributeError text instead), so this matches UL.</ul_evidence>
+<suspicious_clues>Issue discussion mentions \"Probably should raise a better error message ... pyarrow type should be pa.timestamp\", which aligns with PR direction; however, exact final error-string literal was not specified and became a newly fixed constant asserted in tests.</suspicious_clues>
+</sub_agent_result>

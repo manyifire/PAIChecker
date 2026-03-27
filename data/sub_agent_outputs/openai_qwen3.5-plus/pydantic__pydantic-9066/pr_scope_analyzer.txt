@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description states "Fixing a bug where default values of model fields won't be serialized into the json schema" and references only "Fix #8942". The issue description focuses on "Type `IPv4Address` not parsed" with the warning about default value serialization. The PR scope aligns exactly with the issue baseline - both address the same serialization problem. The discussion proposed using TypeAdapter for serialization, which the PR implements, but this is implementation detail clarification, not a new distinct problem.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains literals like '127.0.0.1' and '::1', but these are explicitly present in the issue description ("Default value 127.0.0.1 is not JSON serializable") and discussion ("IPv4Address('127.0.0.1'), (IPv6Address('::1'))"). The patch does not introduce new hardcoded constants - it uses TypeAdapter to serialize the default value dynamically: `TypeAdapter(type(dft), config=config.config_dict).dump_python(dft, mode='json')`. The string outputs are produced by the serialization logic, not hardcoded in the patch.</sc_evidence>
+<suspicious_clues>The commit message "Fix failing datetime test" and its revert suggest some internal test adjustments during development, but these don't reference additional issues or represent scope creep. The PR stays focused on the single issue #8942 throughout.</suspicious_clues>
+</sub_agent_result>

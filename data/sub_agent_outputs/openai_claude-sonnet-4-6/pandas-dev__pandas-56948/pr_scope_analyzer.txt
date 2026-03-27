@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue description (#55815) specifically reports "Left joining on an index with non-unique values removes name of index" (a narrow left-join + non-unique case). The PR title states "BUG: DataFrame.join inconsistently setting result index name," claiming a broader fix for all join types (inner, right, outer). The issue discussion introduced additional cases beyond the baseline (e.g., "In addition to the left join there seems to be other inconsistencies"), and the PR explicitly addresses these broader inconsistencies by patching `_join_via_get_indexer`, `_join_monotonic`, and `_wrap_joined_index` for all `how` options — going beyond the single left-join-non-unique scenario described in the issue.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>N/A — The test_patch uses name literals like "lhs" and "rhs" which are defined in the test setup (e.g., `index = Index(range(0, 20, 2), dtype=np.int64, name="lhs")`) and merely propagated through the fix logic via `self.names`/`other.names`. The patch does not introduce any new hardcoded string constants; it only forwards existing index name values. Per the rules, forwarded existing values do not constitute UL.</ul_evidence>
+<suspicious_clues>The whatsnew entry was added to v3.0.0.rst but the PR commit messages reference "v2.3.0.rst" ("Added an entry in the latest doc/source/whatsnew/v2.3.0.rst file"), creating a minor discrepancy between the PR description checklist and the actual patch file modified.</suspicious_clues>
+</sub_agent_result>

@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue-description baseline is narrowly “`batch.create_compute_environment() call fails against moto server`” with a reproduced 500 on create; it does not request multiple validation rules. PR-side text explicitly broadens scope: title/commit say “`now validates instanceRole and minvCpu`,” i.e., two required-parameter validations, while issue discussion only introduced one additional distinct problem (“`Instance role is required`”). Patch/test are consistent with this broader claim by adding both missing-`instanceRole` and missing-`minvCpus` error paths, so the `minvCpus` requirement is extra beyond the issue baseline (and beyond the single discussion-added problem).</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The patch newly introduces exact runtime literals: `Error executing request, Exception : Instance role is required.` and `Error executing request, Exception : Resource minvCpus is required.` in `moto/batch/models.py`. The test patch asserts those same hardcoded strings in `tests/test_batch/test_batch_compute_envs.py` via `in err["Message"]`. These exact literals are not specified in the issue description (which reports a generic 500 HTML error), so they satisfy UL criteria.</ul_evidence>
+<suspicious_clues>The PR says `Fixes #6463` while the analyzed instance is `getmoto__moto-6470`; there is an issue-number mismatch in provided metadata, though scope evidence remains clear from supplied texts.</suspicious_clues>
+</sub_agent_result>

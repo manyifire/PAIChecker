@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description explicitly closes only "#50977" and the commit messages reference "issue-50977" exclusively. The issue requests deprecating `*args, **kwargs` on resample methods (similar to rolling-like methods), and the PR implements exactly that—adding FutureWarning deprecation notices for these unused arguments in resample methods. No additional issues or unrelated functionality are claimed.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>In `patch`, a new warning message is introduced: `f"Passing additional {msg} to {cls.__name__}.{kernel} has no impact on the result and is deprecated. This will raise a TypeError in a future version of pandas."` In `test_patch`, this is asserted via `warn_msg = f"Passing additional args to DatetimeIndexResampler.{method}"` with `tm.assert_produces_warning(FutureWarning, match=warn_msg)`. The exact text "no impact on the result" and "raise a TypeError in a future version of pandas" does not appear in the issue description or discussion, confirming these are newly introduced literals in patch that are asserted in test_patch without issue-specified exact text.</ul_evidence>
+<suspicious_clues>The test patch removes the old `test_numpy_compat` test (which tested `UnsupportedFunctionCall` errors for passing numpy args) and replaces it with `test_args_kwargs_depr` which now tests both FutureWarning AND the same underlying errors. This represents a test restructuring that moves the import of `UnsupportedFunctionCall` from one test file to another, which is consistent with the deprecation approach but worth noting.</suspicious_clues>
+</sub_agent_result>

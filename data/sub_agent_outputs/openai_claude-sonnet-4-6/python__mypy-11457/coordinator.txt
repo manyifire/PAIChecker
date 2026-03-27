@@ -1,0 +1,41 @@
+## Synthesis Analysis
+
+### Step 1: Review Tier 1 Results
+
+**issue_analyzer**: Reports NO_IS with evidence that the issue discussion is empty and the baseline description is complete and self-contained.
+
+**pr_scope_analyzer**: Reports SC with evidence that PR comments introduce additional scope (validation for `--no-site-packages` and `--install-types` incompatibility). Also reports UL with evidence of a hardcoded error message not specified in the issue.
+
+**pr_connection_analyzer**: Reports NO_DP and NO_FP with evidence that no follow-up PRs/issues referenced this PR, and this was the only PR addressing the issue.
+
+### Step 2: Judge Tier 1 Conclusions Against Evidence
+
+**issue_analyzer (NO_IS)**: The evidence clearly supports this conclusion. Empty discussion means no scope evolution occurred in the issue thread itself. ✓ SUPPORTED
+
+**pr_scope_analyzer (SC)**: The evidence directly quotes PR comments showing that during PR review, a new requirement was introduced: disallowing the combination of `--no-site-packages` and `--install-types`. The issue only requested passing `options.python_executable`, but the PR implemented additional validation logic. This is clear scope expansion beyond the original issue request. ✓ SUPPORTED
+
+**pr_scope_analyzer (UL)**: The evidence shows a specific error message literal (`"error: --install-types not supported without python executable or site packages"`) that does not appear in the issue description. This is a new literal introduced during implementation. ✓ SUPPORTED
+
+**pr_connection_analyzer (NO_DP, NO_FP)**: Evidence shows no follow-up activity and this was the sole PR for the issue. ✓ SUPPORTED
+
+### Step 3: Gather Final Supported Labels
+
+- **SC**: Yes - PR comments show additional incompatibility validation scope added during review
+- **UL**: Yes - Error message literal not specified in issue description  
+- **IS**: No - Issue discussion was empty, no sanctioned evolution
+- **DP**: No - No follow-up PRs/issues
+- **FP**: No - This was the only PR for the issue
+- **Others**: No - The misalignment is fully captured by SC and UL
+- **No Misalignment**: No - SC and UL apply
+
+### Step 4: Final Classification
+
+<classification>
+<label>SC</label>
+<reason>The pr_scope_analyzer provided direct textual evidence from PR comments showing that additional scope was introduced during review: validation logic to disallow the combination of `--no-site-packages` and `--install-types`. The original issue #11405 only requested passing `options.python_executable` to fix compatibility, but the PR implemented an additional incompatibility check based on reviewer suggestions.</reason>
+</classification>
+
+<classification>
+<label>UL</label>
+<reason>The pr_scope_analyzer identified a hardcoded error message literal (`"error: --install-types not supported without python executable or site packages"`) that was introduced in the implementation but does not appear in the issue description or discussion. This specific error text was an unspecified implementation detail added during the PR.</reason>
+</classification>

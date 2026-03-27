@@ -1,0 +1,12 @@
+<classification>
+<label>IS</label>
+<reason>The PR evolved from just raising an error for non-array-like returns to correctly computing the result through broadcasting instead. The code confirms this shift by making `enforce_ndim=False` the default behavior in `map_blocks` and adding `test_chunk_non_array_like()` which tests that `map_blocks(lambda x: 5)` successfully computes and is successfully asserted against `np.array([5, 5, 5])`.</reason>
+</classification>
+<classification>
+<label>SC</label>
+<reason>The PR explicitly addressed an extra issue regarding `assert_eq` passing unexpectedly, expanding the original scope. The code confirms this extra scope by modifying `dask/array/utils.py` to introduce the new `check_ndim` parameter for `assert_eq()` and related functions, and explicitly verifying this behavior in `test_patch`.</reason>
+</classification>
+<classification>
+<label>UL</label>
+<reason>The patch newly introduces the error message literal `"Dimension mismatch:"` (within the formatted string `f"Dimension mismatch: expected output of..."`) when `enforce_ndim` validation fails. The `test_patch` explicitly asserts this literal using `pytest.raises(ValueError, match="Dimension mismatch:")`, which was not specified in the original issue description.</reason>
+</classification>

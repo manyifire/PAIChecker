@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description states "Fixes #6289" only, targeting the single issue of WSIReader reading by power and mpp. All commit messages reference only mpp/power functionality ("Implement read by magnification power and mpp", "update mpp, power and add several unittests to cover them"). The `ConvertUnits` utility class added in `misc.py` is a direct implementation support for the WSI resolution conversion, not an unrelated enhancement. No cross-issue references are found.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The patch introduces several error message strings (e.g., "`mpp` cannot be obtained for this file. Please use `level` instead."), but test_patch only asserts `ValueError` exception types, never the specific message text. Numeric literals in test assertions like `mpp: 1000`, `power: 20`, and pixel values like `[[239], [239]]` are either user-provided input parameters or actual WSI image content values — not newly introduced fixed runtime constants in the patch code.</ul_evidence>
+<suspicious_clues>The test_patch changes the FILE_KEY from "wsi_img" to "wsi_generic_tiff" across multiple test files and adds a new "wsi_aperio_svs" test file download, suggesting a refactoring of test infrastructure alongside the feature. This could be seen as additional scope in test infrastructure, but it directly supports the new feature (Aperio SVS files are needed to test objective power reading which is Aperio-specific in cuCIM backend).</suspicious_clues>
+</sub_agent_result>

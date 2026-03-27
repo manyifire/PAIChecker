@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue baseline is only about restoring optional visibility of Git clone URLs: “The git clone URL is no longer logged… show &lt;hidden&gt;.” In contrast, PR description explicitly claims unrelated feature scope: “New ``compiler.cstd`` setting… Implemented ``compatibility.py``… New ``languages = &quot;C&quot;, &quot;C++&quot;``…” and even “Close https://github.com/conan-io/conan/issues/13777.” A commit in the same PR separately states “Allow to unhide git url… Resolves #15684,” which is direct evidence of multi-issue work in one PR.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The patch introduces fixed output literals through new mappings/templates, e.g. `to_cstd_flag` maps `&apos;11&apos;` to `&quot;c11&quot;`, `cstd_flag` returns `-std={flag}`, and MSBuild template uses `&lt;LanguageStandard_C&gt;{{ cstd }}&lt;/LanguageStandard_C&gt;` with `cstd = f&quot;stdc{self.cstd}&quot;`. The tests then assert exact literals: `assert &quot;c_std = &apos;c11&apos;&quot; in content`, `assert &quot;-std=c17&quot; in env[&quot;CFLAGS&quot;]`, and `assert &apos;&lt;LanguageStandard_C&gt;stdc17&lt;/LanguageStandard_C&gt;&apos; in load(props_file)`. These exact literals are not present in the issue text/discussion about git URL masking, satisfying UL.</ul_evidence>
+<suspicious_clues>The PR title/description and large patch are centered on cstd/languages features (#13777), while the target issue is #15684 (git URL unhide); only one commit references #15684, indicating a stacked/umbrella branch with mixed scopes.</suspicious_clues>
+</sub_agent_result>

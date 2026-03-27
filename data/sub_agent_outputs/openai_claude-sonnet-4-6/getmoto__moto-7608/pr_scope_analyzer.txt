@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description states "Fixes #7583" — a single issue. The issue explicitly states "Currently can not test `send_task_success` or `send_task_failure` with Moto 5.0.4+", so fixing those functions is within the stated scope. All changes (fixing waitForTaskToken error, adding `error` param to `send_task_failure`, correcting `output` param in `send_task_success`) are directly related to making the end-to-end waitForTaskToken flow work as described in the issue.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch uses `"test error"` in `client.send_task_failure(taskToken=token, error="test error")` and asserts `execution["error"] == "test error"`, but this literal is NOT introduced as a fixed constant in the patch — the patch simply adds `error: Optional[str] = None` as a parameter and passes it through. The number `25` in `len(items[0]["StepFunctionTaskToken"]["S"]) > 25` is also only in the test and not a fixed constant in patch. No literal qualifies as both newly introduced in patch AND asserted in test_patch.</ul_evidence>
+<suspicious_clues>The PR fixes a parameter name bug (`outcome` → `output` in `send_task_success`) that is a separate implementation detail from the main waitForTaskToken crash, but this is a minor fix within the same functional scope and not explicitly claimed as a separate issue fix in PR text.</suspicious_clues>
+</sub_agent_result>

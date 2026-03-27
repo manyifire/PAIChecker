@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue description clearly states the bug scope: "BUG: read_sql with chunksize fails due to connection already closed" caused by #49531. The PR description explicitly states: "This fixes a bug which I introduced in #49531... However, this can break `read_sql` with `chunksize`, because the caller might be iterating over the chunks after the connection is closed." The PR commit message "BUG: Allow read_sql to work with chunksize" aligns exactly with the issue scope. No additional issues or unrelated functionality are claimed in PR text.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains literals like `chunksize=7`, shape assertions `(150, 5), (8, 5)`, and column name "SepalWidth", but these are test parameters and dataset properties, not newly introduced hardcoded runtime constants in the patch. The patch introduces `ExitStack` for connection management but does not define new literal strings or values that are then asserted in tests. Per UL definition, literals must be "newly introduced/defined as a fixed runtime constant in patch AND explicitly asserted in test_patch" - this condition is not met.</sc_evidence>
+<suspicious_clues>The PR mentions adding tests with `NullPool` and creating "a new string connectable to test with" - these are test infrastructure additions to properly reproduce the bug, not scope creep. The issue discussion section is empty, so no additional problem statements were introduced there. All code changes (ExitStack, connection lifecycle management) directly support the stated bugfix scope.</suspicious_clues>
+</sub_agent_result>

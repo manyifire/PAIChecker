@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The PR description explicitly claims to fix "#47348: Bug in DataFrame.groupby raising error when None is in first level of MultiIndex" (from whatsnew entry). However, the test_patch includes `test_groupby_none_column_name` which tests "df.groupby(by=[None])" on a DataFrame with a None column name - a distinct scenario not mentioned in the issue description. The issue description only covers "Series.groupby fails when grouping on MultiIndex with nulls in first level", not DataFrame groupby with None column names. This represents additional scope beyond the stated issue scope.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains standard test data literals (e.g., `[[None, 1, 0, 1], [2, 3, 2, 3]]`, `[1, 2]`, `[(0.0, 2), (1.0, 3)]`) which are typical test input/output values, not newly introduced runtime constants. The patch only adds a conditional check `if obj.ndim == 1: return False` without introducing any new hardcoded string literals or error messages. These test literals are not asserted as specific error messages or outputs that would constitute UL.</sc_evidence>
+<suspicious_clues>The test_patch contains two tests both referencing GH#47348, but only one (test_groupby_none_in_first_mi_level) matches the issue description scope. The second test (test_groupby_none_column_name) tests a different scenario (DataFrame groupby with None column name) that was not requested in the issue description, suggesting the fix may have addressed a broader underlying bug than documented.</suspicious_clues>
+</sub_agent_result>

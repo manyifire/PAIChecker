@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The PR whatsnew entry explicitly states: "Change the default argument of `regex` for `Series.str.replace` from `True` to `False`. Additionally, a single character `pat` with `regex=True` is now treated as a regular expression instead of a string literal. (:issue:`36695`, :issue:`24804`)" — referencing two distinct issues. Issue #24804 only describes the problem of single character patterns not being treated as regex; changing the default `regex` parameter from True to False is a separate scope item from #36695. The PR commit message also says "DEPR: Change str.replace(regex) from True to False & single behavior," indicating two distinct behavioral changes.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch asserts `Series(["aaa", "a", "a", np.nan, ""], dtype=any_string_dtype)` when regex=True on input `["a.b", ".", "b", np.nan, ""]` with replacement "a". These values are computed outputs from the regex engine (`.` matches any char), not newly hardcoded constants in patch. The patch itself only removes special-case override code and doesn't introduce any new fixed string literals — it removes the condition `if isinstance(pat, str) and len(pat) == 1: regex = False`, so the assertion values are derived behavior, not new constants.</ul_evidence>
+<suspicious_clues>The PR comments mention "updated #30228?" suggesting a third issue may have been touched; the PR also references issue #36695 explicitly in the whatsnew as the origin of the deprecation that is being enforced, making this a multi-issue enforcement PR while only claiming to close #24804 in the PR description.</suspicious_clues>
+</sub_agent_result>

@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR explicitly states "Fixes #829" and addresses a single root cause: "This PR restored ArrayDataset and NiftiDataset to use `tuple` as output type to fix a regression bug. Because `nested lists` is not supported by MONAI DataLoader." The ZipDataset test changes in `test_zipdataset.py` are a consequence of the same tuple/list regression fix, not a separate unrelated issue. No commit messages or PR text claim additional distinct issues beyond #829.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The patch only introduces `return tuple(data)` with a comment, adding no new hardcoded runtime string/number constants. The `test_zipdataset.py` changes convert existing list literals like `[0, 0, 0]` to tuple literals `(0, 0, 0)` — these are modifications to pre-existing test expected values, not newly introduced literals. The new test `test_dataloading_img_label` uses `expected_shape` from the parameterized test case and `atol=1e-3` from existing test patterns, none of which are new constants introduced in the patch.</ul_evidence>
+<suspicious_clues>The commit message "[DLMED] update ZipDataset test" hints at updating ZipDataset tests as a side effect, but this is directly caused by the same tuple/list fix rather than a separate functional change. The PR also fixes `nifti_reader.py` in addition to `dataset.py`, but both changes share the same root cause explanation provided in the PR description.</suspicious_clues>
+</sub_agent_result>

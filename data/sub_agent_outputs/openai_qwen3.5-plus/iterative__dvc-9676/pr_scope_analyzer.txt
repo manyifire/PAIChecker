@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description explicitly states "Fixes #9176" and addresses the exact issue described: "'md5' dict lookup" KeyError in `dvc get --show-url`. The PR description mentions handling "md5-dos2unix" which was already raised in the issue discussion ("we see 'md5-dos2unix' as a key here"), not a new distinct problem. The commit messages ('api.get_url: use index remote storage for getting remote URL', 'dvcfs: return md5-dos2unix in info', etc.) describe implementation details of the same fix, not additional unrelated issues.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch adds assertions like `assert api.get_url(os.path.join("subrepo", "dir", "foo"), repo=".") == expected_url` where `expected_url` is computed from `local_cloud / "files" / "md5" / ...` (runtime path construction, not hardcoded literals). The patch does not introduce any new hardcoded literal constants that are asserted in tests; it changes logic to use `index.storage_map.get_remote(entry)` and `remote_fs.unstrip_protocol(remote_path)` which are dynamic lookups, not fixed string constants.</ul_evidence>
+<suspicious_clues>None - The PR scope aligns cleanly with the issue description and discussion. The `md5-dos2unix` handling mentioned in PR was already identified in issue discussion as part of the same bug, not a separate enhancement.</suspicious_clues>
+</sub_agent_result>

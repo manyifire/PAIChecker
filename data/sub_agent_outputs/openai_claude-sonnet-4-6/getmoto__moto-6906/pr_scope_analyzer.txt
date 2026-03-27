@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue (#6903) requests only adding `HibernationOptions` support to `describe_instances`. The PR description explicitly claims broader scope: "EC2: Streamline output of run_instances()/describe_instances()" and states "The duplicate copy/pasta nature before meant that `run_instances()` and `describe_instances()` were missing different fields in the response. The output of both methods is now the same." This explicitly indicates the PR also fixes missing fields in `run_instances()`, which is an unrelated enhancement not requested by the issue.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch adds an assertion `assert instance["HibernationOptions"] == {"Configured": hibernate}` where `hibernate` is parametrized as `True/False` — not a new hardcoded constant introduced by the patch. The `clientToken` literal `ABCDE{{ account_id }}3` was already present in the describe_instances template and was merely moved to a shared template, not newly introduced as a fixed constant.</ul_evidence>
+<suspicious_clues>The PR's approach of creating a shared INSTANCE_TEMPLATE is a reasonable refactoring strategy to implement the requested feature, but the PR description explicitly claims it also fixes `run_instances()` output (which had "missing different fields"). This additional claimed fix for `run_instances()` is not mentioned in the issue description, constituting scope creep beyond the baseline.</suspicious_clues>
+</sub_agent_result>

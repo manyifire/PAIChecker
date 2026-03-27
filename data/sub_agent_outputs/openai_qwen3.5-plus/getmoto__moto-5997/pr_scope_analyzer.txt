@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue description requests fixing DynamoDB error messages to be Java SDK compatible due to incorrect error type prefix `com.amazonaws.dynamodb.v20111205#`. The PR description states "Fixes #5993" and explains "The `com.amazonaws.dynamodb.v20111205#`-prefix was a holdover from the old DynamoDB...All error types from the current DynamoDB version seem to be prefixed with `com.amazonaws.dynamodb.v20120810#` instead." The additional note about describe_table() returning a different error message is an implementation detail of achieving the correct AWS-compatible error format, not an unrelated enhancement or separate issue fix.</sc_evidence>
+<ul_judgment>UL</ul_judgment>
+<ul_evidence>The test_patch contains hardcoded literal `"Requested resource not found: Table: messages not found"` which is asserted in the test. The patch introduces this literal via `default_msg += f": Table: {table_name} not found"`. However, the issue description only mentions `"Requested resource not found"` without the table name suffix. This specific literal format with table name is newly introduced in the patch and asserted in test_patch but was not specified in the issue text.</ul_evidence>
+<suspicious_clues>The PR description explicitly acknowledges the message format change ("This also changes the error message in the body"), which suggests it's intentional. However, per UL definition requiring exact string match in issue text, the extended message format with table name qualifies as UL since only the base message was mentioned in the issue.</suspicious_clues>
+</sub_agent_result>

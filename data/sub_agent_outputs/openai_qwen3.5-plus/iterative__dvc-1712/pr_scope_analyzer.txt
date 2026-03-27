@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue description reports "UNIQUE constraint failed: state.inode" error. The PR description states "Fixes #1707" with title "Apply inode value mapping when checking for an existing entry." The commit message "apply inode value mapping when checking for an existing entry" directly addresses the single bug scope identified in the issue. The issue discussion identified the root cause as "in `get_state_record_for_inode` we don't aplly `self._to_sqlite(inode)` before running the check" which is exactly what the PR patch implements. No additional issues or unrelated functionality are claimed in PR text.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains `inode = state.MAX_INT + 2` and asserts `self.assertIsNotNone(ret)`. The literal `2` is a simple offset for test input, not a new hardcoded runtime constant introduced in patch. The patch only changes `cmd.format(self.STATE_TABLE, inode)` to `cmd.format(self.STATE_TABLE, self._to_sqlite(inode))` - it forwards the inode through existing `_to_sqlite` method, not introducing new literal values. No error messages or specific output strings are asserted in tests that aren't in the issue.</ul_evidence>
+<suspicious_clues>None</suspicious_clues>
+</sub_agent_result>

@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The PR description explicitly states "Fix for 55753 BUG: No kwargs in df.apply(raw=True)" and only references issue #55753 with "- [x] closes #55753". The issue description baseline requests fixing kwargs passing in `df.apply(raw=True)`, and the PR commits consistently reference only this single issue ("Fix for 55753 BUG: No kwargs in df.apply(raw=True) [ Backport to 2.1.x ]"). No additional issues or unrelated functionality are claimed in PR text.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch adds `@pytest.mark.parametrize("raw", [True, False])` and uses `args=(1,)` with assertion `tm.assert_frame_equal(result, expected)` where `expected = float_frame + 1`. The literal `1` is a test input parameter, not a newly introduced runtime constant in the patch. The patch only forwards existing values via `*self.args, **self.kwargs` without defining new hardcoded literals.</ul_evidence>
+<suspicious_clues>The PR is a backport to 2.1.x branch (not main), which explains why it's fixing an already-resolved issue. The whatsnew discussion about moving entries between versions (2.2.0 to 2.1.3/2.1.4) is documentation coordination, not scope creep. Test changes are minimal and directly validate the reported bug scenario.</suspicious_clues>
+</sub_agent_result>

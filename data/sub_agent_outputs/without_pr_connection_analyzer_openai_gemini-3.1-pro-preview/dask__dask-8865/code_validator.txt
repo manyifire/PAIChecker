@@ -1,0 +1,12 @@
+<classification>
+<label>IS</label>
+<reason>The patch modifies `chunks_from_arrays` to handle 0-d array shapes (`x.shape if x.shape else (1,)`) so the computation succeeds instead of crashing. The test `test_chunk_shape_broadcast` explicitly checks that `out.compute()` does not raise an exception by default, confirming the evolved requirement to successfully compute the result rather than just improving the failure message.</reason>
+</classification>
+<classification>
+<label>SC</label>
+<reason>The test patch introduces `test_chunk_non_array_like` which explicitly tests a non-array-like scalar return (`lambda x: 5`). Additionally, `apply_infer_dtype` in the patch is updated to use `type(o)` as a fallback for objects without a `dtype` attribute, confirming the PR deliberately expands scope to handle unrelated edge cases for non-array-like returns.</reason>
+</classification>
+<classification>
+<label>UL</label>
+<reason>The PR introduces a newly hardcoded error string `"Dimension mismatch: expected output of..."` in the `apply_and_enforce` function. The test suite explicitly asserts this exact string using `pytest.raises(ValueError, match="Dimension mismatch:")`, confirming the introduction of an unprompted literal.</reason>
+</classification>

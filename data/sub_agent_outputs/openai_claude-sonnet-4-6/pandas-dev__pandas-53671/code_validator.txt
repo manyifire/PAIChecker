@@ -1,0 +1,12 @@
+<classification>
+<label>IS</label>
+<reason>The PR patch confirms the implementation covers `fillna`, `ffill`, `bfill`, and `interpolate` with deprecation warnings, while the whatsnew diff shows the old entry only mentioned `fillna`/`DataFrame.fillna`. The code expansion to multiple methods (all receiving `lib.no_default` defaults and `_deprecate_downcast` calls) confirms scope grew beyond the original issue description during discussion.</reason>
+</classification>
+<classification>
+<label>UL</label>
+<reason>The patch newly introduces specific warning message literals in `_deprecate_downcast` (e.g., `"The 'downcast' keyword in {method_name} is deprecated and will be removed in a future version. Use res.infer_objects(copy=False) to infer non-object dtype, or pd.to_numeric with the 'downcast' keyword to downcast numeric results."`) and in `interpolate` (`"Call result.infer_objects(copy=False) on the result instead."`). The test_patch explicitly asserts these strings (e.g., `msg = "The 'downcast' keyword in fillna is deprecated"`, `msg = "The 'downcast' keyword in Series.interpolate is deprecated"`) in multiple test files, confirming the UL criterion that the literal is both newly defined in the patch and asserted in the test_patch.</reason>
+</classification>
+<classification>
+<label>FP</label>
+<reason>The whatsnew diff shows removal of an old entry "Deprecated allowing `downcast` keyword other than `None`, `False`, "infer"..." (referencing the same issue #40988) that was already added by a prior PR, replaced with a broader deprecation entry. The code in `generic.py` shows the old `_deprecate_downcast` implementation (which only warned for specific non-None/False/infer values) being replaced with a new implementation that warns for all non-default values, indicating the current PR is completing work started by earlier PRs on the same issue.</reason>
+</classification>

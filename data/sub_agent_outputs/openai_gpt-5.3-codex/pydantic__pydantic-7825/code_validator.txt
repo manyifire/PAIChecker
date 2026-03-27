@@ -1,0 +1,8 @@
+<classification>
+<label>IS</label>
+<reason>The patch in pydantic/main.py changes BaseModel.__eq__ to compare pydantic fields while tolerating extra __dict__ entries, which matches the requirement that cached properties should not break equality. This is directly validated by the new test_eq_with_cached_property in tests/test_edge_cases.py, where touching cached_property mutates one instance __dict__ but equality is still expected. The code therefore supports the Coordinator's incomplete-spec interpretation rather than contradicting it.</reason>
+</classification>
+<classification>
+<label>FP</label>
+<reason>The implementation comments explicitly tie this equality work to GH-7444 and GH-7825, and the diff includes both __eq__ changes and related hash fallback robustness updates. tests/test_main.py also adjusts hash expectations to focus on non-crashing behavior with missing keys, indicating coordinated continuation work rather than an unrelated fix. Nothing in the code contradicts the claim that this PR is a same-issue follow-up or supplement chain.</reason>
+</classification>

@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue description states the bug is "`dvc exp show --show-json` is failing... `Object of type datetime is not JSON serializable`" in non-TTY. The PR description states "Regression from #6743. Fixes #6803" and the commit message says "ui: write_json: don't forget json kwargs. Regression from #6743. Fixes #6803". The PR scope exactly matches the issue scope - restoring the `default` parameter to fix JSON serialization of datetime objects. No additional issues or unrelated functionality are claimed in PR text.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The patch only adds `default=default` to the json.dumps call: `return self.write(json.dumps(data, default=default))`. This forwards an existing parameter, not introducing new hardcoded literals. The test_patch uses `datetime.datetime(1970, 1, 1)` and expects `"1970-01-01 00:00:00"` as test fixtures to verify the fix works, but these are not newly introduced runtime constants in the patch itself - they are test data values.</ul_evidence>
+<suspicious_clues>None</suspicious_clues>
+</sub_agent_result>

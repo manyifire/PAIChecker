@@ -1,0 +1,31 @@
+## Step 1: Review Tier 1 Results
+
+- **issue_analyzer**: Judges `IS` — the CLI format (`key=val`) and CLI flag name (`--remote-config`) were not specified in the baseline issue, only finalized in the discussion thread before merge.
+- **pr_scope_analyzer**: Judges `NO_SC` and `NO_UL` — the PR directly addresses the requested feature; test literals are inputs, not hardcoded production constants.
+- **pr_connection_analyzer**: Judges `NO_DP` and `NO_FP` — clean first implementation, no prior PRs for this issue.
+
+## Step 2: Judge Tier 1 Conclusions Against Their Evidence
+
+**IS (issue_analyzer):** The evidence is sound. The baseline issue (`remote_config` as a Python dict for API) did not specify the CLI format. The discussion explicitly finalized "same format as `dvc exp run --set-param key=val`" and confirmed the CLI flag name `--remote-config`. This is a textbook Condition 3 IS scenario — interface details undecided in baseline, resolved in discussion. The evidence clearly supports the `IS` label.
+
+**NO_SC (pr_scope_analyzer):** The evidence supports NO_SC. The PR title and description directly target the issue's requested feature. The suspicious clue about API vs. CLI focus is noted, but the issue title itself says "api/cli" and the PR description says "Similar to how it is used in api," indicating the API portion was treated as pre-existing. No unrelated issue is closed. The evidence holds.
+
+**NO_UL (pr_scope_analyzer):** The evidence supports NO_UL. Test literals are inputs, not production constants. The `DictAction` parser is generic. Evidence is consistent with the conclusion.
+
+**NO_DP / NO_FP (pr_connection_analyzer):** Both are supported by the evidence. No prior merged PRs exist for this issue.
+
+## Step 3: Gather Final Supported Labels
+
+- `IS`: Supported — CLI format and flag name finalized in discussion, not baseline.
+- `SC`: Not supported.
+- `UL`: Not supported.
+- `DP`: Not supported.
+- `FP`: Not supported.
+- `Others`: No combined evidence points to a clear textual mismatch not covered by IS.
+
+## Step 4: Final Classification
+
+<classification>
+<label>IS</label>
+<reason>The issue_analyzer found that the baseline issue described `remote_config` only as a Python dict for the API without specifying the CLI format or flag name. These key interface details — the `key=val` format (matching `dvc exp run --set-param`) and the `--remote-config` flag name — were explicitly finalized only in the discussion thread before the PR was merged. This constitutes a sanctioned issue-scope evolution where the exact CLI interface was undecided in the baseline and resolved during the discussion.</reason>
+</classification>

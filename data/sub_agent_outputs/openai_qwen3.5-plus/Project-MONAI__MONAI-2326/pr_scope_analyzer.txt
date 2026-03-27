@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>NO_SC</sc_judgment>
+<sc_evidence>The issue description reports a memory error when saving NIfTI images with resampling, caused by corrupted header metadata (e.g., spatial_shape showing [20481, 20481, 20736]). The PR description explicitly states "Fixes #2316" and "This PR added support to swap endian order in Nibabel reader" - directly addressing the root cause of the header corruption. There is no textual evidence in PR description, commits, or comments claiming to fix additional issues or add unrelated functionality beyond the single issue #2316.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains assertion `np.testing.assert_allclose(ret["image_meta_dict"]["spatial_shape"], [[100, 100]])`. However, this literal `[[100, 100]]` is not newly introduced as a hardcoded runtime constant in the patch - the patch only adds `header = img.header.as_byteswapped("<")` to swap byte order. The `[[100, 100]]` value represents expected test data output (as confirmed by PR comment showing correct shape vs incorrect `[[25600, 25600]]`), not a new literal defined in production code.</sc_evidence>
+<suspicious_clues>None</suspicious_clues>
+</sub_agent_result>

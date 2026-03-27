@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue description baseline only requests: "If `dvc exp run --pull` fails to pull anything from the cache or run-cache, the command will fail immediately. Instead, it should only show a warning and try to do as much as possible." However, the PR commit messages explicitly claim two distinct fixes: (1) "repro: Continue on RunCacheNotSupported - Closes #9470" and (2) "repro: Skip pulling run cache if `no-run-cache` was passed." The PR comment also confirms this expansion: "Putting draft as I will update to respect the no-run-cache flag." The `--no-run-cache` flag behavior is a distinct feature beyond the issue's baseline scope of handling pull failures gracefully.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains `"foo"` as a mock argument to `RunCacheNotSupported("foo")`, but this is test setup data, not a literal introduced by the patch. The patch only imports and catches the existing `RunCacheNotSupported` exception class without introducing any new hardcoded string literals. The test assertions check boolean results (`assert dvc.reproduce(pull=True)`) and method call status (`assert not spy_pull.called`), neither of which are hardcoded literals introduced by the patch.</ul_evidence>
+<suspicious_clues>The PR comment reveals uncertainty about scope: "I am not really sure about continuing when plain pull fails or the no-run-cache flag which currently means a different thing. So went with the shortest fix to unblock HTTP remotes" - indicating the author recognized the `--no-run-cache` handling as separate from the original issue scope but included it anyway.</suspicious_clues>
+</sub_agent_result>

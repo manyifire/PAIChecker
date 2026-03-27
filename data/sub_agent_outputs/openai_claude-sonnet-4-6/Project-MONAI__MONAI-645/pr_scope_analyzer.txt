@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The PR description states "Fixes #517, follow up of #623" (referencing a second issue) and the PR comments explicitly state: "Added support for adaptive window sizes for sliding window, central spatial crop, rand crop, spatial pad." The issue description only requested keeping original spatial size in `RandAffine`, but the PR explicitly claims and delivers adaptive window sizes for `SlidingWindowInferer`, `CenterSpatialCrop`, `RandSpatialCrop`, `SpatialPad`, and `RandCropByPosNegLabel` — all beyond the issue scope.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains computed numeric output values (e.g., `torch.tensor([[[[0.3658, 1.0000], [1.0000, 1.0000]]...]]`) and shape tuples (e.g., `(3, 2, 2, 3)`) as expected results of transformed images. These are not newly introduced fixed runtime constants in patch — they are expected outputs of the resampling/cropping computations. No new hardcoded string literals or error messages are introduced in patch and then asserted in test_patch.</ul_evidence>
+<suspicious_clues>The `align_corners` parameter changed from `False` to `True` in the Resampler, which caused many existing test expected values to change throughout test_patch. This is a functional behavior change beyond the issue scope but is reflected in PR text as part of the broader "adaptive window sizes" work. The PR also references "#623" as a "follow up" which suggests cross-issue work.</suspicious_clues>
+</sub_agent_result>

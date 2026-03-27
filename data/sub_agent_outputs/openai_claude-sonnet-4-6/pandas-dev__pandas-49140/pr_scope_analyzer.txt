@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue_number field contains multiple issue numbers ['49141', '48826'], which is an immediate SC trigger. The PR description explicitly confirms this: "closes #48826" and "closes #49141", indicating the PR closes two distinct issues. The PR commit messages also reference both: "fix GH issue number in test" and "add test from original issue", addressing work beyond a single issue scope.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>N/A. The literal `0.57735` asserted in `test_patch` (`expected = Series([0.57735, 0.57735], index=["A", "B"])`) is explicitly present in the issue description: "B    0.57735 / A    0.57735". The other assertion literals like `[0.0, 1.0, 0.0]` are computed dynamically at runtime and not hardcoded as fixed constants in the production `patch` code (which only reverts to using `this.apply(lambda x: other.corr(x, method=method), axis=axis)`).</ul_evidence>
+<suspicious_clues>The changed error message assertion in `test_corrwith_mixed_dtypes` from `"not supported for the input types"` to `r"unsupported operand type\(s\) for /: 'str' and 'int'"` is notable — this is a side effect of reverting the fast path code, changing which Python built-in error gets raised. It's not a new hardcoded literal in production code, just a test update to match the reverted behavior.</suspicious_clues>
+</sub_agent_result>

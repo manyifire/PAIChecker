@@ -1,0 +1,8 @@
+<sub_agent_result>
+<agent>pr_scope_analyzer</agent>
+<sc_judgment>SC</sc_judgment>
+<sc_evidence>The issue description explicitly requests only `__name__` support: "Support `__name__` on functions annotated with `@delayed`" and "the expected behavior is for `__name__` to be `my_function`". However, the PR title explicitly claims broader scope: "Pass __name__ and __doc__ through on DelayedLeaf", and the commit message states "Pass __name__ and __doc__ through on DelayedLeaf". The PR text clearly indicates it delivers both `__name__` AND `__doc__` forwarding, where `__doc__` is an additional attribute beyond what the issue description requested.</sc_evidence>
+<ul_judgment>NO_UL</ul_judgment>
+<ul_evidence>The test_patch contains literals `"add"` and `"This is a docstring"` in assertions (`assert add.__name__ == "add"` and `assert add.__doc__ == "This is a docstring"`). However, the patch only forwards existing values via `return self._obj.__name__` and `return self._obj.__doc__` - these are not newly introduced hardcoded constants in the patch. The literals are defined in the test function source itself, not introduced by the patch as fixed runtime constants.</ul_evidence>
+<suspicious_clues>The `__doc__` addition is closely related to `__name__` (both are standard function metadata attributes), which makes the scope creep borderline - it could be argued as a natural implementation detail of "wrapping" behavior. However, since the issue explicitly only mentions `__name__` and the PR explicitly claims both in its title/commits, this qualifies as SC per the textual evidence rule.</suspicious_clues>
+</sub_agent_result>
